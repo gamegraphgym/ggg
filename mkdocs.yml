@@ -1,0 +1,68 @@
+site_name: Game Graph Gym
+site_description: A C++20 framework for implementing and benchmarking game-theoretic solvers
+site_url: https://gamegraphgym.github.io/ggg
+repo_url: https://github.com/gamegraphgym/ggg
+repo_name: gamegraphgym/ggg
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: quick_start.md
+    - Building: building.md
+    - File Formats: file_formats.md
+  - API Guide: api_guide.md
+  - Development:
+    - Developer Guide: developing.md
+  - API Reference: api/index.md
+
+docs_dir: docs
+site_dir: site
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/gamegraphgym/ggg

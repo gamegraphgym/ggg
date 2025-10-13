@@ -1,0 +1,33 @@
+# Clang-format configuration for GGG project
+# This is based on the format of the boost library
+
+BasedOnStyle: LLVM
+ColumnLimit: 0
+
+# Include organization
+SortIncludes: true
+IncludeCategories:
+  # Project headers first
+  - Regex: '^"libggg/'
+    Priority: 1
+  - Regex: '^<libggg/'
+    Priority: 1
+  # Boost headers
+  - Regex: '^<boost/'
+    Priority: 2
+  # System/standard library headers
+  - Regex: '^<[[:alnum:]_]+>'
+    Priority: 3
+  # Other includes
+  - Regex: '.*'
+    Priority: 4
+
+# Boost prefers 4-space indentation and no tab characters
+IndentWidth: 4
+UseTab: Never
+
+# Boost prefers spaces before parentheses in control statements
+SpaceBeforeParens: ControlStatements
+
+# Boost prefers no extra space after cast
+SpaceAfterCStyleCast: false

@@ -1,0 +1,35 @@
+digraph test013 {
+    // Discounted game test case
+    // Vertex properties: name [player=X]
+    // Edge properties: [weight=Y, discount=Z]
+
+    v0 [name="v0", player=0];
+    v1 [name="v1", player=1];
+    v2 [name="v2", player=0];
+    v3 [name="v3", player=1];
+    v4 [name="v4", player=0];
+    v5 [name="v5", player=0];
+    v6 [name="v6", player=0];
+    v7 [name="v7", player=1];
+    v8 [name="v8", player=0];
+    v9 [name="v9", player=1];
+
+    v5 -> v0 [label="edge_v5_v0", weight=-3.69, discount=0.032];
+    v5 -> v1 [label="edge_v5_v1", weight=-4.34, discount=0.032];
+    v1 -> v5 [label="edge_v1_v5", weight=-5.06, discount=0.032];
+    v5 -> v2 [label="edge_v5_v2", weight=1.98, discount=0.032];
+    v5 -> v3 [label="edge_v5_v3", weight=4.23, discount=0.032];
+    v5 -> v4 [label="edge_v5_v4", weight=7.79, discount=0.032];
+    v4 -> v5 [label="edge_v4_v5", weight=9.09, discount=0.032];
+    v5 -> v6 [label="edge_v5_v6", weight=-3.98, discount=0.032];
+    v5 -> v7 [label="edge_v5_v7", weight=-2.10, discount=0.032];
+    v7 -> v5 [label="edge_v7_v5", weight=-0.36, discount=0.032];
+    v5 -> v8 [label="edge_v5_v8", weight=2.11, discount=0.032];
+    v5 -> v9 [label="edge_v5_v9", weight=6.91, discount=0.032];
+    v0 -> v3 [label="edge_v0_v3", weight=1.98, discount=0.032];
+    v2 -> v5 [label="edge_v2_v5", weight=-2.36, discount=0.032];
+    v3 -> v6 [label="edge_v3_v6", weight=6.45, discount=0.032];
+    v6 -> v9 [label="edge_v6_v9", weight=3.88, discount=0.032];
+    v8 -> v1 [label="edge_v8_v1", weight=-0.18, discount=0.032];
+    v9 -> v2 [label="edge_v9_v2", weight=1.01, discount=0.032];
+}

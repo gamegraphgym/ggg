@@ -1,0 +1,27 @@
+digraph G {
+    // Stochastic discounted game
+
+    v0 [name="v0", player=1];
+    v1 [name="v1", player=0];
+    v2 [name="v2", player=1];
+    v3 [name="v3", player=0];
+    v4 [name="v4", player=1];
+    v5 [name="v5", player=-1];
+    v6 [name="v6", player=-1];
+    v7 [name="v7", player=-1];
+    v8 [name="v8", player=0];
+    v9 [name="v9", player=1];
+
+    v0 -> v5 [label="edge_0_5", weight=-9.722878, discount=0.190933];
+    v1 -> v7 [label="edge_1_7", weight=-9.369477, discount=0.897728];
+    v2 -> v6 [label="edge_2_6", weight=-3.613030, discount=0.132650];
+    v3 -> v5 [label="edge_3_5", weight=-0.307251, discount=0.562712];
+    v4 -> v6 [label="edge_4_6", weight=1.396976, discount=0.387115];
+    v5 -> v0 [label="edge_5_0", probability=0.337594];
+    v5 -> v9 [label="edge_5_9", probability=0.662406];
+    v6 -> v4 [label="edge_6_4", probability=1.000000];
+    v7 -> v4 [label="edge_7_4", probability=0.611125];
+    v7 -> v0 [label="edge_7_0", probability=0.388875];
+    v8 -> v5 [label="edge_8_5", weight=1.768809, discount=0.360287];
+    v9 -> v5 [label="edge_9_5", weight=-0.850509, discount=0.451691];
+}

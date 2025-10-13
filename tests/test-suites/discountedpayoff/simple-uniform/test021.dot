@@ -1,0 +1,65 @@
+digraph test021 {
+    // Discounted game test case
+    // Vertex properties: name [player=X]
+    // Edge properties: [weight=Y, discount=Z]
+
+    v0 [name="v0", player=1];
+    v1 [name="v1", player=0];
+    v2 [name="v2", player=1];
+    v3 [name="v3", player=1];
+    v4 [name="v4", player=1];
+    v5 [name="v5", player=1];
+    v6 [name="v6", player=1];
+    v7 [name="v7", player=0];
+    v8 [name="v8", player=0];
+    v9 [name="v9", player=1];
+    v10 [name="v10", player=1];
+    v11 [name="v11", player=1];
+    v12 [name="v12", player=1];
+    v13 [name="v13", player=0];
+    v14 [name="v14", player=1];
+    v15 [name="v15", player=0];
+    v16 [name="v16", player=1];
+    v17 [name="v17", player=1];
+    v18 [name="v18", player=1];
+    v19 [name="v19", player=0];
+
+    v0 -> v1 [label="edge_v0_v1", weight=-1.01, discount=0.119];
+    v0 -> v4 [label="edge_v0_v4", weight=-4.20, discount=0.119];
+    v0 -> v5 [label="edge_v0_v5", weight=-3.24, discount=0.119];
+    v1 -> v2 [label="edge_v1_v2", weight=-3.15, discount=0.119];
+    v1 -> v5 [label="edge_v1_v5", weight=-3.31, discount=0.119];
+    v1 -> v6 [label="edge_v1_v6", weight=-1.28, discount=0.119];
+    v2 -> v3 [label="edge_v2_v3", weight=-1.25, discount=0.119];
+    v2 -> v6 [label="edge_v2_v6", weight=-1.10, discount=0.119];
+    v2 -> v7 [label="edge_v2_v7", weight=-0.73, discount=0.119];
+    v3 -> v7 [label="edge_v3_v7", weight=-1.01, discount=0.119];
+    v4 -> v5 [label="edge_v4_v5", weight=-0.31, discount=0.119];
+    v4 -> v8 [label="edge_v4_v8", weight=-1.53, discount=0.119];
+    v4 -> v9 [label="edge_v4_v9", weight=-0.74, discount=0.119];
+    v5 -> v6 [label="edge_v5_v6", weight=-2.66, discount=0.119];
+    v5 -> v9 [label="edge_v5_v9", weight=-2.99, discount=0.119];
+    v5 -> v10 [label="edge_v5_v10", weight=-2.41, discount=0.119];
+    v6 -> v7 [label="edge_v6_v7", weight=0.44, discount=0.119];
+    v6 -> v10 [label="edge_v6_v10", weight=0.68, discount=0.119];
+    v6 -> v11 [label="edge_v6_v11", weight=0.22, discount=0.119];
+    v7 -> v11 [label="edge_v7_v11", weight=-0.52, discount=0.119];
+    v8 -> v9 [label="edge_v8_v9", weight=-0.54, discount=0.119];
+    v8 -> v12 [label="edge_v8_v12", weight=0.37, discount=0.119];
+    v8 -> v13 [label="edge_v8_v13", weight=-2.60, discount=0.119];
+    v9 -> v10 [label="edge_v9_v10", weight=0.21, discount=0.119];
+    v9 -> v13 [label="edge_v9_v13", weight=1.25, discount=0.119];
+    v9 -> v14 [label="edge_v9_v14", weight=-1.17, discount=0.119];
+    v10 -> v11 [label="edge_v10_v11", weight=2.62, discount=0.119];
+    v10 -> v14 [label="edge_v10_v14", weight=1.10, discount=0.119];
+    v10 -> v15 [label="edge_v10_v15", weight=-0.68, discount=0.119];
+    v11 -> v15 [label="edge_v11_v15", weight=1.94, discount=0.119];
+    v12 -> v13 [label="edge_v12_v13", weight=-1.91, discount=0.119];
+    v13 -> v14 [label="edge_v13_v14", weight=2.11, discount=0.119];
+    v14 -> v15 [label="edge_v14_v15", weight=1.88, discount=0.119];
+    v16 -> v17 [label="edge_v16_v17", weight=-0.96, discount=0.119];
+    v17 -> v18 [label="edge_v17_v18", weight=2.34, discount=0.119];
+    v18 -> v19 [label="edge_v18_v19", weight=4.08, discount=0.119];
+    v15 -> v0 [label="edge_v15_v0", weight=-0.79, discount=0.119];
+    v19 -> v4 [label="edge_v19_v4", weight=4.65, discount=0.119];
+}

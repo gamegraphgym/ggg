@@ -1,0 +1,68 @@
+digraph G {
+    // Stochastic discounted game
+
+    v0 [name="v0", player=1];
+    v1 [name="v1", player=-1];
+    v2 [name="v2", player=0];
+    v3 [name="v3", player=-1];
+    v4 [name="v4", player=-1];
+    v5 [name="v5", player=-1];
+    v6 [name="v6", player=1];
+    v7 [name="v7", player=-1];
+    v8 [name="v8", player=-1];
+    v9 [name="v9", player=1];
+    v10 [name="v10", player=1];
+    v11 [name="v11", player=0];
+    v12 [name="v12", player=1];
+    v13 [name="v13", player=0];
+    v14 [name="v14", player=0];
+    v15 [name="v15", player=1];
+    v16 [name="v16", player=0];
+    v17 [name="v17", player=-1];
+    v18 [name="v18", player=-1];
+    v19 [name="v19", player=1];
+    v20 [name="v20", player=-1];
+    v21 [name="v21", player=1];
+    v22 [name="v22", player=0];
+    v23 [name="v23", player=0];
+    v24 [name="v24", player=0];
+    v25 [name="v25", player=0];
+    v26 [name="v26", player=-1];
+    v27 [name="v27", player=0];
+    v28 [name="v28", player=1];
+    v29 [name="v29", player=1];
+
+    v0 -> v4 [label="edge_0_4", weight=-6.123542, discount=0.557636];
+    v1 -> v27 [label="edge_1_27", probability=1.000000];
+    v2 -> v18 [label="edge_2_18", weight=3.190204, discount=0.433232];
+    v3 -> v19 [label="edge_3_19", probability=1.000000];
+    v4 -> v14 [label="edge_4_14", probability=1.000000];
+    v5 -> v22 [label="edge_5_22", probability=0.428729];
+    v5 -> v28 [label="edge_5_28", probability=0.571271];
+    v6 -> v7 [label="edge_6_7", weight=7.981080, discount=0.474456];
+    v7 -> v23 [label="edge_7_23", probability=0.587186];
+    v7 -> v29 [label="edge_7_29", probability=0.412814];
+    v8 -> v29 [label="edge_8_29", probability=1.000000];
+    v9 -> v3 [label="edge_9_3", weight=-9.441909, discount=0.283304];
+    v10 -> v17 [label="edge_10_17", weight=-9.325149, discount=0.810463];
+    v11 -> v18 [label="edge_11_18", weight=1.035119, discount=0.552682];
+    v12 -> v8 [label="edge_12_8", weight=-2.321651, discount=0.720516];
+    v13 -> v5 [label="edge_13_5", weight=5.400927, discount=0.429914];
+    v14 -> v17 [label="edge_14_17", weight=-3.849695, discount=0.881187];
+    v15 -> v8 [label="edge_15_8", weight=-4.201703, discount=0.765374];
+    v16 -> v26 [label="edge_16_26", weight=8.651158, discount=0.890746];
+    v17 -> v24 [label="edge_17_24", probability=1.000000];
+    v18 -> v15 [label="edge_18_15", probability=0.378345];
+    v18 -> v16 [label="edge_18_16", probability=0.621655];
+    v19 -> v18 [label="edge_19_18", weight=-7.821383, discount=0.367151];
+    v20 -> v10 [label="edge_20_10", probability=1.000000];
+    v21 -> v1 [label="edge_21_1", weight=-2.704203, discount=0.233149];
+    v22 -> v18 [label="edge_22_18", weight=-0.139214, discount=0.489614];
+    v23 -> v26 [label="edge_23_26", weight=9.556012, discount=0.393133];
+    v24 -> v3 [label="edge_24_3", weight=1.757558, discount=0.819805];
+    v25 -> v17 [label="edge_25_17", weight=4.494415, discount=0.522836];
+    v26 -> v28 [label="edge_26_28", probability=1.000000];
+    v27 -> v26 [label="edge_27_26", weight=3.789921, discount=0.817996];
+    v28 -> v1 [label="edge_28_1", weight=-4.884333, discount=0.788487];
+    v29 -> v4 [label="edge_29_4", weight=-1.358892, discount=0.518293];
+}

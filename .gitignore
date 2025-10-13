@@ -1,0 +1,77 @@
+# Build directories
+build/
+build*/
+out/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+!cmake/*.cmake.in
+compile_commands.json
+
+# Compiled object files
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+
+# Executables
+*.exe
+test_libggg
+
+# Solver binaries
+solvers_bin/
+solver_bin/
+
+# IDE and editor files
+.vscode/
+.cache/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Coverage files
+*.gcov
+*.gcda
+*.gcno
+coverage.info
+coverage/
+
+# Documentation generated files
+site/
+
+# Package files
+*.tar.gz
+*.zip
+
+# Test output
+Testing/
+
+# Dependencies
+vcpkg_installed/
+conan/
+
+# Temporary files
+*.tmp
+*.temp
+*.dot
+!tests/test-suites/**/*.dot
+*.pg
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Local development tools (not for repo)
+tools/local/
