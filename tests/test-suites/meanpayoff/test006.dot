@@ -1,0 +1,23 @@
+digraph test006 {
+    v0 [name="v0", player=0, weight=2];
+    v1 [name="v1", player=1, weight=3];
+    v2 [name="v2", player=0, weight=0];
+    v3 [name="v3", player=1, weight=2];
+    v4 [name="v4", player=0, weight=0];
+    v5 [name="v5", player=1, weight=7];
+    v6 [name="v6", player=0, weight=3];
+    v7 [name="v7", player=1, weight=15];
+    v8 [name="v8", player=0, weight=1];
+    v9 [name="v9", player=1, weight=5];
+    v0 -> v1;
+    v0 -> v2;
+    v2 -> v3;
+    v3 -> v2;
+    v3 -> v4;
+    v1 -> v5;
+    v4 -> v6;
+    v1 -> v7;
+    v7 -> v8;
+    v0 -> v9;
+    v8 -> v1;
+}

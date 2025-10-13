@@ -1,0 +1,45 @@
+digraph G {
+    // Stochastic discounted game
+
+    v0 [name="v0", player=0];
+    v1 [name="v1", player=-1];
+    v2 [name="v2", player=0];
+    v3 [name="v3", player=1];
+    v4 [name="v4", player=-1];
+    v5 [name="v5", player=1];
+    v6 [name="v6", player=1];
+    v7 [name="v7", player=1];
+    v8 [name="v8", player=0];
+    v9 [name="v9", player=1];
+    v10 [name="v10", player=1];
+    v11 [name="v11", player=-1];
+    v12 [name="v12", player=0];
+    v13 [name="v13", player=0];
+    v14 [name="v14", player=-1];
+    v15 [name="v15", player=1];
+    v16 [name="v16", player=0];
+    v17 [name="v17", player=-1];
+    v18 [name="v18", player=-1];
+    v19 [name="v19", player=0];
+
+    v0 -> v11 [label="edge_0_11", weight=-8.931113, discount=0.703136];
+    v1 -> v6 [label="edge_1_6", probability=1.000000];
+    v2 -> v17 [label="edge_2_17", weight=3.925828, discount=0.651022];
+    v3 -> v14 [label="edge_3_14", weight=-2.555459, discount=0.730711];
+    v4 -> v0 [label="edge_4_0", probability=1.000000];
+    v5 -> v1 [label="edge_5_1", weight=4.156095, discount=0.306983];
+    v6 -> v1 [label="edge_6_1", weight=-1.771032, discount=0.320806];
+    v7 -> v17 [label="edge_7_17", weight=7.056545, discount=0.619361];
+    v8 -> v4 [label="edge_8_4", weight=9.121616, discount=0.571300];
+    v9 -> v18 [label="edge_9_18", weight=-7.689348, discount=0.556275];
+    v10 -> v18 [label="edge_10_18", weight=-2.311200, discount=0.769931];
+    v11 -> v0 [label="edge_11_0", probability=1.000000];
+    v12 -> v11 [label="edge_12_11", weight=-9.071791, discount=0.753356];
+    v13 -> v18 [label="edge_13_18", weight=3.617464, discount=0.871433];
+    v14 -> v13 [label="edge_14_13", probability=1.000000];
+    v15 -> v14 [label="edge_15_14", weight=-9.895346, discount=0.802745];
+    v16 -> v4 [label="edge_16_4", weight=0.973143, discount=0.396720];
+    v17 -> v16 [label="edge_17_16", probability=1.000000];
+    v18 -> v12 [label="edge_18_12", probability=1.000000];
+    v19 -> v14 [label="edge_19_14", weight=4.751639, discount=0.831328];
+}

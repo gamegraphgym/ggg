@@ -1,0 +1,32 @@
+# Clang-tidy configuration for GGG project
+# This is based on the format of the boost library
+
+Checks: >
+  -*,
+  readability-identifier-naming,
+  modernize-use-auto,
+  readability-const-return-type,
+  performance-unnecessary-copy-initialization,
+  modernize-use-nullptr,
+  readability-redundant-member-init
+
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: lower_case
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: readability-identifier-naming.ParameterCase
+    value: lower_case
+  - key: readability-identifier-naming.MethodCase
+    value: lower_case
+  - key:             readability-identifier-naming.VariableConstantCase
+    value:           lower_case  # or CamelCase
+  - key:             readability-identifier-naming.ClassConstantCase
+    value:           CamelCase   # or lower_case
+  - key:             readability-identifier-naming.GlobalConstantCase
+    value:           UPPER_CASE  # Only global constants get ALL_CAPS
+
+# Simpler regex - include all project files, exclude build directory
+HeaderFilterRegex: '^(?!.*/build/).*\.(h|hpp|cpp)$'
