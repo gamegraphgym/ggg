@@ -1,0 +1,29 @@
+digraph buchi_test003 {
+    v0 [name="v0", player=1, priority=1];
+    v1 [name="v1", player=1, priority=1];
+    v2 [name="v2", player=0, priority=0];
+    v3 [name="v3", player=1, priority=1];
+    v4 [name="v4", player=0, priority=1];
+    v5 [name="v5", player=0, priority=0];
+    v6 [name="v6", player=1, priority=0];
+    v7 [name="v7", player=1, priority=0];
+    v8 [name="v8", player=1, priority=0];
+    v9 [name="v9", player=1, priority=0];
+    v0 -> v1;
+    v0 -> v7;
+    v1 -> v2;
+    v0 -> v4;
+    v3 -> v4;
+    v0 -> v3;
+    v7 -> v0;
+    v0 -> v9;
+    v3 -> v0;
+    v0 -> v6;
+    v2 -> v3;
+    v0 -> v2;
+    v5 -> v0;
+    v0 -> v5;
+    v6 -> v0;
+    v5 -> v9;
+    v0 -> v8;
+}

@@ -1,0 +1,48 @@
+digraph G {
+    // Stochastic discounted game
+
+    v0 [name="v0", player=1];
+    v1 [name="v1", player=0];
+    v2 [name="v2", player=-1];
+    v3 [name="v3", player=-1];
+    v4 [name="v4", player=-1];
+    v5 [name="v5", player=1];
+    v6 [name="v6", player=0];
+    v7 [name="v7", player=0];
+    v8 [name="v8", player=1];
+    v9 [name="v9", player=0];
+    v10 [name="v10", player=1];
+    v11 [name="v11", player=1];
+    v12 [name="v12", player=1];
+    v13 [name="v13", player=0];
+    v14 [name="v14", player=-1];
+    v15 [name="v15", player=-1];
+    v16 [name="v16", player=1];
+    v17 [name="v17", player=0];
+    v18 [name="v18", player=0];
+    v19 [name="v19", player=-1];
+
+    v0 -> v14 [label="edge_0_14", weight=4.726737, discount=0.704830];
+    v1 -> v19 [label="edge_1_19", weight=6.756147, discount=0.845855];
+    v2 -> v5 [label="edge_2_5", probability=1.000000];
+    v3 -> v11 [label="edge_3_11", probability=0.679492];
+    v3 -> v13 [label="edge_3_13", probability=0.320508];
+    v4 -> v8 [label="edge_4_8", probability=1.000000];
+    v5 -> v2 [label="edge_5_2", weight=-8.029823, discount=0.207322];
+    v6 -> v2 [label="edge_6_2", weight=5.498143, discount=0.196205];
+    v7 -> v15 [label="edge_7_15", weight=-1.307861, discount=0.880411];
+    v8 -> v4 [label="edge_8_4", weight=5.524547, discount=0.506562];
+    v9 -> v3 [label="edge_9_3", weight=-2.287620, discount=0.441194];
+    v10 -> v14 [label="edge_10_14", weight=-5.855149, discount=0.227721];
+    v11 -> v3 [label="edge_11_3", weight=1.124685, discount=0.189317];
+    v12 -> v2 [label="edge_12_2", weight=9.740123, discount=0.319939];
+    v13 -> v4 [label="edge_13_4", weight=8.590741, discount=0.277918];
+    v14 -> v17 [label="edge_14_17", probability=0.406149];
+    v14 -> v0 [label="edge_14_0", probability=0.593851];
+    v15 -> v8 [label="edge_15_8", probability=0.300145];
+    v15 -> v17 [label="edge_15_17", probability=0.699855];
+    v16 -> v4 [label="edge_16_4", weight=7.322336, discount=0.739746];
+    v17 -> v19 [label="edge_17_19", weight=1.220984, discount=0.699265];
+    v18 -> v15 [label="edge_18_15", weight=4.181253, discount=0.294358];
+    v19 -> v16 [label="edge_19_16", probability=1.000000];
+}

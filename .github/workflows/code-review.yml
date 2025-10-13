@@ -1,0 +1,119 @@
+name: Code Review Assistant
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install apt-fast
+        run: |
+          sudo add-apt-repository -y ppa:apt-fast/stable
+          sudo apt-get update
+          sudo apt-get install -y apt-fast
+
+      - name: Install dependencies
+        run: |
+          sudo apt-fast update
+          sudo apt-fast install -y libboost-all-dev cmake build-essential clang-tidy
+
+      - name: Configure CMake (generate compile database)
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBUILD_ALL_SOLVERS=ON -DBUILD_TOOLS=ON -DBUILD_TESTING=ON
+
+      - name: Run clang-tidy with suggestions
+        uses: cpp-linter/cpp-linter-action@v2
+        id: linter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          style: 'file'  # Uses .clang-format for formatting suggestions
+          tidy-checks: ''  # Uses .clang-tidy file configuration
+          files-changed-only: true
+          ignore: 'build|tests'
+          step-summary: true
+          format-review: true
+          thread-comments: true
+          database: 'build'  # Uses compile_commands.json from CMake configure
+
+      - name: Check for missing Doxygen comments
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { execSync } = require('child_process');
+            const fs = require('fs');
+            
+            // Get the PR info
+            const { data: pullRequest } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const headSha = pullRequest.head.sha;
+            
+            // Get changed files
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const cppFiles = files.filter(file => 
+              (file.filename.endsWith('.hpp') || file.filename.endsWith('.cpp')) &&
+              (file.filename.startsWith('solvers/') || file.filename.startsWith('include/')) &&
+              file.status !== 'removed'
+            );
+            
+            for (const file of cppFiles) {
+              if (!fs.existsSync(file.filename)) continue;
+              
+              const content = fs.readFileSync(file.filename, 'utf8');
+              const lines = content.split('\n');
+              
+              // Check for solver classes missing complexity documentation
+              for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.includes('class') && line.includes('Solver') && !line.includes('//')) {
+                  // Look for complexity documentation in preceding comments
+                  let hasComplexity = false;
+                  for (let j = Math.max(0, i-10); j < i; j++) {
+                    if (lines[j].includes('@complexity') || lines[j].includes('Time:') || lines[j].includes('Space:')) {
+                      hasComplexity = true;
+                      break;
+                    }
+                  }
+                  
+                  if (!hasComplexity) {
+                    // Create review comment with suggestion
+                    const suggestion = `/**
+             * @brief Brief description of the solver
+             * @complexity Time: O(?), Space: O(?) - Please document actual complexity
+             */`;
+                    
+                    try {
+                      await github.rest.pulls.createReviewComment({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        pull_number: context.issue.number,
+                        body: `Missing complexity documentation for solver class. Consider adding:\n\n\`\`\`suggestion\n${suggestion}\n\`\`\``,
+                        path: file.filename,
+                        commit_id: headSha,
+                        line: i + 1
+                      });
+                    } catch (error) {
+                      console.log(`Could not comment on ${file.filename}:${i + 1} - ${error.message}`);
+                    }
+                  }
+                }
+              }
+            }
