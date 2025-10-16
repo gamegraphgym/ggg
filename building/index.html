@@ -306,7 +306,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../api/" class="md-tabs__link">
+      <a href="../api/index.md" class="md-tabs__link">
         
   
   
@@ -524,9 +524,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#system-requirements" class="md-nav__link">
+  <a href="#system-requirements-and-dependencies" class="md-nav__link">
     <span class="md-ellipsis">
-      System Requirements
+      System Requirements and Dependencies
     </span>
   </a>
   
@@ -547,13 +547,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#build-configuration" class="md-nav__link">
+  <a href="#building-ggg" class="md-nav__link">
     <span class="md-ellipsis">
-      Build Configuration
+      Building GGG
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Build Configuration">
+    <nav class="md-nav" aria-label="Building GGG">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -578,15 +578,6 @@
   <a href="#complete-build" class="md-nav__link">
     <span class="md-ellipsis">
       Complete Build
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-boost-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Boost Installation
     </span>
   </a>
   
@@ -833,7 +824,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/" class="md-nav__link">
+      <a href="../api/index.md" class="md-nav__link">
         
   
   
@@ -885,9 +876,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#system-requirements" class="md-nav__link">
+  <a href="#system-requirements-and-dependencies" class="md-nav__link">
     <span class="md-ellipsis">
-      System Requirements
+      System Requirements and Dependencies
     </span>
   </a>
   
@@ -908,13 +899,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#build-configuration" class="md-nav__link">
+  <a href="#building-ggg" class="md-nav__link">
     <span class="md-ellipsis">
-      Build Configuration
+      Building GGG
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Build Configuration">
+    <nav class="md-nav" aria-label="Building GGG">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -939,15 +930,6 @@
   <a href="#complete-build" class="md-nav__link">
     <span class="md-ellipsis">
       Complete Build
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-boost-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Boost Installation
     </span>
   </a>
   
@@ -1074,7 +1056,7 @@
 <p>This page provides detailed instructions for building Game Graph Gym with various configurations.
 Here, "libggg" refers to the library, "ggg" is the short name for the project as well as the c++ namespace stuff is defined in.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
-<h3 id="system-requirements">System Requirements<a class="headerlink" href="#system-requirements" title="Permanent link">&para;</a></h3>
+<h3 id="system-requirements-and-dependencies">System Requirements and Dependencies<a class="headerlink" href="#system-requirements-and-dependencies" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>C++20 compatible compiler</strong> (GCC 10+, Clang 10+, MSVC 2019+)</li>
 <li><strong><a href="https://cmake.org/">CMake</a> 3.15 or later</strong></li>
@@ -1107,7 +1089,7 @@ Here, "libggg" refers to the library, "ggg" is the short name for the project as
 <p><strong>Windows (vcpkg):</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vcpkg<span class="w"> </span>install<span class="w"> </span>boost-graph<span class="w"> </span>boost-program-options<span class="w"> </span>boost-filesystem<span class="w"> </span>boost-system<span class="w"> </span>boost-test
 </span></code></pre></div>
-<h2 id="build-configuration">Build Configuration<a class="headerlink" href="#build-configuration" title="Permanent link">&para;</a></h2>
+<h2 id="building-ggg">Building GGG<a class="headerlink" href="#building-ggg" title="Permanent link">&para;</a></h2>
 <h3 id="basic-build">Basic Build<a class="headerlink" href="#basic-build" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/gamegraphgym/ggg.git
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">cd</span><span class="w"> </span>ggg
@@ -1170,30 +1152,24 @@ Here, "libggg" refers to the library, "ggg" is the short name for the project as
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>cmake<span class="w"> </span>--build<span class="w"> </span>build<span class="w"> </span>-j<span class="k">$(</span>nproc<span class="k">)</span>
 </span></code></pre></div>
-<h3 id="custom-boost-installation">Custom Boost Installation<a class="headerlink" href="#custom-boost-installation" title="Permanent link">&para;</a></h3>
-<p>If Boost is installed in a non-standard location:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>-DBOOST_ROOT<span class="o">=</span>/path/to/boost<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-DBoost_NO_SYSTEM_PATHS<span class="o">=</span>ON
-</span></code></pre></div>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>You can optionally install the library system-wide:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build
 </span></code></pre></div>
 <p>Or to a custom prefix:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build<span class="w"> </span>--prefix<span class="w"> </span>/custom/path
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build<span class="w"> </span>--prefix<span class="w"> </span>/custom/path
 </span></code></pre></div>
-<p>Optionally, you can install specific components (when using the componentized setup):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Development headers and CMake package files</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build<span class="w"> </span>--component<span class="w"> </span>dev<span class="w"> </span>--prefix<span class="w"> </span>/usr
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Shared solver libraries</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build<span class="w"> </span>--component<span class="w"> </span>libs<span class="w"> </span>--prefix<span class="w"> </span>/usr
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># CLI executables (generators and solver CLIs)</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build<span class="w"> </span>--component<span class="w"> </span>bin<span class="w"> </span>--prefix<span class="w"> </span>/usr
+<p>You can also install specific components (when using the componentized setup):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Development headers and CMake package files</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build<span class="w"> </span>--component<span class="w"> </span>dev<span class="w"> </span>--prefix<span class="w"> </span>/usr
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Shared solver libraries</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build<span class="w"> </span>--component<span class="w"> </span>libs<span class="w"> </span>--prefix<span class="w"> </span>/usr
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># CLI executables (generators and solver CLIs)</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build<span class="w"> </span>--component<span class="w"> </span>bin<span class="w"> </span>--prefix<span class="w"> </span>/usr
 </span></code></pre></div>
-<p>As <code>libggg</code> is header-only, <code>GameGraphGym::ggg</code> installs headers and CMake package files under standard locations:</p>
+<p>This will install headers and CMake package files under standard locations:</p>
 <ul>
 <li>Headers under <code>${CMAKE_INSTALL_INCLUDEDIR}</code> (e.g., <code>/usr/include/libggg/...</code>)</li>
 <li>CMake package config under <code>${CMAKE_INSTALL_LIBDIR}/cmake/GameGraphGym</code></li>
@@ -1206,32 +1182,32 @@ Here, "libggg" refers to the library, "ggg" is the short name for the project as
 <h2 id="using-game-graph-gym-in-your-project">Using Game Graph Gym in Your Project<a class="headerlink" href="#using-game-graph-gym-in-your-project" title="Permanent link">&para;</a></h2>
 <h3 id="cmake-integration">CMake Integration<a class="headerlink" href="#cmake-integration" title="Permanent link">&para;</a></h3>
 <p>Add Game Graph Gym to your CMake project:</p>
-<div class="language-cmake highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">find_package</span><span class="p">(</span><span class="s">GameGraphGym</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">your_target</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">GameGraphGym::ggg</span><span class="p">)</span>
+<div class="language-cmake highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">find_package</span><span class="p">(</span><span class="s">GameGraphGym</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">your_target</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">GameGraphGym::ggg</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="manual-integration">Manual Integration<a class="headerlink" href="#manual-integration" title="Permanent link">&para;</a></h3>
 <p>If building without installation:</p>
-<div class="language-cmake highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Find Boost library. Libggg requires graph and program_options components </span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c"># (also add `system`, `filesystem` for tools, and `unit_test_framework` for tests)</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nb">find_package</span><span class="p">(</span><span class="s">Boost</span><span class="w"> </span><span class="s">REQUIRED</span><span class="w"> </span><span class="s">COMPONENTS</span><span class="w"> </span><span class="s">graph</span><span class="w"> </span><span class="s">program_options</span><span class="p">)</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c"># Add Game Graph Gym</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">path/to/libggg</span><span class="p">)</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">your_target</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">ggg</span><span class="w"> </span><span class="s">Boost::graph</span><span class="w"> </span><span class="s">Boost::program_options</span><span class="p">)</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="nb">target_compile_features</span><span class="p">(</span><span class="s">your_target</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">cxx_std_20</span><span class="p">)</span>
+<div class="language-cmake highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Find Boost library. Libggg requires graph and program_options components </span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c"># (also add `system`, `filesystem` for tools, and `unit_test_framework` for tests)</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nb">find_package</span><span class="p">(</span><span class="s">Boost</span><span class="w"> </span><span class="s">REQUIRED</span><span class="w"> </span><span class="s">COMPONENTS</span><span class="w"> </span><span class="s">graph</span><span class="w"> </span><span class="s">program_options</span><span class="p">)</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c"># Add Game Graph Gym</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">path/to/libggg</span><span class="p">)</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">your_target</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">ggg</span><span class="w"> </span><span class="s">Boost::graph</span><span class="w"> </span><span class="s">Boost::program_options</span><span class="p">)</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nb">target_compile_features</span><span class="p">(</span><span class="s">your_target</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">cxx_std_20</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
 <p><strong>Boost not found:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>CMAKE_ERROR:<span class="w"> </span>Could<span class="w"> </span>not<span class="w"> </span>find<span class="w"> </span>Boost
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>CMAKE_ERROR:<span class="w"> </span>Could<span class="w"> </span>not<span class="w"> </span>find<span class="w"> </span>Boost
 </span></code></pre></div>
 <p>Solution: Install Boost development packages or set <code>BOOST_ROOT</code></p>
 <p><strong>C++20 not supported:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>error:<span class="w"> </span><span class="s1">&#39;auto&#39;</span><span class="w"> </span>not<span class="w"> </span>allowed<span class="w"> </span><span class="k">in</span><span class="w"> </span>non-static<span class="w"> </span>class<span class="w"> </span>member
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>error:<span class="w"> </span><span class="s1">&#39;auto&#39;</span><span class="w"> </span>not<span class="w"> </span>allowed<span class="w"> </span><span class="k">in</span><span class="w"> </span>non-static<span class="w"> </span>class<span class="w"> </span>member
 </span></code></pre></div>
 <p>Solution: Use a newer compiler or set <code>CMAKE_CXX_STANDARD=20</code></p>
 <p><strong>Link errors with Boost:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>undefined<span class="w"> </span>reference<span class="w"> </span>to<span class="w"> </span>boost::graph
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>undefined<span class="w"> </span>reference<span class="w"> </span>to<span class="w"> </span>boost::graph
 </span></code></pre></div>
 <p>Solution: Ensure CMake policy is set: <code>cmake_policy(SET CMP0167 NEW)</code></p>
 <h3 id="packaging-with-cpack-deb">Packaging with CPack (DEB)<a class="headerlink" href="#packaging-with-cpack-deb" title="Permanent link">&para;</a></h3>
@@ -1242,23 +1218,23 @@ Here, "libggg" refers to the library, "ggg" is the short name for the project as
 <li><code>bin</code>: command-line executables (generators and solver CLIs)</li>
 </ul>
 <p>Build and create .deb packages (example for Release):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span>-DTOOLS_ALL<span class="o">=</span>ON
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>cmake<span class="w"> </span>--build<span class="w"> </span>build<span class="w"> </span>-j<span class="k">$(</span>nproc<span class="k">)</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build<span class="w"> </span>--prefix<span class="w"> </span>/usr<span class="w">  </span><span class="c1"># optional install step for local testing</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nb">cd</span><span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cpack<span class="w"> </span>-C<span class="w"> </span>Release<span class="w"> </span>-G<span class="w"> </span>DEB
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span>-DTOOLS_ALL<span class="o">=</span>ON
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>cmake<span class="w"> </span>--build<span class="w"> </span>build<span class="w"> </span>-j<span class="k">$(</span>nproc<span class="k">)</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build<span class="w"> </span>--prefix<span class="w"> </span>/usr<span class="w">  </span><span class="c1"># optional install step for local testing</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nb">cd</span><span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cpack<span class="w"> </span>-C<span class="w"> </span>Release<span class="w"> </span>-G<span class="w"> </span>DEB
 </span></code></pre></div>
 <p>This produces separate packages like <code>gamegraphgym-dev</code>, <code>gamegraphgym-libs</code>, and <code>gamegraphgym-bin</code>.</p>
 <h3 id="performance-builds">Performance Builds<a class="headerlink" href="#performance-builds" title="Permanent link">&para;</a></h3>
 <p>For maximum performance:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>-DCMAKE_CXX_FLAGS<span class="o">=</span><span class="s2">&quot;-O3 -DNDEBUG -march=native&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span>-DCMAKE_CXX_FLAGS<span class="o">=</span><span class="s2">&quot;-O3 -DNDEBUG -march=native&quot;</span>
 </span></code></pre></div>
 <h3 id="debug-builds">Debug Builds<a class="headerlink" href="#debug-builds" title="Permanent link">&para;</a></h3>
 <p>For debugging with full symbols:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">    </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Debug<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">    </span>-DCMAKE_CXX_FLAGS<span class="o">=</span><span class="s2">&quot;-g -O0&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Debug<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>-DCMAKE_CXX_FLAGS<span class="o">=</span><span class="s2">&quot;-g -O0&quot;</span>
 </span></code></pre></div>
 
 
