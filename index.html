@@ -428,24 +428,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      Getting Started
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#development" class="md-nav__link">
-    <span class="md-ellipsis">
-      Development
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#supported-game-types" class="md-nav__link">
     <span class="md-ellipsis">
       Supported Game Types
@@ -473,9 +455,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#contributing" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
-      Contributing
+      Next Steps
     </span>
   </a>
   
@@ -765,24 +747,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      Getting Started
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#development" class="md-nav__link">
-    <span class="md-ellipsis">
-      Development
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#supported-game-types" class="md-nav__link">
     <span class="md-ellipsis">
       Supported Game Types
@@ -810,9 +774,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#contributing" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
-      Contributing
+      Next Steps
     </span>
   </a>
   
@@ -840,40 +804,36 @@
 <h1 id="game-graph-gym">Game Graph Gym<a class="headerlink" href="#game-graph-gym" title="Permanent link">&para;</a></h1>
 <p>Welcome to the Game Graph Gym documentation! This framework provides a comprehensive C++20 library for implementing and benchmarking solvers for games on graphs.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p><strong>Game Graph Gym (GGG)</strong> is a modern C++20 framework designed for implementing and benchmarking game-theoretic solvers. The architecture consists of:</p>
+<p><strong>Game Graph Gym (GGG)</strong> is a C++20 framework designed for implementing and benchmarking solvers for games on graphs. The architecture consists of:</p>
 <ul>
-<li><strong>Core Library</strong> (<code>libggg</code>): Built on Boost Graph Library, provides graph types (Parity, Mean-Payoff) with standardized vertex/edge properties</li>
-<li><strong>Solver Framework</strong>: Template-based with pluggable solution types (regions, strategies, values) using C++20 concepts</li>
-<li><strong>CLI Tools</strong>: Standardized interface for game generation, solver listing, and benchmarking</li>
-<li><strong>Modular Solvers</strong>: Each game type has subdirectories with independent solvers</li>
-</ul>
-<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="quick_start/">Quick Start Guide</a> - Get up and running quickly</li>
-<li><a href="building/">Building the Library</a> - Detailed build instructions</li>
-<li><a href="file_formats/">File Formats</a> - Supported input/output formats</li>
-</ul>
-<h2 id="development">Development<a class="headerlink" href="#development" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="developing/">Developer Guide</a> - Setup development environment and contribution guidelines</li>
+<li><strong>Core Library</strong>: provides templates for defining custom graph types, parsers, and generic algorithms.</li>
+<li><strong>Game Solvers</strong>: for some well-known types of games (buechi, parity, mean-payoff, and stochastic discounted)</li>
+<li><strong>CLI Tools</strong>: for solvers with uniform CLI interface</li>
+<li><strong>Convenience Scripts</strong>: for benchmarking and visualisations</li>
 </ul>
 <h2 id="supported-game-types">Supported Game Types<a class="headerlink" href="#supported-game-types" title="Permanent link">&para;</a></h2>
 <p>Game Graph Gym supports several types of two-player, zero-sum, non-stochastic games out of the box.</p>
 <ul>
+<li><strong>Büchi Games</strong>: Games with Büchi acceptance conditions ("buechi");</li>
 <li><strong>Parity Games</strong>: Games with parity winning conditions ("parity");</li>
 <li><strong>Mean-Payoff Games</strong>: Games with mean-payoff objectives ("mean_payoff");</li>
-<li><strong>Büchi Games</strong>: Games with Büchi acceptance conditions ("buechi");</li>
+<li><strong>Stochastic Discounted</strong>: Probabilistic Games with discounted payoffs.</li>
 </ul>
 <h2 id="file-formats">File Formats<a class="headerlink" href="#file-formats" title="Permanent link">&para;</a></h2>
-<p>All game types support import/export via <a href="https://graphviz.org/doc/info/lang.html">Graphviz DOT format</a> with custom attributes. See the <a href="file_formats/">File Formats</a> guide for detailed specifications.</p>
+<p>All game types can be parsed from / written as files in a format similar to <a href="https://graphviz.org/doc/info/lang.html">Graphviz DOT</a> with custom attributes. See the <a href="file_formats/">File Formats</a> guide for details.</p>
 <h2 id="command-line-tools">Command-Line Tools<a class="headerlink" href="#command-line-tools" title="Permanent link">&para;</a></h2>
 <p>The framework includes several command-line utilities:</p>
 <ul>
 <li><code>ggg_X_generate</code>: Generate random game instances for type <code>X</code> (parity,mean_payoff, or stochastic_discounted)</li>
 <li><code>ggg_X_solver_Y</code> Solve a game of type <code>X</code> using algorithm <code>Y</code></li>
 </ul>
-<h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
-<p>See the <a href="developing/">Developer Guide</a> for information on setting up a development environment and contributing to the project.</p>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="quick_start/">Quick Start Guide</a> - Get up and running quickly</li>
+<li><a href="building/">Building the Library</a> - Detailed build instructions</li>
+<li><a href="file_formats/">File Formats</a> - Supported input/output formats</li>
+<li><a href="developing/">Developer Guide</a> - Setup development environment and contribution guidelines</li>
+</ul>
 
 
 
