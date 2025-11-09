@@ -28,6 +28,13 @@ namespace ggg {
  */
 namespace graphs {
 
+/**
+ * Exception thrown on graph parsing errors.
+ */
+struct ParseError : public std::runtime_error {
+    explicit ParseError(const std::string &msg) : std::runtime_error(msg) {}
+};
+
 // --- Helper macros for property struct field generation ---
 #define PROPERTY_STRUCT_FIELD(type, name) type name;
 
@@ -169,7 +176,7 @@ namespace graphs {
         register_dynamic_properties(dp, *g);                                                          \
         if (!boost::read_graphviz(in, *g, dp, "name")) {                                              \
             LGG_ERROR("Failed to parse DOT format");                                                  \
-            return nullptr;                                                                           \
+            throw ggg::graphs::ParseError("Failed to parse DOT format");                              \
         }                                                                                             \
         return g;                                                                                     \
     }                                                                                                 \

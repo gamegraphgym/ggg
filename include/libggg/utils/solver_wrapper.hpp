@@ -3,6 +3,7 @@
 #include "libggg/solutions/concepts.hpp"
 #include "libggg/solvers/solver.hpp"
 #include "libggg/utils/logging.hpp"
+#include "libggg/graphs/graph_utilities.hpp"
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/program_options.hpp>
 #include <chrono>
@@ -216,12 +217,6 @@ class GameSolverWrapper {
                 graph = parser_func(input_file);
             }
 
-            if (!graph) {
-                LGG_ERROR("Failed to parse input game");
-                std::cerr << "Error: Failed to parse input game" << std::endl;
-                return 1;
-            }
-
             LGG_INFO("Successfully parsed game with ", boost::num_vertices(*graph), " vertices");
 
             // Create solver and measure time
@@ -259,6 +254,10 @@ class GameSolverWrapper {
 
             return 0;
 
+        } catch (const ggg::graphs::ParseError &e) {
+            LGG_ERROR("ParseError caught: ", e.what());
+            std::cerr << "Parse error: " << e.what() << std::endl;
+            return 2;
         } catch (const std::exception &e) {
             LGG_ERROR("Exception caught: ", e.what());
             std::cerr << "Error: " << e.what() << std::endl;
