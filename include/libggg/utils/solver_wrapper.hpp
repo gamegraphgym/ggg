@@ -1,9 +1,9 @@
 #pragma once
 
+#include "libggg/graphs/graph_utilities.hpp"
 #include "libggg/solutions/concepts.hpp"
 #include "libggg/solvers/solver.hpp"
 #include "libggg/utils/logging.hpp"
-#include "libggg/graphs/graph_utilities.hpp"
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/program_options.hpp>
 #include <chrono>
