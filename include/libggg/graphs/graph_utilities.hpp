@@ -5,6 +5,8 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/property_map/dynamic_property_map.hpp>
+#include <ios>
+#include <stdexcept>
 
 namespace ggg {
 /**
@@ -62,7 +64,7 @@ struct ParseError : public std::runtime_error {
  *  - Vertex add_vertex(Graph&, (params from VERTEX_FIELDS))
  *  - std::pair<Edge,bool> add_edge(Graph&, Vertex, Vertex, (params from EDGE_FIELDS))
  *  - std::shared_ptr<Graph> parse(std::istream&), parse(const std::string&)
- *  - bool write(const Graph&, std::ostream&), write(const Graph&, const std::string&)
+ *  - void write(const Graph&, std::ostream&), write(const Graph&, const std::string&)
  *
  * @param VERTEX_FIELDS Macro that expands a field macro to declare vertex fields (F(type,name) ...)
  * @param EDGE_FIELDS   Macro that expands a field macro to declare edge fields
@@ -175,7 +177,6 @@ struct ParseError : public std::runtime_error {
         boost::dynamic_properties dp(boost::ignore_other_properties);                                 \
         register_dynamic_properties(dp, *g);                                                          \
         if (!boost::read_graphviz(in, *g, dp, "name")) {                                              \
-            LGG_ERROR("Failed to parse DOT format");                                                  \
             throw ggg::graphs::ParseError("Failed to parse DOT format");                              \
         }                                                                                             \
         return g;                                                                                     \
@@ -190,8 +191,7 @@ struct ParseError : public std::runtime_error {
         LGG_DEBUG("Parsing DOT file: ", fn);                                                          \
         std::ifstream file(fn);                                                                       \
         if (!file.is_open()) {                                                                        \
-            LGG_ERROR("Failed to open file: ", fn);                                                   \
-            return nullptr;                                                                           \
+            throw std::ios_base::failure(std::string("Failed to open file: ") + fn);                  \
         }                                                                                             \
         return parse(file);                                                                           \
     }                                                                                                 \
@@ -201,28 +201,31 @@ struct ParseError : public std::runtime_error {
      * @brief Serialize a graph to an output stream in DOT format                                     \
      * @param g  The graph to serialize                                                               \
      * @param os Output stream to receive DOT-formatted data                                          \
-     * @returns true on success, false on failure                                                     \
+     * @throws std::ios_base::failure if the stream enters a bad state after writing                  \
      *                                                                                                \
      * The function registers the same dynamic properties used for parsing so                         \
      * that bundled properties are emitted as DOT attributes. */                                      \
-    inline bool write(const Graph &g, std::ostream &os) {                                             \
+    inline void write(const Graph &g, std::ostream &os) {                                             \
         boost::dynamic_properties dp(boost::ignore_other_properties);                                 \
         register_dynamic_properties(dp, const_cast<Graph &>(g));                                      \
         boost::write_graphviz_dp(os, g, dp, "name");                                                  \
-        return true;                                                                                  \
+        if (!os.good()) {                                                                             \
+            throw std::ios_base::failure("Failed to write graph to output stream");                   \
+        }                                                                                             \
     }                                                                                                 \
     /**                                                                                               \
      * @brief Serialize a graph to a DOT file                                                         \
      * @param g  The graph to serialize                                                               \
      * @param fn Path to the output file                                                              \
-     * @returns true on success, false on failure                                                     \
+     * @throws std::ios_base::failure on failure to open or write the output file                     \
      *                                                                                                \
      * Convenience overload that opens the file and forwards to write(std::ostream&). */              \
-    inline bool write(const Graph &g, const std::string &fn) {                                        \
+    inline void write(const Graph &g, const std::string &fn) {                                        \
         std::ofstream file(fn);                                                                       \
-        if (!file.is_open())                                                                          \
-            return false;                                                                             \
-        return write(g, file);                                                                        \
+        if (!file.is_open()) {                                                                        \
+            throw std::ios_base::failure(std::string("Failed to open file for writing: ") + fn);      \
+        }                                                                                             \
+        write(g, file);                                                                               \
     }
 
 } // namespace graphs
