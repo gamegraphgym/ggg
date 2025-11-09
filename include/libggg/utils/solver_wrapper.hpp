@@ -110,17 +110,20 @@ class GameSolverWrapper {
 
         // If help requested, print a synopsis that includes the positional input parameter
         if (vm.count("help")) {
-            // Usage synopsis: program [options] <input>
             std::cout << "Usage: " << argv[0] << " [options] <input>\n\n";
             std::cout << desc << std::endl;
             exit(0);
         }
 
-        // Determine input file: first positional token if provided; default to stdin ("-")
-        std::string input_file = "-";
-        if (!unrecognized.empty()) {
-            input_file = unrecognized.front();
+        // Determine input file: first positional token (required). Do not accept a missing positional.
+        if (unrecognized.empty()) {
+            std::cerr << "Error: missing required positional argument <input>\n";
+            std::cerr << "Usage: " << argv[0] << " [options] <input>\n\n";
+            std::cerr << desc << std::endl;
+            exit(2);
         }
+
+        std::string input_file = unrecognized.front();
 
 #ifdef ENABLE_LOGGING
         if (verbosity > 0) {
