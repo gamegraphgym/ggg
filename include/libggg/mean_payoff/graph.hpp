@@ -25,9 +25,9 @@ DEFINE_GAME_GRAPH(MEAN_PAYOFF_VERTEX_FIELDS, MEAN_PAYOFF_EDGE_FIELDS, MEAN_PAYOF
 #undef MEAN_PAYOFF_GRAPH_FIELDS
 
 // Standard validators for mean-payoff graphs
-using graphs::player_utilities::PlayerValidator;
-using graphs::OutDegreeValidator;
 using graphs::NoDuplicateEdgesValidator;
+using graphs::OutDegreeValidator;
+using graphs::player_utilities::PlayerValidator;
 
 /**
  * @brief Standard composite validator for 2-player mean-payoff games
@@ -42,7 +42,6 @@ using StandardValidator = graphs::CompositeValidator<
     PlayerValidator<0, 1>,
     OutDegreeValidator<1>,
     NoDuplicateEdgesValidator>;
-
 
 } // namespace graph
 } // namespace mean_payoff

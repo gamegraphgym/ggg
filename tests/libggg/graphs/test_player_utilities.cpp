@@ -1,8 +1,8 @@
 #include "libggg/graphs/graph_concepts.hpp"
 #include "libggg/graphs/graph_utilities.hpp"
+#include "libggg/graphs/player_utilities.hpp"
 #include "libggg/mean_payoff/graph.hpp"
 #include "libggg/parity/graph.hpp"
-#include "libggg/graphs/player_utilities.hpp"
 #include <boost/test/unit_test.hpp>
 
 using namespace ggg::graphs::player_utilities;

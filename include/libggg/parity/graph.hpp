@@ -26,10 +26,10 @@ DEFINE_GAME_GRAPH(PARITY_VERTEX_FIELDS, PARITY_EDGE_FIELDS, PARITY_GRAPH_FIELDS)
 #undef PARITY_GRAPH_FIELDS
 
 // Standard validators for parity graphs
+using graphs::NoDuplicateEdgesValidator;
+using graphs::OutDegreeValidator;
 using graphs::player_utilities::PlayerValidator;
 using graphs::priority_utilities::PriorityValidator;
-using graphs::OutDegreeValidator;
-using graphs::NoDuplicateEdgesValidator;
 
 /**
  * @brief Standard composite validator for 2-player turn-basedparity games
@@ -46,7 +46,6 @@ using StandardValidator = graphs::CompositeValidator<
     PriorityValidator<0>,
     OutDegreeValidator<1>,
     NoDuplicateEdgesValidator>;
-
 
 } // namespace graph
 } // namespace parity

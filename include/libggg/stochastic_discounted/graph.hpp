@@ -1,8 +1,8 @@
 ﻿#pragma once
+#include "libggg/graphs/discount_utilities.hpp"
 #include "libggg/graphs/graph_utilities.hpp"
 #include "libggg/graphs/player_utilities.hpp"
 #include "libggg/graphs/probability_utilities.hpp"
-#include "libggg/graphs/discount_utilities.hpp"
 #include "libggg/graphs/validator.hpp"
 #include <boost/graph/depth_first_search.hpp>
 #include <boost/graph/filtered_graph.hpp>
@@ -81,21 +81,20 @@ struct CycleValidator {
             void back_edge(FilteredEdgeT, const FilteredGraphT &) { has_cycle = true; }
         } visitor;
         boost::depth_first_search(filtered_graph, boost::visitor(visitor));
-        
+
         if (visitor.has_cycle) {
             throw graphs::GraphValidationError(
-                "Cycle detected in player 1 vertices (not allowed in stochastic discounted games)"
-            );
+                "Cycle detected in player 1 vertices (not allowed in stochastic discounted games)");
         }
     }
 };
 
 // Standard validators for stochastic discounted graphs
+using graphs::NoDuplicateEdgesValidator;
+using graphs::OutDegreeValidator;
+using graphs::discount_utilities::DiscountValidator;
 using graphs::player_utilities::PlayerValidator;
 using graphs::probability_utilities::ProbabilityValidator;
-using graphs::discount_utilities::DiscountValidator;
-using graphs::OutDegreeValidator;
-using graphs::NoDuplicateEdgesValidator;
 
 // Specialized validator wrapper that applies probability and discount validators with filters
 struct FilteredValidator {
@@ -104,7 +103,7 @@ struct FilteredValidator {
         // Validate probabilities only for probabilistic vertices (player == -1)
         auto prob_filter = [](const GraphType &g, auto v) { return g[v].player == -1; };
         ProbabilityValidator::validate(graph, prob_filter);
-        
+
         // Validate discounts only for non-probabilistic vertices (player != -1)
         auto discount_filter = [](const GraphType &g, auto v) { return g[v].player != -1; };
         DiscountValidator::validate(graph, discount_filter);

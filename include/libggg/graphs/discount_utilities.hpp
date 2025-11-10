@@ -41,14 +41,14 @@ concept HasDiscountOnEdges = requires(const GraphType &graph) {
  */
 struct DiscountValidator {
     template <HasDiscountOnEdges GraphType, typename VertexFilter>
-    static void validate(const GraphType &graph, VertexFilter vertex_filter, 
-                        double min_discount = 0.0, double max_discount = 1.0) {
+    static void validate(const GraphType &graph, VertexFilter vertex_filter,
+                         double min_discount = 0.0, double max_discount = 1.0) {
         using Vertex = typename boost::graph_traits<GraphType>::vertex_descriptor;
         const auto [edges_begin, edges_end] = boost::edges(graph);
 
         for (const auto &edge : boost::make_iterator_range(edges_begin, edges_end)) {
             auto source = boost::source(edge, graph);
-            
+
             // Only check discount for vertices matching the filter
             if (vertex_filter(graph, source)) {
                 const double discount = graph[edge].discount;

@@ -1,7 +1,6 @@
 #include "libggg/parity/solvers/recursive.hpp"
 #include "libggg/utils/solver_wrapper.hpp"
 
-
 using namespace ggg::parity;
 
 // Unified macro to create a main function for the recursive parity solver
