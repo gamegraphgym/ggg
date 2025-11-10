@@ -1,6 +1,7 @@
 #pragma once
 
 #include "libggg/graphs/graph_utilities.hpp"
+#include "libggg/graphs/validator.hpp"
 #include "libggg/solutions/concepts.hpp"
 #include "libggg/solvers/solver.hpp"
 #include "libggg/utils/logging.hpp"
@@ -32,8 +33,10 @@ concept HasStatistics = requires(const SolutionType &solution) {
  * @brief Generic wrapper for game solvers
  * @template GraphType The graph type (ParityGraph, MeanPayoffGraph)
  * @template SolverType The solver class for the graph type
+ * @template ParserFunc The parser function type
+ * @template ValidatorFunc The validator function type
  */
-template <typename GraphType, typename SolverType>
+template <typename GraphType, typename SolverType, typename ParserFunc, typename ValidatorFunc>
 class GameSolverWrapper {
   private:
     struct ParseResult {
@@ -193,8 +196,7 @@ class GameSolverWrapper {
     }
 
   public:
-    template <typename ParserFunc>
-    static int run(int argc, char *argv[], ParserFunc parser_func) {
+    static int run(int argc, char *argv[], ParserFunc parser_func, ValidatorFunc validator_func) {
         try {
             auto parsed = parse_command_line(argc, argv);
             auto &vm = parsed.vm;
@@ -221,6 +223,11 @@ class GameSolverWrapper {
             }
 
             LGG_INFO("Successfully parsed game with ", boost::num_vertices(*graph), " vertices");
+
+            // Validate graph
+            LGG_DEBUG("Validating graph");
+            validator_func(*graph);
+            LGG_DEBUG("Graph validation passed");
 
             // Create solver and measure time
             SolverType solver;
@@ -261,6 +268,11 @@ class GameSolverWrapper {
             LGG_ERROR("ParseError caught: ", e.what());
             std::cerr << "Parse error: " << e.what() << std::endl;
             return 2;
+        } catch (const graphs::GraphValidationError &e) {
+            // Catch validation errors that might occur during parsing or other stages
+            LGG_ERROR("Validation error: ", e.what());
+            std::cerr << "Validation Error: " << e.what() << std::endl;
+            return 3;
         } catch (const std::exception &e) {
             LGG_ERROR("Exception caught: ", e.what());
             std::cerr << "Error: " << e.what() << std::endl;
@@ -270,15 +282,18 @@ class GameSolverWrapper {
 };
 
 /**
- * @brief Macro to create main functions for game solvers
+ * @brief Macro to create main functions for game solvers with validation
  * @param GraphType The game graph type (e.g., graphs::ParityGraph)
  * @param ParserFunc The parser function name (e.g., parse_Parity_graph)
+ * @param ValidatorType The validator type (e.g., StandardValidator or NoOpValidator)
  * @param SolverType The solver class
  */
-#define GGG_GAME_SOLVER_MAIN(GraphType, ParserFunc, SolverType)                                    \
-    int main(int argc, char *argv[]) {                                                             \
-        auto parser_func = [](auto &&input) { return ParserFunc(input); };                         \
-        return ggg::utils::GameSolverWrapper<GraphType, SolverType>::run(argc, argv, parser_func); \
+#define GGG_GAME_SOLVER_MAIN(GraphType, ParserFunc, ValidatorType, SolverType)                                             \
+    int main(int argc, char *argv[]) {                                                                                     \
+        auto parser_func = [](auto &&input) { return ParserFunc(input); };                                                 \
+        auto validator_func = [](const GraphType &graph) { ValidatorType::validate(graph); };                              \
+        return ggg::utils::GameSolverWrapper<GraphType, SolverType, decltype(parser_func), decltype(validator_func)>::run( \
+            argc, argv, parser_func, validator_func);                                                                      \
     }
 
 } // namespace utils
