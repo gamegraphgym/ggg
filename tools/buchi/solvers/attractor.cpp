@@ -5,4 +5,4 @@ using namespace ggg::parity;
 
 // Use the unified macro to create a main function for the Buchi solver
 // note that it uses parity graphs
-GGG_GAME_SOLVER_MAIN(graph::Graph, graph::parse, ggg::buechi::AttractorSolver)
+GGG_GAME_SOLVER_MAIN(graph::Graph, graph::parse, graph::StandardValidator, ggg::buechi::AttractorSolver)
