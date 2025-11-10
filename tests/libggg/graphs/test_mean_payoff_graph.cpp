@@ -40,15 +40,15 @@ BOOST_AUTO_TEST_CASE(TestMeanPayoffGameValidation) {
     auto v2 = add_vertex(graph, "v2", 1, 3);
     add_edge(graph, v1, v2, ""); // Add edge so vertices have outgoing edges
     add_edge(graph, v2, v1, ""); // Add edge so vertices have outgoing edges
-    BOOST_CHECK(is_valid(graph));
+    BOOST_CHECK_NO_THROW(StandardValidator::validate(graph));
 
     // Add vertex without outgoing edges, check validity
     auto v3 = add_vertex(graph, "v3", 0, 0);
-    BOOST_CHECK(!is_valid(graph)); // should return false
+    BOOST_CHECK_THROW(StandardValidator::validate(graph), ggg::graphs::GraphValidationError); // should throw
 
     // Fix the deadlock
     add_edge(graph, v3, v1, "");
-    BOOST_CHECK(is_valid(graph));
+    BOOST_CHECK_NO_THROW(StandardValidator::validate(graph));
 }
 
 BOOST_AUTO_TEST_CASE(TestBoostMeanPayoffParsing) {
