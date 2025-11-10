@@ -48,35 +48,44 @@ inline Vertex find_vertex(const Graph &g, const std::string &name) {
     return (it != ve) ? *it : boost::graph_traits<Graph>::null_vertex();
 }
 
-struct VertexFilter {
-    const Graph *g{};
-    VertexFilter() = default;
-    explicit VertexFilter(const Graph &graph) : g(&graph) {}
-    bool operator()(Vertex v) const { return (*g)[v].player == 1; }
-};
-
-struct CycleDetector : public boost::dfs_visitor<> {
-    bool has_cycle = false;
-    template <typename EdgeT, typename GraphT>
-    void back_edge(EdgeT, const GraphT &) {
-        has_cycle = true;
-    }
-};
-
 /**
- * @brief Validator for cycles in filtered vertices
+ * @brief Validator for cycles in player 1 vertices
  *
- * Checks that vertices matching the filter predicate form an acyclic subgraph.
- * This is used to ensure that player 1 vertices don't form cycles in stochastic games.
+ * Checks that player 1 vertices form an acyclic subgraph.
+ * This is required for stochastic discounted games.
  */
 struct CycleValidator {
     template <typename GraphType>
     static void validate(const GraphType &graph) {
-        auto fg = boost::make_filtered_graph(graph, boost::keep_all{}, VertexFilter(graph));
-        CycleDetector vis{};
-        boost::depth_first_search(fg, boost::visitor(vis));
-        if (vis.has_cycle) {
-            throw graphs::GraphValidationError("Cycle detected in player 1 vertices (not allowed in stochastic discounted games)");
+        // Local vertex filter functor for player 1 vertices (default-constructible as required by Boost)
+        struct LocalPlayer1Filter {
+            const GraphType *graph_ptr;
+            LocalPlayer1Filter() : graph_ptr(nullptr) {}
+            explicit LocalPlayer1Filter(const GraphType &g) : graph_ptr(&g) {}
+            bool operator()(typename boost::graph_traits<GraphType>::vertex_descriptor v) const {
+                return graph_ptr && (*graph_ptr)[v].player == 1;
+            }
+        };
+
+        // Create filtered graph showing only player 1 vertices
+        auto filtered_graph = boost::make_filtered_graph(
+            graph,
+            boost::keep_all{},
+            LocalPlayer1Filter(graph));
+
+        // Local DFS visitor to detect back edges (cycles) without member templates
+        using FilteredGraphT = decltype(filtered_graph);
+        using FilteredEdgeT = typename boost::graph_traits<FilteredGraphT>::edge_descriptor;
+        struct LocalCycleDetector : public boost::dfs_visitor<> {
+            bool has_cycle = false;
+            void back_edge(FilteredEdgeT, const FilteredGraphT &) { has_cycle = true; }
+        } visitor;
+        boost::depth_first_search(filtered_graph, boost::visitor(visitor));
+        
+        if (visitor.has_cycle) {
+            throw graphs::GraphValidationError(
+                "Cycle detected in player 1 vertices (not allowed in stochastic discounted games)"
+            );
         }
     }
 };
