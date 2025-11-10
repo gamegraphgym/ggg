@@ -1,8 +1,7 @@
 #pragma once
 #include "libggg/graphs/graph_utilities.hpp"
-#include <algorithm>
-#include <set>
-#include <stdexcept>
+#include "libggg/graphs/player_utilities.hpp"
+#include "libggg/graphs/priority_utilities.hpp"
 
 namespace ggg {
 namespace parity {
@@ -26,35 +25,28 @@ DEFINE_GAME_GRAPH(PARITY_VERTEX_FIELDS, PARITY_EDGE_FIELDS, PARITY_GRAPH_FIELDS)
 #undef PARITY_EDGE_FIELDS
 #undef PARITY_GRAPH_FIELDS
 
-// Utilities migrated from legacy graphs/parity_graph.hpp
-inline bool is_valid(const Graph &graph) {
-    const auto [vertices_begin, vertices_end] = boost::vertices(graph);
-    return std::all_of(vertices_begin, vertices_end, [&graph](const auto &vertex) {
-        if (graph[vertex].player != 0 && graph[vertex].player != 1) {
-            return false;
-        }
-        if (graph[vertex].priority < 0) {
-            return false;
-        }
-        return boost::out_degree(vertex, graph) > 0;
-    });
-}
+// Standard validators for parity graphs
+using graphs::player_utilities::PlayerValidator;
+using graphs::priority_utilities::PriorityValidator;
+using graphs::OutDegreeValidator;
+using graphs::NoDuplicateEdgesValidator;
 
-inline void check_no_duplicate_edges(const Graph &graph) {
-    std::set<std::pair<Vertex, Vertex>> seen_edges;
-    const auto [edges_begin, edges_end] = boost::edges(graph);
-    for (const auto &edge : boost::make_iterator_range(edges_begin, edges_end)) {
-        auto source = boost::source(edge, graph);
-        auto target = boost::target(edge, graph);
-        const auto edge_key = std::make_pair(source, target);
-        if (!seen_edges.insert(edge_key).second) {
-            std::string source_name = graph[source].name;
-            std::string target_name = graph[target].name;
-            throw std::runtime_error("Duplicate edge found between vertices '" +
-                                     source_name + "' and '" + target_name + "'");
-        }
-    }
-}
+/**
+ * @brief Standard composite validator for 2-player turn-basedparity games
+ *
+ * This validator checks:
+ * - Players are either 0 or 1
+ * - Priorities are non-negative
+ * - All vertices have at least one outgoing edge
+ * - No duplicate edges exist
+ */
+using StandardValidator = graphs::CompositeValidator<
+    Graph,
+    PlayerValidator<0, 1>,
+    PriorityValidator<0>,
+    OutDegreeValidator<1>,
+    NoDuplicateEdgesValidator>;
+
 
 } // namespace graph
 } // namespace parity
