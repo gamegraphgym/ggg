@@ -32,7 +32,7 @@ using graphs::player_utilities::PlayerValidator;
 using graphs::priority_utilities::PriorityValidator;
 
 /**
- * @brief Standard composite validator for 2-player turn-basedparity games
+ * @brief Standard composite validator for 2-player turn-based parity games
  *
  * This validator checks:
  * - Players are either 0 or 1

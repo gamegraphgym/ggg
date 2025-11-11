@@ -268,7 +268,7 @@ class GameSolverWrapper {
             LGG_ERROR("ParseError caught: ", e.what());
             std::cerr << "Parse error: " << e.what() << std::endl;
             return 2;
-        } catch (const graphs::GraphValidationError &e) {
+        } catch (const ggg::graphs::GraphValidationError &e) {
             // Catch validation errors that might occur during parsing or other stages
             LGG_ERROR("Validation error: ", e.what());
             std::cerr << "Validation Error: " << e.what() << std::endl;
