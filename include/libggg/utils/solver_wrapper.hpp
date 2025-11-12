@@ -1,5 +1,6 @@
 #pragma once
 
+#include "libggg/graphs/graph_utilities.hpp"
 #include "libggg/solutions/concepts.hpp"
 #include "libggg/solvers/solver.hpp"
 #include "libggg/utils/logging.hpp"
@@ -109,17 +110,20 @@ class GameSolverWrapper {
 
         // If help requested, print a synopsis that includes the positional input parameter
         if (vm.count("help")) {
-            // Usage synopsis: program [options] <input>
             std::cout << "Usage: " << argv[0] << " [options] <input>\n\n";
             std::cout << desc << std::endl;
             exit(0);
         }
 
-        // Determine input file: first positional token if provided; default to stdin ("-")
-        std::string input_file = "-";
-        if (!unrecognized.empty()) {
-            input_file = unrecognized.front();
+        // Determine input file: first positional token (required). Do not accept a missing positional.
+        if (unrecognized.empty()) {
+            std::cerr << "Error: missing required positional argument <input>\n";
+            std::cerr << "Usage: " << argv[0] << " [options] <input>\n\n";
+            std::cerr << desc << std::endl;
+            exit(2);
         }
+
+        std::string input_file = unrecognized.front();
 
 #ifdef ENABLE_LOGGING
         if (verbosity > 0) {
@@ -216,12 +220,6 @@ class GameSolverWrapper {
                 graph = parser_func(input_file);
             }
 
-            if (!graph) {
-                LGG_ERROR("Failed to parse input game");
-                std::cerr << "Error: Failed to parse input game" << std::endl;
-                return 1;
-            }
-
             LGG_INFO("Successfully parsed game with ", boost::num_vertices(*graph), " vertices");
 
             // Create solver and measure time
@@ -259,6 +257,10 @@ class GameSolverWrapper {
 
             return 0;
 
+        } catch (const ggg::graphs::ParseError &e) {
+            LGG_ERROR("ParseError caught: ", e.what());
+            std::cerr << "Parse error: " << e.what() << std::endl;
+            return 2;
         } catch (const std::exception &e) {
             LGG_ERROR("Exception caught: ", e.what());
             std::cerr << "Error: " << e.what() << std::endl;
