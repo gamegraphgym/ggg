@@ -15,6 +15,7 @@ add_executable(test_ggg
     libggg/graphs/test_priority_utilities.cpp
     libggg/graphs/test_player_utilities.cpp
     libggg/graphs/test_stochastic_discounted_graph.cpp
+    libggg/graphs/test_parser.cpp
     main.cpp
 )
 
