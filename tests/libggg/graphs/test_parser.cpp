@@ -151,4 +151,59 @@ digraph TestGraph {
     BOOST_CHECK_EQUAL(boost::num_edges(*graph), 1);
 }
 
+BOOST_AUTO_TEST_CASE(TestParseMalformedLineWithEdgeReference) {
+    // This tests Boost GraphViz parser behavior with malformed syntax
+    // The line "asdfasdasdasd //v4 [player=0, priority=0];" is invalid
+    // Boost's parser is lenient and does NOT throw exceptions for syntax errors
+    // It ignores malformed lines and may auto-create vertices with default values for attributes
+    //
+    // IMPORTANT: This is a known limitation of Boost's GraphViz parser.
+    // To catch malformed DOT files, use validators that check for:
+    // - Empty vertex names
+    // - Sentinel values (-1) in required fields  
+    // - Out-degree constraints
+    std::string dot_content = R"(
+digraph TestGraph {
+    v0 [name="v0", player=1, priority=0];
+    asdfasdasdasd //v4 [player=0, priority=0];
+    v0->v4  [label="edge_to_undefined"];
+}
+)";
+
+    std::istringstream input(dot_content);
+    
+    // Boost's parser won't throw - it creates vertices with sentinel defaults
+    auto graph = test_graph::parse(input);
+    BOOST_REQUIRE(graph != nullptr);
+    
+    // Boost creates: 
+    // - An unnamed vertex (from malformed line)
+    // - v0 (properly defined)
+    // - Another unnamed vertex (auto-created v4 referenced by edge)
+    BOOST_TEST_MESSAGE("Number of vertices: " + std::to_string(boost::num_vertices(*graph)));
+    {
+        const auto [v_begin, v_end] = boost::vertices(*graph);
+        for (auto v : boost::make_iterator_range(v_begin, v_end)) {
+            BOOST_TEST_MESSAGE("Vertex: name='" + (*graph)[v].name + 
+                              "', player=" + std::to_string((*graph)[v].player) +
+                              ", priority=" + std::to_string((*graph)[v].priority));
+        }
+    }
+    
+    BOOST_CHECK_EQUAL(boost::num_edges(*graph), 1);
+    
+    // Multiple vertices will have sentinel values due to malformed input
+    int vertices_with_sentinels = 0;
+    {
+        const auto [vb, ve] = boost::vertices(*graph);
+        for (auto v : boost::make_iterator_range(vb, ve)) {
+            if ((*graph)[v].player == -1 && (*graph)[v].priority == -1) {
+                vertices_with_sentinels++;
+            }
+        }
+    }
+    // Expect 2 vertices with sentinel values (from malformed line and auto-created v4)
+    BOOST_CHECK_EQUAL(vertices_with_sentinels, 2);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
