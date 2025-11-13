@@ -160,30 +160,37 @@ discount_utilities::DiscountValidator::validate(graph, discount_filter, 0.5, 0.9
 ### Available Validators
 
 **Player validators** (`graphs/player_utilities.hpp`):
+
 - `PlayerValidator<AllowedPlayers...>` - checks player values are in the specified list
 
 **Priority validators** (`graphs/priority_utilities.hpp`):
+
 - `PriorityValidator<MinPriority>` - checks priorities >= minimum value (default: 0)
 
 **Probability validators** (`graphs/probability_utilities.hpp`):
+
 - `ProbabilityValidator` - checks probabilities are in (0,1] and sum to 1.0
   - Supports filtering: `validate(graph, filter)` to check only specific vertices
   - Default: `validate(graph)` checks all vertices
 
 **Discount validators** (`graphs/discount_utilities.hpp`):
+
 - `DiscountValidator` - checks discount factors are in configurable range (default: (0,1))
   - Supports filtering: `validate(graph, filter, min, max)` to check only specific vertices
   - Default: `validate(graph)` checks all vertices
 
 **Weight validators** (`graphs/weight_utilities.hpp`):
+
 - `EdgeWeightValidator<MinWeight, MaxWeight>` - checks edge weights are in range
 - `VertexWeightValidator<MinWeight, MaxWeight>` - checks vertex weights are in range
 
 **Edge validators** (`graphs/graph_utilities.hpp`):
+
 - `OutDegreeValidator<MinDegree>` - checks minimum outgoing edges per vertex (default: 1)
 - `NoDuplicateEdgesValidator` - ensures no duplicate edges between vertices
 
 **Utility validators** (`graphs/validator.hpp`):
+
 - `NoOpValidator` - accepts any graph without checks
 - `CompositeValidator<GraphType, Validators...>` - runs multiple validators in sequence
 
@@ -207,6 +214,7 @@ GGG_GAME_SOLVER_MAIN(
 ```
 
 The validator runs automatically after parsing and before solving. If validation fails, a clear error message is displayed and the program exits with a non-zero status code. You can use:
+
 - `graph::StandardValidator` for standard validation rules
 - Custom validators for specific constraints
 - `ggg::graphs::NoOpValidator` to skip validation entirely
@@ -262,6 +270,7 @@ GGG_GAME_SOLVER_MAIN(
 ```
 
 The macro generates a complete `main()` function that:
+
 1. Parses command-line arguments (supports `--csv`, `--time-only`, `--solver-name`)
 2. Reads the graph from stdin using the provided parser
 3. Validates the graph using the specified validator
@@ -269,6 +278,7 @@ The macro generates a complete `main()` function that:
 5. Outputs the solution
 
 The third parameter specifies which validator to use:
+
 - `graph::StandardValidator` - standard validation rules for the game type
 - Custom validator types - for specific constraints
 - `ggg::graphs::NoOpValidator` - skip validation entirely

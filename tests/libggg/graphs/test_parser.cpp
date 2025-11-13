@@ -6,8 +6,8 @@
 namespace test_graph {
 
 #define TEST_VERTEX_FIELDS(X) \
-    X(std::string, name, "")      \
-    X(int, player, -1)            \
+    X(std::string, name, "")  \
+    X(int, player, -1)        \
     X(int, priority, -1)
 
 #define TEST_EDGE_FIELDS(X) \
@@ -54,13 +54,13 @@ digraph TestGraph {
 )";
 
     std::istringstream input(dot_content);
-    
+
     // Parser allows this - v3 will be auto-created with default (sentinel) values
     auto graph = test_graph::parse(input);
     BOOST_REQUIRE(graph != nullptr);
     BOOST_CHECK_EQUAL(boost::num_vertices(*graph), 3);
     BOOST_CHECK_EQUAL(boost::num_edges(*graph), 1);
-    
+
     // Find v3 and verify it has default/sentinel values
     bool found_v3 = false;
     const auto [vertices_begin, vertices_end] = boost::vertices(*graph);
@@ -69,7 +69,7 @@ digraph TestGraph {
         if ((*graph)[v].name == "vertex1" || (*graph)[v].name == "vertex2") {
             continue;
         }
-        
+
         // This should be v3 with default values
         found_v3 = true;
         BOOST_CHECK_EQUAL((*graph)[v].name, "");
@@ -92,11 +92,11 @@ digraph TestGraph {
 )";
 
     std::istringstream input(dot_content);
-    
+
     // Parse the graph (will succeed with sentinel value for missing player)
     auto graph = test_graph::parse(input);
     BOOST_REQUIRE(graph != nullptr);
-    
+
     // Find v2 and check if player has sentinel value -1 (indicating it wasn't set)
     bool found_v2 = false;
     const auto [vertices_begin, vertices_end] = boost::vertices(*graph);
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(TestParseInvalidDOTSyntax) {
     std::string dot_content = "This is not DOT format at all!";
 
     std::istringstream input(dot_content);
-    
+
     // Should throw ParseError due to completely invalid format
     BOOST_CHECK_THROW(test_graph::parse(input), ggg::graphs::ParseError);
 }

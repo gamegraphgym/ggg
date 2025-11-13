@@ -11,7 +11,6 @@
 #include <map>
 #include <queue>
 #include <set>
-#include <stdexcept>
 
 namespace ggg {
 namespace stochastic_discounted {

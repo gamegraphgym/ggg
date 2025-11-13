@@ -13,8 +13,8 @@ using MeanPayoffGraph = ggg::mean_payoff::graph::Graph;
 
 // Define a test graph type with priority properties for testing the generic utilities
 #define TEST_VERTEX_FIELDS(X) \
-    X(std::string, name, "")      \
-    X(int, priority, -999)          \
+    X(std::string, name, "")  \
+    X(int, priority, -999)    \
     X(double, value, 0.0)
 
 #define TEST_EDGE_FIELDS(X) \
