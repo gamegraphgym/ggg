@@ -253,8 +253,10 @@ struct ParseError : public std::runtime_error {
         auto g = std::make_shared<Graph>();                                                           \
         boost::dynamic_properties dp(boost::ignore_other_properties);                                 \
         register_dynamic_properties(dp, *g);                                                          \
-        if (!boost::read_graphviz(in, *g, dp, "name")) {                                              \
-            throw ggg::graphs::ParseError("Failed to parse DOT format");                              \
+        try {                                                                                         \
+            boost::read_graphviz(in, *g, dp, "node_id");                                              \
+        } catch (const std::exception &e) {                                                           \
+            throw ggg::graphs::ParseError(std::string("DOT parsing error: ") + e.what());             \
         }                                                                                             \
         return g;                                                                                     \
     }                                                                                                 \
