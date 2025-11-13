@@ -19,14 +19,14 @@ namespace graph {
 
 // Property field lists
 #define STOCHASTIC_DISCOUNTED_VERTEX_FIELDS(X) \
-    X(std::string, name)                       \
-    X(int, player)
+    X(std::string, name, "")                   \
+    X(int, player, -1)
 
 #define STOCHASTIC_DISCOUNTED_EDGE_FIELDS(X) \
-    X(std::string, label)                    \
-    X(double, weight)                        \
-    X(double, discount)                      \
-    X(double, probability)
+    X(std::string, label, "")                \
+    X(double, weight, 0.0)                   \
+    X(double, discount, 0.0)                 \
+    X(double, probability, 0.0)
 
 #define STOCHASTIC_DISCOUNTED_GRAPH_FIELDS(X) /* none */
 

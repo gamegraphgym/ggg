@@ -115,19 +115,19 @@ struct ParseError : public std::runtime_error {
 };
 
 // --- Helper macros for property struct field generation ---
-#define PROPERTY_STRUCT_FIELD(type, name) type name;
+#define PROPERTY_STRUCT_FIELD(type, name, default_val) type name{default_val};
 
 // These macros work within the context of register_*_dynamic_properties functions
 // where dp, g, and Props are in scope
-#define REGISTER_VERTEX_FIELD_IMPL(type, name) dp.property(#name, boost::get(&Props::name, g));
-#define REGISTER_EDGE_FIELD_IMPL(type, name) dp.property(#name, boost::get(&Props::name, g));
-#define REGISTER_GRAPH_FIELD_IMPL(type, name) dp.property(#name, boost::get(&Props::name, g));
+#define REGISTER_VERTEX_FIELD_IMPL(type, name, ...) dp.property(#name, boost::get(&Props::name, g));
+#define REGISTER_EDGE_FIELD_IMPL(type, name, ...) dp.property(#name, boost::get(&Props::name, g));
+#define REGISTER_GRAPH_FIELD_IMPL(type, name, ...) dp.property(#name, boost::get(&Props::name, g));
 
 // Helper macros for generating add_vertex and add_edge parameters
-#define ADD_VERTEX_PARAM(type, name) , const type &name
-#define ADD_VERTEX_ASSIGN(type, name) v.name = name;
-#define ADD_EDGE_PARAM(type, name) , const type &name
-#define ADD_EDGE_ASSIGN(type, name) e.name = name;
+#define ADD_VERTEX_PARAM(type, name, ...) , const type &name
+#define ADD_VERTEX_ASSIGN(type, name, ...) v.name = name;
+#define ADD_EDGE_PARAM(type, name, ...) , const type &name
+#define ADD_EDGE_ASSIGN(type, name, ...) e.name = name;
 
 /**
  * @def DEFINE_GAME_GRAPH(VERTEX_FIELDS, EDGE_FIELDS, GRAPH_FIELDS)

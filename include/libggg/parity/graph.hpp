@@ -9,12 +9,12 @@ namespace graph {
 
 // Parity graph property field lists
 #define PARITY_VERTEX_FIELDS(X) \
-    X(std::string, name)        \
-    X(int, player)              \
-    X(int, priority)
+    X(std::string, name, "")        \
+    X(int, player, -1)              \
+    X(int, priority, -1)
 
 #define PARITY_EDGE_FIELDS(X) \
-    X(std::string, label)
+    X(std::string, label, "")
 
 #define PARITY_GRAPH_FIELDS(X) /* none */
 

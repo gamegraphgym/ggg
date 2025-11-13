@@ -8,12 +8,12 @@ namespace graph {
 
 // Mean-payoff graph property field lists
 #define MEAN_PAYOFF_VERTEX_FIELDS(X) \
-    X(std::string, name)             \
-    X(int, player)                   \
-    X(int, weight)
+    X(std::string, name, "")             \
+    X(int, player, -1)                   \
+    X(int, weight, 0)
 
 #define MEAN_PAYOFF_EDGE_FIELDS(X) \
-    X(std::string, label)
+    X(std::string, label, "")
 
 #define MEAN_PAYOFF_GRAPH_FIELDS(X) /* none */
 

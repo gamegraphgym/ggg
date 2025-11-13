@@ -10,19 +10,20 @@ Game Graph Gym uses X-macros to automatically generate graph types and utility f
 // my_graph.hpp
 #include <libggg/graphs/graph_utilities.hpp>
 
-// Define vertex properties
+// Define vertex properties with explicit default values
+// Each field requires: F(type, name, default_value)
 #define VERTEX_FIELDS(F) \
-    F(std::string, name) \
-    F(int, player) \
-    F(int, custom_property)
+    F(std::string, name, "") \
+    F(int, player, -1) \
+    F(int, custom_property, 0)
 
-// Define edge properties
+// Define edge properties with explicit default values
 #define EDGE_FIELDS(F) \
-    F(std::string, label)
+    F(std::string, label, "")
 
-// Define graph properties (if any)
+// Define graph properties with explicit default values (if any)
 #define GRAPH_FIELDS(F) \
-    F(std::string, title)
+    F(std::string, title, "")
 
 // Generate the complete graph type with utilities
 DEFINE_GAME_GRAPH(VERTEX_FIELDS, EDGE_FIELDS, GRAPH_FIELDS)
