@@ -1,4 +1,4 @@
-# Usage Guide {#quick_start}
+# Quick Start {#quick_start}
 
 ## Prerequisites
 

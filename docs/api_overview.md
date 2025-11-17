@@ -1,4 +1,4 @@
-# API Guide {#api-guide}
+# API Guide {#api_overview}
 
 This guide covers the core APIs for extending Game Graph Gym with new game types and solvers.
 
@@ -292,13 +292,13 @@ Solution types are named `XSolution`, where the prefix `X` indicates what is enc
 initial state only (`X=I`), winning regions (`R`), a winning strategy (`S`), and quantitative (vertex) values (`Q`).
 For instance, `RSSolution<graphs::ParityGraph>`C++ is a type of solution operating on `ParityGraph`s and which can compute a winning `R`egion as well as synthesize a `S`trategy. In more details,
 
-### `ISolution<GraphType>`
+### ISolution<GraphType>
 
 The most basic solution type on `<GraphType>` graphs. It records only the initial winner label for convenience and provides serialization for solution payloads. There is no solved/valid flag in solutions; solvers either return a result or signal errors via logs/exceptions.
 
 See also: [`include/libggg/solutions/isolution.hpp`](https://github.com/gamegraphgym/ggg/blob/main/include/libggg/solutions/isolution.hpp)
 
-### `RSolution<GraphType>`
+### RSolution<GraphType>
 
 Contains info about winning **R**egions.
 
@@ -311,7 +311,7 @@ In addition to the inherited methods of `ISolution`, solutions of this kind impl
 
 See also: [`include/libggg/solutions/rsolution.hpp`](https://github.com/gamegraphgym/ggg/blob/main/include/libggg/solutions/rsolution.hpp)
 
-### `SSolution<GraphType>`
+### SSolution<GraphType>
 
 Contains info about a winning **S**trategy
 
@@ -325,7 +325,7 @@ There is actually a second generic parameter specifying the type of strategy con
 
 See also: [`include/libggg/solutions/ssolution.hpp`](https://github.com/gamegraphgym/ggg/blob/main/include/libggg/solutions/ssolution.hpp)
 
-### `QSolution<GraphType, ValueType>`
+### QSolution<GraphType, ValueType>
 
 Contains info about **Q**ualitative (vertex) values of type `ValueType`.
 

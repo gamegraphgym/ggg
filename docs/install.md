@@ -1,4 +1,4 @@
-# Building Game Graph Gym {#building}
+# Building Game Graph Gym {#install}
 
 This page provides detailed instructions for building Game Graph Gym with various configurations.
 Here, "libggg" refers to the library, "ggg" is the short name for the project as well as the c++ namespace stuff is defined in.

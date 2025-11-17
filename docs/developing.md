@@ -8,7 +8,7 @@ The repository is organized as follows:
 
 ```text
 .
-├── docs/         # Source files for the documentation (built with MkDocs)
+├── docs/         # Source files for the documentation
 ├── cmake/        # CMake configuration modules
 ├── include/      # Public C++ headers for the library
 ├── src/          # Implementations
@@ -29,14 +29,14 @@ cmake -S . -B build \
 cmake --build build
 ```
 
-!!! note "Language Server Support"
-
-    To use [clangd](https://clangd.llvm.org/) for C++ language server support, generate a `compile_commands.json` file:
-
-    ```bash
-    cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-    ln -s build/compile_commands.json .
-    ```
+> [!note]
+> Language Server Support  
+> To use [clangd](https://clangd.llvm.org/) for C++ language server support, generate a `compile_commands.json` file:
+>
+> ```bash
+> cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+> ln -s build/compile_commands.json .
+> ```
 
 ## Code Style Guidelines
 
