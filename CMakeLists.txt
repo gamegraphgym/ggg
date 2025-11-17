@@ -197,3 +197,6 @@ set(CPACK_DEBIAN_LIBS_PACKAGE_NAME "gamegraphgym-libs")
 set(CPACK_DEBIAN_BIN_PACKAGE_NAME "gamegraphgym-bin")
 
 include(CPack)
+
+# Documentation (Doxygen) - configuration extracted to cmake/Doxygen.cmake
+include(cmake/Doxygen.cmake)

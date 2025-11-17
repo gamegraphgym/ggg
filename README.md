@@ -78,12 +78,11 @@ The above serve as proof-of concept as much as starting point for a collection o
 
 ## Documentation
 
-The complete documentation is built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/). From within the project root:
+The complete documentation is configured via CMake and built with doxygen.
 
 ```bash
-pip install mkdocs-material
-mkdocs serve  # Development server at localhost:8000
-mkdocs build  # Static site in site/ directory
+cmake -S . -B build -DBUILD_DOCS=ON
+cmake --build build --target docs
 ```
 
 [GOG-book]: https://arxiv.org/abs/2305.10546

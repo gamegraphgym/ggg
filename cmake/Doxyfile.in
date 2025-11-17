@@ -1,0 +1,67 @@
+# Doxygen configuration for Game Graph Gym (GGG)
+# Generated via CMake to integrate doxygen-awesome-css
+
+# Project
+PROJECT_NAME           = "Game Graph Gym"
+#PROJECT_BRIEF          = "C++20 framework for implementing and benchmarking solvers for games on graphs"
+OUTPUT_DIRECTORY       = @CMAKE_BINARY_DIR@/docs
+CREATE_SUBDIRS         = YES
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+GENERATE_XML           = NO
+QUIET                  = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_AS_ERROR          = NO
+
+# Inputs (absolute paths from source tree)
+INPUT                  = @CMAKE_SOURCE_DIR@/include, @CMAKE_SOURCE_DIR@/src, @CMAKE_SOURCE_DIR@/tools, @CMAKE_SOURCE_DIR@/docs
+RECURSIVE              = YES
+EXCLUDE                = @CMAKE_SOURCE_DIR@/build @CMAKE_SOURCE_DIR@/.git @CMAKE_SOURCE_DIR@/.github @CMAKE_SOURCE_DIR@/external @CMAKE_SOURCE_DIR@/third_party @CMAKE_SOURCE_DIR@/cmake
+EXCLUDE_PATTERNS       = */CMakeFiles/* */build/* */cmake/*
+
+# Markdown
+MARKDOWN_SUPPORT       = YES
+USE_MDFILE_AS_MAINPAGE = @CMAKE_SOURCE_DIR@/docs/index.md
+MARKDOWN_ID_STYLE      = GITHUB
+AUTOLINK_SUPPORT       = YES
+
+# Extraction policy
+# Show all entities from headers and sources (useful for implementation docs)
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+HIDE_UNDOC_MEMBERS     = NO
+HIDE_UNDOC_CLASSES     = NO
+INLINE_SOURCES         = NO
+SOURCE_BROWSER         = YES
+
+# Diagrams (Graphviz)
+HAVE_DOT               = NO
+DOT_NUM_THREADS        = 0
+CALL_GRAPH             = NO
+CALLER_GRAPH           = NO
+DOT_GRAPH_MAX_NODES    = 64
+UML_LOOK               = YES
+
+# HTML output options
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_PATH_NAMES        = NO
+TREEVIEW_WIDTH         = 250
+HTML_DYNAMIC_SECTIONS  = NO
+
+# Custom layout file
+LAYOUT_FILE            = @CMAKE_SOURCE_DIR@/cmake/DoxygenLayout.xml
+
+# Theme: doxygen-awesome
+HTML_EXTRA_STYLESHEET  = @DOXYGEN_AWESOME_CSS@ @DOXYGEN_AWESOME_SIDEBAR@
+
+# Preprocessor
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = NO
+EXPAND_ONLY_PREDEF     = NO
+
+# Misc
+ALWAYS_DETAILED_SEC    = NO
+
+FULL_SIDEBAR = NO
