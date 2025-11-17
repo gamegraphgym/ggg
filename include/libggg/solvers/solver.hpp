@@ -33,8 +33,8 @@ namespace solvers {
 
 /**
  * @brief Generic solver interface for game graphs
- * @template GraphType The graph type (ParityGraph, mean_payoff::graph::Graph)
- * @template SolutionType The solution type returned by the solver
+ * @tparam GraphType The graph type (e.g. mean_payoff::graph::Graph)
+ * @tparam SolutionType The solution type returned by the solver
  */
 template <typename GraphType, typename SolutionType>
 class Solver {

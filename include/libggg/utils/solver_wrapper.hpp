@@ -31,10 +31,10 @@ concept HasStatistics = requires(const SolutionType &solution) {
 
 /**
  * @brief Generic wrapper for game solvers
- * @template GraphType The graph type (ParityGraph, MeanPayoffGraph)
- * @template SolverType The solver class for the graph type
- * @template ParserFunc The parser function type
- * @template ValidatorFunc The validator function type
+ * @tparam GraphType The graph type (ParityGraph, MeanPayoffGraph)
+ * @tparam SolverType The solver class for the graph type
+ * @tparam ParserFunc The parser function type
+ * @tparam ValidatorFunc The validator function type
  */
 template <typename GraphType, typename SolverType, typename ParserFunc, typename ValidatorFunc>
 class GameSolverWrapper {

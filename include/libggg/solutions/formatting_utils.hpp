@@ -22,9 +22,9 @@ namespace detail {
  * @tparam Map      Map-like container type; element type must be pair-like with key convertible to std::size_t
  * @tparam ValToJson Callable with signature std::string(T const&) that produces a JSON fragment for a mapped value
  * @param key       JSON member name to associate with the produced object (returned as first)
- * @param m         The map to serialize; each element is emitted as "<index>": <value-json>
+ * @param m         The map to serialize; each element is emitted as "&lt;index&gt;": &lt;value-json&gt;
  * @param val_to_json Callable used to convert each mapped value into a JSON fragment string
- * @returns Pair {key, json_object_string} where json_object_string is e.g. {"0": <v0>, "1": <v1>}
+ * @returns Pair {key, json_object_string} where json_object_string is e.g. {"0": &lt;v0&gt;, "1": &lt;v1&gt;}
  * @note Keys are cast to std::size_t. The produced value strings are inserted verbatim and should be valid JSON.
  */
 template <typename Vertex, typename Map, typename ValToJson>
@@ -46,7 +46,7 @@ inline std::pair<std::string, std::string> map_member_json(const std::string &ke
  * @brief Merge preformatted name/json-fragment pairs into a single JSON object string.
  * @param items initializer_list of {name, json_fragment} pairs. `name` will be quoted;
  *              `json_fragment` is inserted verbatim as the member value.
- * @returns A std::string like {"name1":<json1>,"name2":<json2>}
+ * @returns A std::string like {"name1":&lt;json1&gt;,"name2":&lt;json2&gt;}
  * @note No escaping or validation is performed on json_fragment content.
  */
 inline std::string merge_json_members(std::initializer_list<std::pair<std::string, std::string>> items) {

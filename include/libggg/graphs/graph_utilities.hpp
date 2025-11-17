@@ -150,13 +150,14 @@ struct ParseError : public std::runtime_error {
  * @note Doxygen cannot see the expanded declarations produced by this macro. This macro-level
  *       documentation describes the API surface the macro generates in the call-site namespace.
  *
- * @example
+ * @code
  * #define VERTEX_FIELDS(F) \
  *     F(std::string, name) \
  *     F(int, value)
  * #define EDGE_FIELDS(F)   F(double, weight)
  * #define GRAPH_FIELDS(F)  F(std::string, title)
  * DEFINE_GAME_GRAPH(VERTEX_FIELDS, EDGE_FIELDS, GRAPH_FIELDS)
+ * @endcode
  */
 #define DEFINE_GAME_GRAPH(VERTEX_FIELDS, EDGE_FIELDS, GRAPH_FIELDS)                                   \
     /* Property structs (internal linkage in call-site namespace) */                                  \

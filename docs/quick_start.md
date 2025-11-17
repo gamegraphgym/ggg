@@ -67,4 +67,4 @@ int main() {
 
 ## Next Steps
 
-- Read the [detailed build instructions](building.md)
+- Read the [detailed build instructions](@ref install)

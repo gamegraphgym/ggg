@@ -233,7 +233,8 @@ inline void compress_priorities(GraphType &graph) {
  * @tparam GraphType Any graph type satisfying HasPriorityOnVertices concept
  * @param graph The graph to analyze
  * @return Vector of vertices sorted by priority (lowest to highest)
- * @complexity O(V log V) where V is the number of vertices
+ * 
+ * Time complexity: O(V log V) where V is the number of vertices
  */
 template <HasPriorityOnVertices GraphType>
 inline std::vector<typename boost::graph_traits<GraphType>::vertex_descriptor>
@@ -262,7 +263,8 @@ get_vertices_by_priority_ascending(const GraphType &graph) {
  * @tparam GraphType Any graph type satisfying HasPriorityOnVertices concept
  * @param graph The graph to analyze
  * @return Vector of vertices sorted by priority (highest to lowest)
- * @complexity O(V log V) where V is the number of vertices
+ * 
+ * Time complexity: O(V log V) where V is the number of vertices
  */
 template <HasPriorityOnVertices GraphType>
 inline std::vector<typename boost::graph_traits<GraphType>::vertex_descriptor>
@@ -291,7 +293,8 @@ get_vertices_by_priority_descending(const GraphType &graph) {
  * @tparam GraphType Any graph type satisfying HasPriorityOnVertices concept
  * @param graph The graph to analyze
  * @return Map from priority to vector of vertices with that priority
- * @complexity O(V) where V is the number of vertices
+ * 
+ * Time complexity: O(V) where V is the number of vertices
  */
 template <HasPriorityOnVertices GraphType>
 inline std::map<int, std::vector<typename boost::graph_traits<GraphType>::vertex_descriptor>>

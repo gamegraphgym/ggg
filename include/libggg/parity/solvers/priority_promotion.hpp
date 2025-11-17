@@ -27,7 +27,8 @@ namespace parity {
  * References:
  * - Benerecetti et al. (2016): "Solving Parity Games via Priority Promotion"
  * - Oink parity game solver implementation (Tom van Dijk)
- * @complexity Time: O(2^n), Space: O(n)
+ * 
+ * Time complexity: O(2^n), Space: O(n)
  */
 
 class PriorityPromotionSolver : public ggg::solvers::Solver<graph::Graph, ggg::solutions::RSSolution<graph::Graph>> {

@@ -24,7 +24,8 @@ class MSESolver : public ggg::solvers::Solver<graph::Graph, SolutionType> {
      * @brief Solve the mean payoff game using MSE algorithm
      * @param graph Mean payoff graph to solve
      * @return Complete solution with winning regions, strategies, and quantitative values
-     * @complexity Time: O(V^2 * W), Space: O(V) where V = vertices and W = sum of positive weights + 1
+     * 
+     * Time complexity: O(V^2 * W), Space: O(V) where V = vertices and W = sum of positive weights + 1
      */
     SolutionType solve(const graph::Graph &graph) override;
 
