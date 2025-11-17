@@ -1,33 +1,32 @@
-name: Documentation
+name: Docs
 
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build-documentation:
+  build-docs:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-
-    - name: Install MkDocs Material
-      run: |
-        pip install mkdocs-material
-
-    - name: Build Documentation
-      run: |
-        mkdocs build
-
-    - name: Deploy Documentation
-      if: github.ref == 'refs/heads/main'
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./site
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen graphviz cmake
+      - name: Configure CMake
+        run: cmake -S . -B build -DBUILD_DOCS=ON
+      - name: Build documentation
+        run: cmake --build build --target docs
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen-html
+          path: build/docs/html
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/docs/html
