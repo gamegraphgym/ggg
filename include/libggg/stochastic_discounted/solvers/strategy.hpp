@@ -9,6 +9,13 @@ namespace stochastic_discounted {
 
 using StrategySolutionType = ggg::solutions::RSQSolution<graph::Graph>;
 
+/**
+ * @brief Strategy Improvement solver for stochastic discounted games
+ *
+ * Implementation of the strategy iteration algorithm for solving stochastic
+ * discounted games based on @cite DBLP:journals/or/Howard60 and @cite DBLP:journals/corr/DellErbaDS24.
+ * Uses linear programming to solve the value equations at each iteration.
+ */
 class StochasticDiscountedStrategySolver : public ggg::solvers::Solver<graph::Graph, StrategySolutionType> {
   public:
     auto solve(const graph::Graph &graph) -> StrategySolutionType override;

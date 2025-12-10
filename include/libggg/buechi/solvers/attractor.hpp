@@ -9,6 +9,13 @@
 namespace ggg {
 namespace buechi {
 
+/**
+ * @brief Iterative attractor algorithm for Buchi games
+ *
+ * Solves Buchi games using the classical iterative attractor approach based on
+ * @cite DBLP:conf/stacs/Thomas95. The algorithm repeatedly
+ * computes attractors to accepting vertices until a fixpoint is reached.
+ */
 class AttractorSolver : public ggg::solvers::Solver<ggg::parity::graph::Graph, ggg::solutions::RSSolution<ggg::parity::graph::Graph>> {
   public:
     ggg::solutions::RSSolution<ggg::parity::graph::Graph> solve(const ggg::parity::graph::Graph &graph) override;

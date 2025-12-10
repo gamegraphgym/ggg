@@ -37,6 +37,10 @@ class RecursiveParitySolution : public ggg::solutions::RSSolution<graph::Graph> 
 
 /**
  * @brief Simple recursive parity game solver
+ *
+ * Implementation of the classical recursive algorithm for parity games
+ * based on @cite DBLP:journals/tcs/Zielonka98. This algorithm recursively
+ * computes winning regions by finding attractor sets and removing dominated vertices.
  */
 class RecursiveParitySolver : public ggg::solvers::Solver<graph::Graph, RecursiveParitySolution> {
   public:

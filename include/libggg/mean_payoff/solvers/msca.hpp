@@ -13,6 +13,13 @@ namespace mean_payoff {
 
 using MSCASolutionType = ggg::solutions::RSQSolution<graph::Graph, ggg::strategy::DeterministicStrategy<graph::Graph>, long long>;
 
+/**
+ * @brief Mean-payoff Solver with Constraint Analysis (MSCA)
+ *
+ * Implementation of the MSCA algorithm for solving mean-payoff games
+ * based on @cite DBLP:journals/fmsd/BrimCDGR11 and @cite DBLP:conf/icalp/DorfmanKZ19. 
+ * This algorithm uses constraint analysis and scaling techniques for efficient computation.
+ */
 class MSCASolver : public ggg::solvers::Solver<graph::Graph, MSCASolutionType> {
   public:
     ggg::solutions::RSQSolution<graph::Graph, ggg::strategy::DeterministicStrategy<graph::Graph>, long long> solve(const graph::Graph &graph) override;

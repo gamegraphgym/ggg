@@ -11,6 +11,14 @@ namespace stochastic_discounted {
 
 using ValueSolutionType = ggg::solutions::RSQSolution<graph::Graph>;
 
+/**
+ * @brief Value iteration algorithm for stochastic discounted games
+ *
+ * Implementation of the classical value iteration method for solving stochastic
+ * discounted games based on @cite DBLP:journals/pnas/Shapley53 and @cite Puterman94.
+ * The algorithm iteratively updates value estimates until convergence using
+ * Bellman equations with discounting factors.
+ */
 class StochasticDiscountedValueSolver : public ggg::solvers::Solver<graph::Graph, ValueSolutionType> {
   public:
     auto solve(const graph::Graph &graph) -> ValueSolutionType override;

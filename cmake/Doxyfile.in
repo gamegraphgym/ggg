@@ -64,4 +64,9 @@ EXPAND_ONLY_PREDEF     = NO
 # Misc
 ALWAYS_DETAILED_SEC    = NO
 
+# References
+CITE_BIB_FILES         = docs/references.bib
+USE_MATHJAX            = YES
+MATHJAX_EXTENSIONS     = TeX/AMSmath TeX/AMSsymbols
+
 FULL_SIDEBAR = NO

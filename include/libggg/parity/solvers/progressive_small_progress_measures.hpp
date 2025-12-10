@@ -9,6 +9,13 @@
 namespace ggg {
 namespace parity {
 
+/**
+ * @brief Progressive Small Progress Measures parity game solver
+ *
+ * Implementation of the Progressive Small Progress Measures algorithm 
+ * based on @cite DBLP:conf/stacs/Jurdzinski00. This algorithm uses
+ * progress measures to efficiently solve parity games.
+ */
 class ProgressiveSmallProgressMeasuresSolver : public ggg::solvers::Solver<graph::Graph, ggg::solutions::RSSolution<graph::Graph>> {
   public:
     ProgressiveSmallProgressMeasuresSolver() = default;

@@ -13,20 +13,13 @@ namespace parity {
 /**
  * @brief Priority Promotion (PP) parity game solver
  *
- * Implementation of the Priority Promotion algorithm for solving parity games.
- * Based on the algorithm by Benerecetti, Dell'Erba, and Mogavero, following
- * the implementation approach from Oink solver.
+ * Implementation of the Priority Promotion algorithm for solving parity games
+ * based on @cite DBLP:journals/fmsd/BenerecettiDM18. The implementation follows
+ * the approach from the Oink solver @cite DBLP:conf/tacas/Dijk18.
  *
  * The algorithm iterates vertices from highest to lowest priority, maintaining
  * regions of vertices and promoting them to higher priorities when regions become
  * closed. When a region becomes a dominion, all vertices in it are solved.
- *
- * Time complexity: Exponential in worst case, but often efficient in practice.
- * Space complexity: O(n) where n is the number of vertices.
- *
- * References:
- * - Benerecetti et al. (2016): "Solving Parity Games via Priority Promotion"
- * - Oink parity game solver implementation (Tom van Dijk)
  * 
  * Time complexity: O(2^n), Space: O(n)
  */

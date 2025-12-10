@@ -10,6 +10,14 @@ namespace stochastic_discounted {
 
 using ObjectiveSolutionType = ggg::solutions::RSQSolution<graph::Graph>;
 
+/**
+ * @brief Objective Improvement solver for stochastic discounted games
+ *
+ * Implementation of the novel objective improvement approach described in
+ * @cite DBLP:journals/corr/DellErbaDS24. This algorithm builds constraint systems using
+ * every edge to define inequations and updates the objective function by
+ * considering strategy edges for both players.
+ */
 class StochasticDiscountedObjectiveSolver : public ggg::solvers::Solver<graph::Graph, ObjectiveSolutionType> {
   public:
     auto solve(const graph::Graph &graph) -> ObjectiveSolutionType override;
