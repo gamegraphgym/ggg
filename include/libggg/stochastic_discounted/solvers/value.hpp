@@ -15,7 +15,7 @@ using ValueSolutionType = ggg::solutions::RSQSolution<graph::Graph>;
  * @brief Value iteration algorithm for stochastic discounted games
  *
  * Implementation of the classical value iteration method for solving stochastic
- * discounted games based on @cite DBLP:journals/pnas/Shapley53 and @cite Puterman94.
+ * discounted games based on @cite DBLP:journals/pnas/Shapley53 and @cite DBLP:books/wi/Puterman94.
  * The algorithm iteratively updates value estimates until convergence using
  * Bellman equations with discounting factors.
  */

@@ -1,6 +1,5 @@
 #/**
-# * @file formatting_utils.hpp
-# * @brief Small helpers (internal) for creating compact JSON-like strings and streaming maps.
+# * Small helpers (internal) for creating compact JSON-like strings and streaming maps.
 # *
 # * These utilities live in `ggg::solutions::detail` and expect callers to provide
 # * appropriate value conversion callables. Keys are written as numeric indices
