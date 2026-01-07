@@ -30,13 +30,15 @@ concept HasProbabilityOnEdges = requires(const GraphType &graph) {
  * - All probabilities are in the range (0, 1]
  * - For vertices identified by a filter predicate, outgoing edge probabilities sum to 1.0
  *
- * @example
+ * Example usage:
+ * @code
  * // Validate all vertices (default behavior)
  * ProbabilityValidator::validate(graph);
  *
  * // Validate only vertices where player == -1
  * auto filter = [](const Graph& g, Vertex v) { return g[v].player == -1; };
  * ProbabilityValidator::validate(graph, filter);
+ * @endcode
  */
 struct ProbabilityValidator {
     template <HasProbabilityOnEdges GraphType, typename VertexFilter>

@@ -40,7 +40,8 @@ namespace graphs {
  * @tparam MinOutDegree Minimum required out-degree (default: 0, meaning no minimum check)
  * @tparam MaxOutDegree Maximum allowed out-degree (default: unlimited, meaning no maximum check)
  *
- * @example
+ * Example usage:
+ * @code
  * // Require at least one outgoing edge per vertex
  * OutDegreeValidator<1>::validate(graph);
  *
@@ -52,6 +53,7 @@ namespace graphs {
  *
  * // Require at most 10 outgoing edges per vertex (no minimum)
  * OutDegreeValidator<0, 10>::validate(graph);
+ * @endcode
  */
 template <std::size_t MinOutDegree = 0, std::size_t MaxOutDegree = std::numeric_limits<std::size_t>::max()>
 struct OutDegreeValidator {

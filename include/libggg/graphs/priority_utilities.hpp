@@ -22,7 +22,8 @@ namespace priority_utilities {
  * @tparam MinPriority Minimum allowed priority value (default: 0)
  * @tparam MaxPriority Maximum allowed priority value (default: INT_MAX)
  *
- * @example
+ * Example usage:
+ * @code
  * // Require non-negative priorities (no upper limit)
  * PriorityValidator<0>::validate(graph);
  *
@@ -31,6 +32,7 @@ namespace priority_utilities {
  *
  * // Require priorities in range [5, 50]
  * PriorityValidator<5, 50>::validate(graph);
+ * @endcode
  */
 template <int MinPriority = 0, int MaxPriority = INT_MAX>
 struct PriorityValidator {

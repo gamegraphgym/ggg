@@ -54,13 +54,15 @@ struct NoOpValidator {
  * @tparam GraphType The graph type to validate
  * @tparam Validators Variadic pack of validator types satisfying Validator concept
  *
- * @example
+ * Example usage:
+ * @code
  * using MyValidator = CompositeValidator<
  *     ParityGraph,
  *     PlayerValidator<0, 1>,
  *     PriorityValidator<0>
  * >;
  * MyValidator::validate(graph);
+ * @endcode
  */
 template <typename GraphType, Validator<GraphType>... Validators>
 struct CompositeValidator {

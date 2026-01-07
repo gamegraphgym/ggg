@@ -22,15 +22,23 @@ namespace player_utilities {
  *
  * @tparam AllowedPlayers Variadic pack of integers representing valid player values
  *
- * @example
+ * Example usage:
+ * @code
  * // 2-player game validator (players 0 and 1)
  * PlayerValidator<0, 1>::validate(graph);
  *
  * // 3-player game validator (players 0, 1, and 2)
  * PlayerValidator<0, 1, 2>::validate(graph);
+ * @endcode
  */
 template <int... AllowedPlayers>
 struct PlayerValidator {
+    /**
+     * @brief Validate that all vertices have allowed player values
+     * @tparam GraphType Graph type with player properties on vertices
+     * @param graph The graph to validate
+     * @throws GraphValidationError if any vertex has an invalid player value
+     */
     template <HasPlayerOnVertices GraphType>
     static void validate(const GraphType &graph) {
         constexpr int allowed[] = {AllowedPlayers...};

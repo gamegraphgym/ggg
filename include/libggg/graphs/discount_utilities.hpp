@@ -28,7 +28,8 @@ concept HasDiscountOnEdges = requires(const GraphType &graph) {
  * Validates that discount factors are in the valid range (0, 1) for edges
  * originating from vertices matching a filter predicate (typically non-probabilistic vertices).
  *
- * @example
+ * Example usage:
+ * @code
  * // Validate all vertices (default behavior)
  * DiscountValidator::validate(graph);
  *
@@ -38,6 +39,7 @@ concept HasDiscountOnEdges = requires(const GraphType &graph) {
  *
  * // Custom range
  * DiscountValidator::validate(graph, filter, 0.5, 0.99);
+ * @endcode
  */
 struct DiscountValidator {
     template <HasDiscountOnEdges GraphType, typename VertexFilter>
