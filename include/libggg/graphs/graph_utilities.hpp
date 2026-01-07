@@ -1,11 +1,12 @@
 #pragma once
 
+#include "libggg/graphs/validator.hpp"
 #include "libggg/utils/logging.hpp"
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/property_map/dynamic_property_map.hpp>
-#include <ios>
+#include <set>
 #include <stdexcept>
 
 namespace ggg {
@@ -29,6 +30,82 @@ namespace ggg {
  * @{
  */
 namespace graphs {
+/**
+ * @brief Validator for out-degree range of vertices
+ *
+ * This validator checks that all vertices have an out-degree within a specified
+ * range [MinOutDegree, MaxOutDegree]. Useful for ensuring game graphs have valid
+ * moves and bounded branching factor.
+ *
+ * @tparam MinOutDegree Minimum required out-degree (default: 0, meaning no minimum check)
+ * @tparam MaxOutDegree Maximum allowed out-degree (default: unlimited, meaning no maximum check)
+ *
+ * @example
+ * // Require at least one outgoing edge per vertex
+ * OutDegreeValidator<1>::validate(graph);
+ *
+ * // Require between 2 and 5 outgoing edges per vertex
+ * OutDegreeValidator<2, 5>::validate(graph);
+ *
+ * // Require exactly 3 outgoing edges per vertex
+ * OutDegreeValidator<3, 3>::validate(graph);
+ *
+ * // Require at most 10 outgoing edges per vertex (no minimum)
+ * OutDegreeValidator<0, 10>::validate(graph);
+ */
+template <std::size_t MinOutDegree = 0, std::size_t MaxOutDegree = std::numeric_limits<std::size_t>::max()>
+struct OutDegreeValidator {
+    static_assert(MinOutDegree <= MaxOutDegree, "MinOutDegree must be <= MaxOutDegree");
+
+    template <typename GraphType>
+    static void validate(const GraphType &graph) {
+        const auto [vertices_begin, vertices_end] = boost::vertices(graph);
+        for (const auto &vertex : boost::make_iterator_range(vertices_begin, vertices_end)) {
+            const auto out_deg = boost::out_degree(vertex, graph);
+            if constexpr (MinOutDegree > 0) {
+                if (out_deg < MinOutDegree) {
+                    throw GraphValidationError(
+                        "Vertex '" + graph[vertex].name +
+                        "' has out-degree " + std::to_string(out_deg) +
+                        " (must be >= " + std::to_string(MinOutDegree) + ")");
+                }
+            }
+            if constexpr (MaxOutDegree < std::numeric_limits<std::size_t>::max()) {
+                if (out_deg > MaxOutDegree) {
+                    throw GraphValidationError(
+                        "Vertex '" + graph[vertex].name +
+                        "' has out-degree " + std::to_string(out_deg) +
+                        " (must be <= " + std::to_string(MaxOutDegree) + ")");
+                }
+            }
+        }
+    }
+};
+
+/**
+ * @brief Validator that checks for duplicate edges
+ *
+ * This validator ensures that there are no duplicate edges (multiple edges
+ * between the same source and target vertices) in the graph.
+ */
+struct NoDuplicateEdgesValidator {
+    template <typename GraphType>
+    static void validate(const GraphType &graph) {
+        using Vertex = typename boost::graph_traits<GraphType>::vertex_descriptor;
+        std::set<std::pair<Vertex, Vertex>> seen_edges;
+        const auto [edges_begin, edges_end] = boost::edges(graph);
+        for (const auto &edge : boost::make_iterator_range(edges_begin, edges_end)) {
+            auto source = boost::source(edge, graph);
+            auto target = boost::target(edge, graph);
+            const auto edge_key = std::make_pair(source, target);
+            if (!seen_edges.insert(edge_key).second) {
+                throw GraphValidationError(
+                    "Duplicate edge found between vertices '" +
+                    graph[source].name + "' and '" + graph[target].name + "'");
+            }
+        }
+    }
+};
 
 /**
  * Exception thrown on graph parsing errors.
@@ -38,19 +115,19 @@ struct ParseError : public std::runtime_error {
 };
 
 // --- Helper macros for property struct field generation ---
-#define PROPERTY_STRUCT_FIELD(type, name) type name;
+#define PROPERTY_STRUCT_FIELD(type, name, default_val) type name{default_val};
 
 // These macros work within the context of register_*_dynamic_properties functions
 // where dp, g, and Props are in scope
-#define REGISTER_VERTEX_FIELD_IMPL(type, name) dp.property(#name, boost::get(&Props::name, g));
-#define REGISTER_EDGE_FIELD_IMPL(type, name) dp.property(#name, boost::get(&Props::name, g));
-#define REGISTER_GRAPH_FIELD_IMPL(type, name) dp.property(#name, boost::get(&Props::name, g));
+#define REGISTER_VERTEX_FIELD_IMPL(type, name, ...) dp.property(#name, boost::get(&Props::name, g));
+#define REGISTER_EDGE_FIELD_IMPL(type, name, ...) dp.property(#name, boost::get(&Props::name, g));
+#define REGISTER_GRAPH_FIELD_IMPL(type, name, ...) dp.property(#name, boost::get(&Props::name, g));
 
 // Helper macros for generating add_vertex and add_edge parameters
-#define ADD_VERTEX_PARAM(type, name) , const type &name
-#define ADD_VERTEX_ASSIGN(type, name) v.name = name;
-#define ADD_EDGE_PARAM(type, name) , const type &name
-#define ADD_EDGE_ASSIGN(type, name) e.name = name;
+#define ADD_VERTEX_PARAM(type, name, ...) , const type &name
+#define ADD_VERTEX_ASSIGN(type, name, ...) v.name = name;
+#define ADD_EDGE_PARAM(type, name, ...) , const type &name
+#define ADD_EDGE_ASSIGN(type, name, ...) e.name = name;
 
 /**
  * @def DEFINE_GAME_GRAPH(VERTEX_FIELDS, EDGE_FIELDS, GRAPH_FIELDS)
@@ -176,8 +253,10 @@ struct ParseError : public std::runtime_error {
         auto g = std::make_shared<Graph>();                                                           \
         boost::dynamic_properties dp(boost::ignore_other_properties);                                 \
         register_dynamic_properties(dp, *g);                                                          \
-        if (!boost::read_graphviz(in, *g, dp, "name")) {                                              \
-            throw ggg::graphs::ParseError("Failed to parse DOT format");                              \
+        try {                                                                                         \
+            boost::read_graphviz(in, *g, dp, "node_id");                                              \
+        } catch (const std::exception &e) {                                                           \
+            throw ggg::graphs::ParseError(std::string("DOT parsing error: ") + e.what());             \
         }                                                                                             \
         return g;                                                                                     \
     }                                                                                                 \

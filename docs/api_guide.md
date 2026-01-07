@@ -10,19 +10,20 @@ Game Graph Gym uses X-macros to automatically generate graph types and utility f
 // my_graph.hpp
 #include <libggg/graphs/graph_utilities.hpp>
 
-// Define vertex properties
+// Define vertex properties with explicit default values
+// Each field requires: F(type, name, default_value)
 #define VERTEX_FIELDS(F) \
-    F(std::string, name) \
-    F(int, player) \
-    F(int, custom_property)
+    F(std::string, name, "") \
+    F(int, player, -1) \
+    F(int, custom_property, 0)
 
-// Define edge properties
+// Define edge properties with explicit default values
 #define EDGE_FIELDS(F) \
-    F(std::string, label)
+    F(std::string, label, "")
 
-// Define graph properties (if any)
+// Define graph properties with explicit default values (if any)
 #define GRAPH_FIELDS(F) \
-    F(std::string, title)
+    F(std::string, title, "")
 
 // Generate the complete graph type with utilities
 DEFINE_GAME_GRAPH(VERTEX_FIELDS, EDGE_FIELDS, GRAPH_FIELDS)
@@ -65,6 +66,159 @@ write(*graph_ptr, "output.dot");
 write(*graph_ptr, std::cout);
 ```
 
+## Graph Validation
+
+Game Graph Gym provides a validator system for checking that parsed graphs are valid for the intended use. Validators check graph properties and throw `GraphValidationError` on failure.
+
+### Using Built-in Validators
+
+Each graph type provides a `StandardValidator` that checks game-specific constraints. For example, parity graphs:
+
+```cpp
+#include "libggg/parity/graph.hpp"
+
+using namespace ggg::parity::graph;
+
+Graph graph;
+// ... construct graph ...
+
+// Validate using StandardValidator
+try {
+    StandardValidator::validate(graph);
+    // Checks: 2 players (0,1), non-negative priorities, out-degree >= 1, no duplicates
+} catch (const ggg::graphs::GraphValidationError& e) {
+    std::cerr << "Validation failed: " << e.what() << std::endl;
+}
+```
+
+Similarly for mean-payoff games:
+
+```cpp
+#include "libggg/mean_payoff/graph.hpp"
+
+using namespace ggg::mean_payoff::graph;
+StandardValidator::validate(graph);  // Checks: 2 players (0,1), out-degree >= 1, no duplicates
+```
+
+And stochastic discounted games:
+
+```cpp
+#include "libggg/stochastic_discounted/graph.hpp"
+
+using namespace ggg::stochastic_discounted::graph;
+StandardValidator::validate(graph);
+// Checks: players in {-1, 0, 1}, out-degree >= 1, 
+//         probabilities sum to 1.0 for player -1 vertices,
+//         discounts in (0,1) for non-probabilistic vertices,
+//         no duplicates, no cycles in player 1 vertices
+```
+
+### Creating Custom Validators
+
+Validators are composable using `CompositeValidator`. Create custom combinations for specific needs:
+
+```cpp
+#include "libggg/parity/graph.hpp"
+#include "libggg/graphs/validator.hpp"
+#include "libggg/graphs/player_utilities.hpp"
+#include "libggg/graphs/priority_utilities.hpp"
+#include "libggg/graphs/graph_utilities.hpp"
+
+using namespace ggg::parity::graph;
+using namespace ggg::graphs;
+
+// Custom validator: 3 players, priorities >= 10, at least 2 outgoing edges
+using ThreePlayerValidator = CompositeValidator<
+    Graph,
+    player_utilities::PlayerValidator<0, 1, 2>,    // 3 players allowed
+    priority_utilities::PriorityValidator<10>,     // Min priority = 10
+    OutDegreeValidator<2>,                         // At least 2 outgoing edges
+    NoDuplicateEdgesValidator                      // No duplicate edges
+>;
+
+// Use the custom validator
+Graph graph;
+// ... construct graph ...
+ThreePlayerValidator::validate(graph);
+```
+
+Validators with filtering for conditional checks:
+
+```cpp
+#include "libggg/graphs/probability_utilities.hpp"
+#include "libggg/graphs/discount_utilities.hpp"
+
+// Validate probabilities only for specific vertices
+auto prob_filter = [](const Graph& g, auto v) { return g[v].player == -1; };
+probability_utilities::ProbabilityValidator::validate(graph, prob_filter);
+
+// Validate discounts with custom range
+auto discount_filter = [](const Graph& g, auto v) { return g[v].player != -1; };
+discount_utilities::DiscountValidator::validate(graph, discount_filter, 0.5, 0.99);
+```
+
+### Available Validators
+
+**Player validators** (`graphs/player_utilities.hpp`):
+
+- `PlayerValidator<AllowedPlayers...>` - checks player values are in the specified list
+
+**Priority validators** (`graphs/priority_utilities.hpp`):
+
+- `PriorityValidator<MinPriority>` - checks priorities >= minimum value (default: 0)
+
+**Probability validators** (`graphs/probability_utilities.hpp`):
+
+- `ProbabilityValidator` - checks probabilities are in (0,1] and sum to 1.0
+  - Supports filtering: `validate(graph, filter)` to check only specific vertices
+  - Default: `validate(graph)` checks all vertices
+
+**Discount validators** (`graphs/discount_utilities.hpp`):
+
+- `DiscountValidator` - checks discount factors are in configurable range (default: (0,1))
+  - Supports filtering: `validate(graph, filter, min, max)` to check only specific vertices
+  - Default: `validate(graph)` checks all vertices
+
+**Weight validators** (`graphs/weight_utilities.hpp`):
+
+- `EdgeWeightValidator<MinWeight, MaxWeight>` - checks edge weights are in range
+- `VertexWeightValidator<MinWeight, MaxWeight>` - checks vertex weights are in range
+
+**Edge validators** (`graphs/graph_utilities.hpp`):
+
+- `OutDegreeValidator<MinDegree>` - checks minimum outgoing edges per vertex (default: 1)
+- `NoDuplicateEdgesValidator` - ensures no duplicate edges between vertices
+
+**Utility validators** (`graphs/validator.hpp`):
+
+- `NoOpValidator` - accepts any graph without checks
+- `CompositeValidator<GraphType, Validators...>` - runs multiple validators in sequence
+
+### Validator Integration
+
+Validators are automatically integrated into solver CLI tools via `GGG_GAME_SOLVER_MAIN`. The macro takes four parameters: graph type, parser function, validator type, and solver class:
+
+```cpp
+// In your solver main.cpp
+#include "libggg/parity/graph.hpp"
+#include "libggg/utils/solver_wrapper.hpp"
+
+using namespace ggg::parity;
+
+GGG_GAME_SOLVER_MAIN(
+    graph::Graph,                    // Graph type
+    graph::parse,                    // Parser function
+    graph::StandardValidator,        // Validator (runs after parsing, before solving)
+    YourSolver                       // Solver class
+)
+```
+
+The validator runs automatically after parsing and before solving. If validation fails, a clear error message is displayed and the program exits with a non-zero status code. You can use:
+
+- `graph::StandardValidator` for standard validation rules
+- Custom validators for specific constraints
+- `ggg::graphs::NoOpValidator` to skip validation entirely
+
 ## Adding New Solvers
 
 ### Implementing a Solver
@@ -100,12 +254,36 @@ public:
 
 You can use the project macro to expose this solver as a CLI, following the pattern used by the shipped tools:
 
-```C++
-// inside the game-specific tools/ or main.cpp
-GGG_GAME_SOLVER_MAIN(ggg::parity::graph::Graph, ggg::parity::graph::parse, YourSolver)
+```cpp
+// inside tools/parity/solvers/your_solver.cpp
+#include "libggg/parity/solvers/your_solver.hpp"
+#include "libggg/utils/solver_wrapper.hpp"
+
+using namespace ggg::parity;
+
+GGG_GAME_SOLVER_MAIN(
+    graph::Graph,                    // Graph type
+    graph::parse,                    // Parser function
+    graph::StandardValidator,        // Validator (runs after parsing, before solving)
+    YourSolver                       // Solver class
+)
 ```
 
-See the implementations of existing solvers under `solvers/` as examples.
+The macro generates a complete `main()` function that:
+
+1. Parses command-line arguments (supports `--csv`, `--time-only`, `--solver-name`)
+2. Reads the graph from stdin using the provided parser
+3. Validates the graph using the specified validator
+4. Runs the solver
+5. Outputs the solution
+
+The third parameter specifies which validator to use:
+
+- `graph::StandardValidator` - standard validation rules for the game type
+- Custom validator types - for specific constraints
+- `ggg::graphs::NoOpValidator` - skip validation entirely
+
+See the implementations of existing solvers under `tools/*/solvers/` as examples.
 
 ## Solution Types
 

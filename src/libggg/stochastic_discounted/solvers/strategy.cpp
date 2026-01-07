@@ -137,10 +137,6 @@ auto StochasticDiscountedStrategySolver::solve(const graphs_t &graph) -> ggg::so
     LGG_INFO("Starting Strategy Improvement solver for stochastic discounted game");
 
     ggg::solutions::RSQSolution<graphs_t> solution;
-    if (!g::is_valid(graph)) {
-        LGG_ERROR("Invalid stochastic discounted graph provided");
-        return solution;
-    }
     if (boost::num_vertices(graph) == 0) {
         LGG_WARN("Empty graph provided");
         return solution;

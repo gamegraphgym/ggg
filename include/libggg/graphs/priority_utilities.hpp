@@ -1,6 +1,7 @@
 #pragma once
 
 #include "libggg/graphs/graph_concepts.hpp"
+#include "libggg/graphs/validator.hpp"
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <algorithm>
@@ -10,6 +11,44 @@
 namespace ggg {
 namespace graphs {
 namespace priority_utilities {
+
+/**
+ * @brief Validator for priority values with configurable minimum and maximum
+ *
+ * This validator checks that all vertices have priorities within a specified
+ * range [MinPriority, MaxPriority]. By default, requires non-negative priorities
+ * with no upper limit.
+ *
+ * @tparam MinPriority Minimum allowed priority value (default: 0)
+ * @tparam MaxPriority Maximum allowed priority value (default: INT_MAX)
+ *
+ * @example
+ * // Require non-negative priorities (no upper limit)
+ * PriorityValidator<0>::validate(graph);
+ *
+ * // Require priorities in range [0, 100]
+ * PriorityValidator<0, 100>::validate(graph);
+ *
+ * // Require priorities in range [5, 50]
+ * PriorityValidator<5, 50>::validate(graph);
+ */
+template <int MinPriority = 0, int MaxPriority = INT_MAX>
+struct PriorityValidator {
+    template <HasPriorityOnVertices GraphType>
+    static void validate(const GraphType &graph) {
+        const auto [vertices_begin, vertices_end] = boost::vertices(graph);
+        for (const auto &vertex : boost::make_iterator_range(vertices_begin, vertices_end)) {
+            const int priority = graph[vertex].priority;
+            if (priority < MinPriority || priority > MaxPriority) {
+                throw GraphValidationError(
+                    "Invalid priority " + std::to_string(priority) +
+                    " for vertex '" + graph[vertex].name +
+                    "' (must be in range [" + std::to_string(MinPriority) +
+                    ", " + std::to_string(MaxPriority) + "])");
+            }
+        }
+    }
+};
 
 /**
  * @brief Get all vertices with a specific priority from any graph with priority properties

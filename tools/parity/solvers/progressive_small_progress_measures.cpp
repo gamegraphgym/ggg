@@ -4,4 +4,4 @@
 using namespace ggg::parity;
 
 // Unified macro to create a main function for the Progressive Small Progress Measures parity solver
-GGG_GAME_SOLVER_MAIN(graph::Graph, graph::parse, ProgressiveSmallProgressMeasuresSolver)
+GGG_GAME_SOLVER_MAIN(graph::Graph, graph::parse, graph::StandardValidator, ProgressiveSmallProgressMeasuresSolver)

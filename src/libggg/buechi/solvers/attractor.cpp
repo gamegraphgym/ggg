@@ -17,12 +17,6 @@ ggg::solutions::RSSolution<ggg::parity::graph::Graph> AttractorSolver::solve(con
     LGG_DEBUG("Buechi solver starting with ", boost::num_vertices(graph), " vertices");
     ggg::solutions::RSSolution<ggg::parity::graph::Graph> solution;
 
-    if (!validate_buchi_game(graph)) {
-        LGG_ERROR("Invalid Buechi game: priorities must be 0 or 1");
-
-        return solution;
-    }
-
     if (boost::num_vertices(graph) == 0) {
         LGG_TRACE("Empty game - returning solved");
 

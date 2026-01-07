@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(ValidGraphTest) {
     add_edge(graph, v2, v0, "edge_2_0", 0.0, 0.0, 0.7);
     add_edge(graph, v2, v1, "edge_2_1", 0.0, 0.0, 0.3);
 
-    BOOST_TEST(is_valid(graph));
+    BOOST_CHECK_NO_THROW(StandardValidator::validate(graph));
 }
 
 BOOST_AUTO_TEST_CASE(InvalidGraphTests) {
@@ -67,15 +67,15 @@ BOOST_AUTO_TEST_CASE(InvalidGraphTests) {
 
     // Test invalid player
     {
-    Graph graph;
+        Graph graph;
         auto v0 = add_vertex(graph, "v0", 2); // Invalid player
         add_edge(graph, v0, v0, "self", 1.0, 0.5, 0.0);
-    BOOST_TEST(!is_valid(graph));
+        BOOST_CHECK_THROW(StandardValidator::validate(graph), ggg::graphs::GraphValidationError);
     }
 
     // Test invalid probabilities that don't sum to 1
     {
-    Graph graph;
+        Graph graph;
         auto v0 = add_vertex(graph, "v0", 0);
         auto v1 = add_vertex(graph, "v1", 1);
         auto v2 = add_vertex(graph, "v2", -1);
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(InvalidGraphTests) {
         add_edge(graph, v2, v0, "edge_2_0", 0.0, 0.0, 0.6);
         add_edge(graph, v2, v1, "edge_2_1", 0.0, 0.0, 0.3); // Sum = 0.9, should be 1.0
 
-    BOOST_TEST(!is_valid(graph));
+        BOOST_CHECK_THROW(StandardValidator::validate(graph), ggg::graphs::GraphValidationError);
     }
 }
 

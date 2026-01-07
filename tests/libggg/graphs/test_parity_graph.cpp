@@ -40,17 +40,17 @@ BOOST_AUTO_TEST_CASE(TestParityGameValidation) {
     auto v2 = add_vertex(graph, "v2", 1, 3);
     add_edge(graph, v1, v2, ""); // Add edge so vertices have outgoing edges
     add_edge(graph, v2, v1, ""); // Add edge so vertices have outgoing edges
-    BOOST_CHECK(is_valid(graph));
+    BOOST_CHECK_NO_THROW(StandardValidator::validate(graph));
 
     // Test with negative priority (should be invalid)
     auto v3 = add_vertex(graph, "v3", 0, 0);
     add_edge(graph, v3, v1, ""); // Add edge so vertex has outgoing edge
     graph[v3].priority = -1;     // Direct access to set invalid priority
-    BOOST_CHECK(!is_valid(graph));
+    BOOST_CHECK_THROW(StandardValidator::validate(graph), ggg::graphs::GraphValidationError);
 
     // Fix the priority
     graph[v3].priority = 0;
-    BOOST_CHECK(is_valid(graph));
+    BOOST_CHECK_NO_THROW(StandardValidator::validate(graph));
 }
 
 BOOST_AUTO_TEST_CASE(TestBoostParityParsing) {

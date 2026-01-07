@@ -1,5 +1,9 @@
 ﻿#pragma once
+#include "libggg/graphs/discount_utilities.hpp"
 #include "libggg/graphs/graph_utilities.hpp"
+#include "libggg/graphs/player_utilities.hpp"
+#include "libggg/graphs/probability_utilities.hpp"
+#include "libggg/graphs/validator.hpp"
 #include <boost/graph/depth_first_search.hpp>
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/range/adaptor/filtered.hpp>
@@ -7,7 +11,6 @@
 #include <map>
 #include <queue>
 #include <set>
-#include <stdexcept>
 
 namespace ggg {
 namespace stochastic_discounted {
@@ -15,14 +18,14 @@ namespace graph {
 
 // Property field lists
 #define STOCHASTIC_DISCOUNTED_VERTEX_FIELDS(X) \
-    X(std::string, name)                       \
-    X(int, player)
+    X(std::string, name, "")                   \
+    X(int, player, -1)
 
 #define STOCHASTIC_DISCOUNTED_EDGE_FIELDS(X) \
-    X(std::string, label)                    \
-    X(double, weight)                        \
-    X(double, discount)                      \
-    X(double, probability)
+    X(std::string, label, "")                \
+    X(double, weight, 0.0)                   \
+    X(double, discount, 0.0)                 \
+    X(double, probability, 0.0)
 
 #define STOCHASTIC_DISCOUNTED_GRAPH_FIELDS(X) /* none */
 
@@ -44,86 +47,86 @@ inline Vertex find_vertex(const Graph &g, const std::string &name) {
     return (it != ve) ? *it : boost::graph_traits<Graph>::null_vertex();
 }
 
-struct VertexFilter {
-    const Graph *g{};
-    VertexFilter() = default;
-    explicit VertexFilter(const Graph &graph) : g(&graph) {}
-    bool operator()(Vertex v) const { return (*g)[v].player == 1; }
+/**
+ * @brief Validator for cycles in player 1 vertices
+ *
+ * Checks that player 1 vertices form an acyclic subgraph.
+ * This is required for stochastic discounted games.
+ */
+struct CycleValidator {
+    template <typename GraphType>
+    static void validate(const GraphType &graph) {
+        // Local vertex filter functor for player 1 vertices (default-constructible as required by Boost)
+        struct LocalPlayer1Filter {
+            const GraphType *graph_ptr;
+            LocalPlayer1Filter() : graph_ptr(nullptr) {}
+            explicit LocalPlayer1Filter(const GraphType &g) : graph_ptr(&g) {}
+            bool operator()(typename boost::graph_traits<GraphType>::vertex_descriptor v) const {
+                return graph_ptr && (*graph_ptr)[v].player == 1;
+            }
+        };
+
+        // Create filtered graph showing only player 1 vertices
+        auto filtered_graph = boost::make_filtered_graph(
+            graph,
+            boost::keep_all{},
+            LocalPlayer1Filter(graph));
+
+        // Local DFS visitor to detect back edges (cycles) without member templates
+        using FilteredGraphT = decltype(filtered_graph);
+        using FilteredEdgeT = typename boost::graph_traits<FilteredGraphT>::edge_descriptor;
+        struct LocalCycleDetector : public boost::dfs_visitor<> {
+            bool has_cycle = false;
+            void back_edge(FilteredEdgeT, const FilteredGraphT &) { has_cycle = true; }
+        } visitor;
+        boost::depth_first_search(filtered_graph, boost::visitor(visitor));
+
+        if (visitor.has_cycle) {
+            throw graphs::GraphValidationError(
+                "Cycle detected in player 1 vertices (not allowed in stochastic discounted games)");
+        }
+    }
 };
 
-struct CycleDetector : public boost::dfs_visitor<> {
-    bool has_cycle = false;
-    template <typename EdgeT, typename GraphT>
-    void back_edge(EdgeT, const GraphT &) {
-        has_cycle = true;
+// Standard validators for stochastic discounted graphs
+using graphs::NoDuplicateEdgesValidator;
+using graphs::OutDegreeValidator;
+using graphs::discount_utilities::DiscountValidator;
+using graphs::player_utilities::PlayerValidator;
+using graphs::probability_utilities::ProbabilityValidator;
+
+// Specialized validator wrapper that applies probability and discount validators with filters
+struct FilteredValidator {
+    template <typename GraphType>
+    static void validate(const GraphType &graph) {
+        // Validate probabilities only for probabilistic vertices (player == -1)
+        auto prob_filter = [](const GraphType &g, auto v) { return g[v].player == -1; };
+        ProbabilityValidator::validate(graph, prob_filter);
+
+        // Validate discounts only for non-probabilistic vertices (player != -1)
+        auto discount_filter = [](const GraphType &g, auto v) { return g[v].player != -1; };
+        DiscountValidator::validate(graph, discount_filter);
     }
 };
 
-inline bool is_valid(const Graph &g) {
-    const auto [vb, ve] = boost::vertices(g);
-
-    // Vertex checks
-    for (const auto &v : boost::make_iterator_range(vb, ve)) {
-        if (g[v].player != -1 && g[v].player != 0 && g[v].player != 1) {
-            return false;
-        }
-        if (boost::out_degree(v, g) == 0) {
-            return false;
-        }
-    }
-
-    // Edge checks
-    const auto [eb, ee] = boost::edges(g);
-    for (const auto &e : boost::make_iterator_range(eb, ee)) {
-        auto s = boost::source(e, g);
-        if (g[s].player != -1) {
-            const auto d = g[e].discount;
-            if ((d <= 0.0) || (d >= 1.0)) {
-                return false;
-            }
-        }
-    }
-
-    // Probabilities from probabilistic vertices must be in (0,1] and sum to 1
-    for (const auto &v : boost::make_iterator_range(vb, ve)) {
-        if (g[v].player == -1) {
-            double sum = 0.0;
-            for (const auto &e : boost::make_iterator_range(boost::out_edges(v, g))) {
-                const auto p = g[e].probability;
-                if ((p <= 0.0) || (p > 1.0)) {
-                    return false;
-                }
-                sum += p;
-            }
-            if (std::abs(sum - 1.0) > 1e-8) {
-                return false;
-            }
-        }
-    }
-
-    // Check for cycles within filtered vertices (currently: player==1)
-    auto fg = boost::make_filtered_graph(g, boost::keep_all{}, VertexFilter(g));
-    CycleDetector vis{};
-    boost::depth_first_search(fg, boost::visitor(vis));
-    if (vis.has_cycle) {
-        return false;
-    }
-
-    return true;
-}
-
-inline void check_no_duplicate_edges(const Graph &g) {
-    std::set<std::pair<Vertex, Vertex>> seen;
-    const auto [eb, ee] = boost::edges(g);
-    for (const auto &e : boost::make_iterator_range(eb, ee)) {
-        auto s = boost::source(e, g);
-        auto t = boost::target(e, g);
-        const auto key = std::make_pair(s, t);
-        if (!seen.insert(key).second) {
-            throw std::runtime_error("Duplicate edge found between vertices '" + g[s].name + "' and '" + g[t].name + "'");
-        }
-    }
-}
+/**
+ * @brief Standard composite validator for stochastic discounted games
+ *
+ * This validator checks:
+ * - Players are -1 (probabilistic), 0, or 1
+ * - All vertices have at least one outgoing edge
+ * - Probabilities on edges from probabilistic vertices (player == -1) are in (0,1] and sum to 1.0
+ * - Discount factors on edges from non-probabilistic vertices (player != -1) are in (0,1)
+ * - No duplicate edges exist
+ * - No cycles exist within player 1 vertices
+ */
+using StandardValidator = graphs::CompositeValidator<
+    Graph,
+    PlayerValidator<-1, 0, 1>,
+    OutDegreeValidator<1>,
+    FilteredValidator,
+    NoDuplicateEdgesValidator,
+    CycleValidator>;
 
 inline double get_min_discount(const Graph &g) {
     if (boost::num_edges(g) == 0) {

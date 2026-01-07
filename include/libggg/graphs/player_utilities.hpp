@@ -1,6 +1,7 @@
 #pragma once
 
 #include "libggg/graphs/graph_concepts.hpp"
+#include "libggg/graphs/validator.hpp"
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <algorithm>
@@ -12,6 +13,39 @@
 namespace ggg {
 namespace graphs {
 namespace player_utilities {
+
+/**
+ * @brief Validator for player values with configurable allowed players
+ *
+ * This validator checks that all vertices have player values from a specified set.
+ * Template parameters specify which player values are valid (e.g., 0 and 1 for 2-player games).
+ *
+ * @tparam AllowedPlayers Variadic pack of integers representing valid player values
+ *
+ * @example
+ * // 2-player game validator (players 0 and 1)
+ * PlayerValidator<0, 1>::validate(graph);
+ *
+ * // 3-player game validator (players 0, 1, and 2)
+ * PlayerValidator<0, 1, 2>::validate(graph);
+ */
+template <int... AllowedPlayers>
+struct PlayerValidator {
+    template <HasPlayerOnVertices GraphType>
+    static void validate(const GraphType &graph) {
+        constexpr int allowed[] = {AllowedPlayers...};
+        const auto [vertices_begin, vertices_end] = boost::vertices(graph);
+        for (const auto &vertex : boost::make_iterator_range(vertices_begin, vertices_end)) {
+            const int player = graph[vertex].player;
+            const bool is_valid = std::find(std::begin(allowed), std::end(allowed), player) != std::end(allowed);
+            if (!is_valid) {
+                throw GraphValidationError(
+                    "Invalid player value " + std::to_string(player) +
+                    " for vertex '" + graph[vertex].name + "' (must be one of the allowed values)");
+            }
+        }
+    }
+};
 
 /**
  * @brief Compute the attractor set for a player to force reaching a target set

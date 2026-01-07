@@ -1,8 +1,8 @@
 #include "libggg/graphs/graph_concepts.hpp"
 #include "libggg/graphs/graph_utilities.hpp"
+#include "libggg/graphs/priority_utilities.hpp"
 #include "libggg/mean_payoff/graph.hpp"
 #include "libggg/parity/graph.hpp"
-#include "libggg/graphs/priority_utilities.hpp"
 #include <boost/test/unit_test.hpp>
 
 using namespace ggg::graphs::priority_utilities;
@@ -13,12 +13,12 @@ using MeanPayoffGraph = ggg::mean_payoff::graph::Graph;
 
 // Define a test graph type with priority properties for testing the generic utilities
 #define TEST_VERTEX_FIELDS(X) \
-    X(std::string, name)      \
-    X(int, priority)          \
-    X(double, value)
+    X(std::string, name, "")  \
+    X(int, priority, -999)    \
+    X(double, value, 0.0)
 
 #define TEST_EDGE_FIELDS(X) \
-    X(std::string, label)
+    X(std::string, label, "")
 
 #define TEST_GRAPH_FIELDS(X) /* none */
 
