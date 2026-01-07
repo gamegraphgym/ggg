@@ -37,8 +37,19 @@ You can use the project macro to expose this solver as a CLI, following the patt
 
 ```C++
 // inside the game-specific tools/ or main.cpp
-GGG_GAME_SOLVER_MAIN(ggg::parity::graph::Graph, ggg::parity::graph::parse, YourSolver)
+GGG_GAME_SOLVER_MAIN(
+    ggg::parity::graph::Graph,           // Graph type
+    ggg::parity::graph::parse,           // Parser function
+    ggg::parity::graph::StandardValidator, // Validator (runs after parsing, before solving)
+    YourSolver                           // Solver class
+)
 ```
+
+The third parameter is the validator used for input verification. Options include:
+
+- ggg::parity::graph::StandardValidator: default checks for the game type.
+- Custom validator types composed via `ggg::graphs::CompositeValidator`.
+- ggg::graphs::NoOpValidator: disable validation entirely.
 
 See the implementations of existing solvers under `solvers/` as examples.
 
