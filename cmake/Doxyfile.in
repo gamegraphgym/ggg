@@ -65,7 +65,7 @@ EXPAND_ONLY_PREDEF     = NO
 ALWAYS_DETAILED_SEC    = NO
 
 # References
-CITE_BIB_FILES         = docs/references.bib
+CITE_BIB_FILES         = @CMAKE_SOURCE_DIR@/docs/references.bib
 USE_MATHJAX            = YES
 MATHJAX_EXTENSIONS     = TeX/AMSmath TeX/AMSsymbols
 

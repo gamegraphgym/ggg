@@ -78,12 +78,14 @@ The above serve as proof-of concept as much as starting point for a collection o
 
 ## Documentation
 
-The complete documentation is configured via CMake and built with doxygen.
+The complete documentation is generated using Doxygen with the doxygen-awesome theme (downloaded automatically):
 
 ```bash
-cmake -S . -B build -DBUILD_DOCS=ON
+cmake -S . -B build
 cmake --build build --target docs
 ```
+
+The generated HTML documentation will be available at `build/docs/html/index.html`.
 
 [GOG-book]: https://arxiv.org/abs/2305.10546
 [BGL]: https://www.boost.org/doc/libs/release/libs/graph/
