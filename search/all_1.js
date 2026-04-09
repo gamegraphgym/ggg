@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['a_20solver_0',['a solver',['../dc/d22/api_solvers.html#implementing-a-solver-1',1,'Implementing a Solver'],['../dc/df9/api_overview.html#implementing-a-solver',1,'Implementing a Solver']]],
+  ['add_5fedge_5fassign_1',['ADD_EDGE_ASSIGN',['../d8/d48/graph__utilities_8hpp.html#a817a3c507b6d0345feb870a53ec9ee6e',1,'graph_utilities.hpp']]],
+  ['add_5fedge_5fparam_2',['ADD_EDGE_PARAM',['../d8/d48/graph__utilities_8hpp.html#ae1dc51c84a8fcaf895857fda1dfd11d8',1,'graph_utilities.hpp']]],
+  ['add_5fvertex_5fassign_3',['ADD_VERTEX_ASSIGN',['../d8/d48/graph__utilities_8hpp.html#a83436a9434bc1a77108aef679a8eee5d',1,'graph_utilities.hpp']]],
+  ['add_5fvertex_5fparam_4',['ADD_VERTEX_PARAM',['../d8/d48/graph__utilities_8hpp.html#a6a1323fa6cf248efae95cfa9fafd5498',1,'graph_utilities.hpp']]],
+  ['adding_20new_20game_20types_5',['adding new game types',['../d0/ddd/api_graphs.html#adding-new-game-types',1,'Adding New Game Types'],['../dc/df9/api_overview.html#adding-new-game-types-1',1,'Adding New Game Types']]],
+  ['adding_20new_20solvers_6',['adding new solvers',['../dc/d22/api_solvers.html#adding-new-solvers-1',1,'Adding New Solvers'],['../dc/df9/api_overview.html#adding-new-solvers',1,'Adding New Solvers']]],
+  ['algorithm_7',['Algorithm',['../d3/d98/namespaceggg_1_1graphs_1_1player__utilities.html#algorithm',1,'']]],
+  ['all_5fvariables_5fhave_5fnon_5fbasic_5fslack_8',['all_variables_have_non_basic_slack',['../d8/dff/classSimplex.html#ae8abe93474b02a424d3b115593a39246',1,'Simplex']]],
+  ['and_20dependencies_9',['System Requirements and Dependencies',['../d9/d87/install.html#system-requirements-and-dependencies',1,'']]],
+  ['and_20expect_20callers_20to_20provide_10',['* These utilities live in &lt;tt&gt;ggg::solutions::detail&lt;/tt&gt; and expect callers to provide',['../d7/d06/namespaceggg.html#autotoc_md-these-utilities-live-in-gggsolutionsdetail-and-expect-callers-to-provide',1,'']]],
+  ['and_20solvers_11',['and solvers',['../da/d0d/quick_start.html#building-tools-and-solvers',1,'Building Tools and Solvers'],['../d8/de9/md__2home_2runner_2work_2ggg_2ggg_2docs_2games.html',1,'Included Games and Solvers']]],
+  ['and_20streaming_20maps_12',['* Small helpers (internal) for creating compact JSON-like strings and streaming maps.',['../d7/d06/namespaceggg.html#autotoc_md-small-helpers-internal-for-creating-compact-json-like-strings-and-streaming-maps',1,'']]],
+  ['api_20guide_13',['api guide',['../dc/d22/api_solvers.html',1,'API Guide'],['../dc/df9/api_overview.html',1,'API Guide'],['../d0/ddd/api_graphs.html',1,'API Guide']]],
+  ['api_20in_20your_20code_14',['Using the API in Your Code',['../da/d0d/quick_start.html#using-the-api-in-your-code',1,'']]],
+  ['api_5fgraphs_2emd_15',['api_graphs.md',['../d6/d0a/api__graphs_8md.html',1,'']]],
+  ['api_5foverview_2emd_16',['api_overview.md',['../d2/ddc/api__overview_8md.html',1,'']]],
+  ['api_5fsolvers_2emd_17',['api_solvers.md',['../d1/ddf/api__solvers_8md.html',1,'']]],
+  ['appropriate_20value_20conversion_20callables_20keys_20are_20written_20as_20numeric_20indices_18',['* appropriate value conversion callables. Keys are written as numeric indices',['../d7/d06/namespaceggg.html#autotoc_md-appropriate-value-conversion-callables-keys-are-written-as-numeric-indices',1,'']]],
+  ['are_20written_20as_20numeric_20indices_19',['* appropriate value conversion callables. Keys are written as numeric indices',['../d7/d06/namespaceggg.html#autotoc_md-appropriate-value-conversion-callables-keys-are-written-as-numeric-indices',1,'']]],
+  ['as_20numeric_20indices_20',['* appropriate value conversion callables. Keys are written as numeric indices',['../d7/d06/namespaceggg.html#autotoc_md-appropriate-value-conversion-callables-keys-are-written-as-numeric-indices',1,'']]],
+  ['attractor_2ehpp_21',['attractor.hpp',['../d2/deb/attractor_8hpp.html',1,'']]],
+  ['attractorsolver_22',['AttractorSolver',['../d3/d39/classggg_1_1buechi_1_1AttractorSolver.html',1,'ggg::buechi']]],
+  ['available_20validators_23',['Available Validators',['../dc/df9/api_overview.html#available-validators',1,'']]]
+];

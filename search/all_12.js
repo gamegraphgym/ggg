@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['random_20game_20graph_20generators_0',['Random Game Graph Generators',['../d7/d83/tools.html#random-game-graph-generators',1,'']]],
+  ['recursive_2ehpp_1',['recursive.hpp',['../d3/d33/recursive_8hpp.html',1,'']]],
+  ['recursiveparitysolution_2',['recursiveparitysolution',['../d6/db5/classggg_1_1parity_1_1RecursiveParitySolution.html',1,'ggg::parity::RecursiveParitySolution'],['../d6/db5/classggg_1_1parity_1_1RecursiveParitySolution.html#ad17b5b48068901680184aa9811a7d5e7',1,'ggg::parity::RecursiveParitySolution::RecursiveParitySolution()']]],
+  ['recursiveparitysolver_3',['recursiveparitysolver',['../dd/d84/classggg_1_1parity_1_1RecursiveParitySolver.html',1,'ggg::parity::RecursiveParitySolver'],['../dd/d84/classggg_1_1parity_1_1RecursiveParitySolver.html#a64750f6011c65aea2af735714ca877c5',1,'ggg::parity::RecursiveParitySolver::RecursiveParitySolver(size_t max_depth)'],['../dd/d84/classggg_1_1parity_1_1RecursiveParitySolver.html#a73ba8256439c3f9b58f53f86b76ebf13',1,'ggg::parity::RecursiveParitySolver::RecursiveParitySolver()']]],
+  ['register_5fedge_5ffield_5fimpl_4',['REGISTER_EDGE_FIELD_IMPL',['../d8/d48/graph__utilities_8hpp.html#a87eedfa1ce76894b70f504e6cee17d06',1,'graph_utilities.hpp']]],
+  ['register_5fgraph_5ffield_5fimpl_5',['REGISTER_GRAPH_FIELD_IMPL',['../d8/d48/graph__utilities_8hpp.html#a72dca802972c772e73df08782cb6de78',1,'graph_utilities.hpp']]],
+  ['register_5fvertex_5ffield_5fimpl_6',['REGISTER_VERTEX_FIELD_IMPL',['../d8/d48/graph__utilities_8hpp.html#ae80a9526ec8e5f0b0d7598ae22f30064',1,'graph_utilities.hpp']]],
+  ['remove_5fartificial_5fvariables_7',['remove_artificial_variables',['../d8/dff/classSimplex.html#a53e8f7b1080d77b3ce3faa2e98341969',1,'Simplex']]],
+  ['render_5fhelpers_2ehpp_8',['render_helpers.hpp',['../d6/d44/render__helpers_8hpp.html',1,'']]],
+  ['request_20process_9',['Pull Request Process',['../d0/d3f/developing.html#pull-request-process',1,'']]],
+  ['requirements_10',['Requirements',['../d9/d87/install.html#requirements',1,'']]],
+  ['requirements_20and_20dependencies_11',['System Requirements and Dependencies',['../d9/d87/install.html#system-requirements-and-dependencies',1,'']]],
+  ['resize_12',['resize',['../d5/d5a/classUintqueue.html#a687851a4f1566c7743e15cafe2819e8f',1,'Uintqueue']]],
+  ['rsolution_13',['rsolution',['../da/d7c/classggg_1_1solutions_1_1RSolution.html',1,'ggg::solutions::RSolution&lt; GraphType &gt;'],['../da/d7c/classggg_1_1solutions_1_1RSolution.html#aa8006b235401742f6ed8ecf5757be1ce',1,'ggg::solutions::RSolution::RSolution()']]],
+  ['rsolution_20graphtype_14',['rsolution graphtype',['../dc/df9/api_overview.html#rsolutiongraphtype',1,'RSolution&lt;GraphType&gt;'],['../dc/d22/api_solvers.html#rsolutiongraphtype-1',1,'RSolution&lt;GraphType&gt;']]],
+  ['rsolution_2ehpp_15',['rsolution.hpp',['../d4/df1/rsolution_8hpp.html',1,'']]],
+  ['rsolution_3c_20graph_3a_3agraph_20_3e_16',['RSolution&lt; graph::Graph &gt;',['../da/d7c/classggg_1_1solutions_1_1RSolution.html',1,'ggg::solutions']]],
+  ['rsqsolution_17',['rsqsolution',['../d3/da4/classggg_1_1solutions_1_1RSQSolution.html#aeefd14b8364f348c7f12222e5895b52d',1,'ggg::solutions::RSQSolution::RSQSolution()'],['../d3/da4/classggg_1_1solutions_1_1RSQSolution.html',1,'ggg::solutions::RSQSolution&lt; GraphType, StrategyType, ValueType &gt;']]],
+  ['rsqsolution_2ehpp_18',['rsqsolution.hpp',['../d9/d8e/rsqsolution_8hpp.html',1,'']]],
+  ['rssolution_19',['rssolution',['../dd/d77/classggg_1_1solutions_1_1RSSolution.html#a3b999d9c9b4d4689fdfb2ec1eb3a8690',1,'ggg::solutions::RSSolution::RSSolution()'],['../dd/d77/classggg_1_1solutions_1_1RSSolution.html',1,'ggg::solutions::RSSolution&lt; GraphType, StrategyType &gt;']]],
+  ['rssolution_2ehpp_20',['rssolution.hpp',['../d8/d3b/rssolution_8hpp.html',1,'']]],
+  ['rssolution_3c_20graph_3a_3agraph_20_3e_21',['RSSolution&lt; graph::Graph &gt;',['../dd/d77/classggg_1_1solutions_1_1RSSolution.html',1,'ggg::solutions']]],
+  ['run_22',['run',['../db/d7c/classggg_1_1utils_1_1GameGraphGenerator.html#a1e5949062b00b19279c1b586dee8650f',1,'ggg::utils::GameGraphGenerator::run()'],['../d7/dbd/classggg_1_1utils_1_1GameSolverWrapper.html#af2dcfbeec7852e662e1435de5fd10082',1,'ggg::utils::GameSolverWrapper::run()']]],
+  ['running_20tests_23',['Running Tests',['../d0/d3f/developing.html#running-tests',1,'']]],
+  ['running_20your_20first_20example_24',['Running Your First Example',['../da/d0d/quick_start.html#running-your-first-example',1,'']]]
+];
