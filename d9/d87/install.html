@@ -170,7 +170,14 @@ Complete Build</h2>
 <div class="line">    -DBUILD_TESTING=ON</div>
 <div class="line">    </div>
 <div class="line">cmake --build build -j$(nproc)</div>
-</div><!-- fragment --><h1><a class="anchor" id="installation"></a>
+</div><!-- fragment --><h1><a class="anchor" id="documentation-pages"></a>
+Documentation Pages</h1>
+<p>The most recent version is available online at <a href="https://gamegraphgym.github.io/ggg/">https://gamegraphgym.github.io/ggg/</a>.</p>
+<p>To generate the docs yourself, you need to have <a href="https://www.doxygen.nl/">Doxygen</a> available in your PATH. The following will generate docs locally from within the ggg source directory. This uses the <a href="https://jothepro.github.io/doxygen-awesome-css/">doxygen-awesome</a> theme (downloaded automatically).</p>
+<div class="fragment"><div class="line">cmake -S . -B build</div>
+<div class="line">cmake --build build --target docs</div>
+</div><!-- fragment --><p>The generated HTML documentation will be available at <code>build/docs/html/index.html</code>.</p>
+<h1><a class="anchor" id="installation"></a>
 Installation</h1>
 <p>You can optionally install the library system-wide:</p>
 <div class="fragment"><div class="line">cmake --install build</div>

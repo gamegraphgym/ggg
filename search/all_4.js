@@ -12,5 +12,6 @@ var searchData=
   ['development_20guide_9',['Development Guide',['../d0/d3f/developing.html',1,'']]],
   ['development_20setup_10',['Development Setup',['../d0/d3f/developing.html#development-setup',1,'']]],
   ['discount_5futilities_2ehpp_11',['discount_utilities.hpp',['../d8/d52/discount__utilities_8hpp.html',1,'']]],
-  ['discountvalidator_12',['DiscountValidator',['../df/d20/structggg_1_1graphs_1_1discount__utilities_1_1DiscountValidator.html',1,'ggg::graphs::discount_utilities']]]
+  ['discountvalidator_12',['DiscountValidator',['../df/d20/structggg_1_1graphs_1_1discount__utilities_1_1DiscountValidator.html',1,'ggg::graphs::discount_utilities']]],
+  ['documentation_20pages_13',['Documentation Pages',['../d9/d87/install.html#documentation-pages',1,'']]]
 ];
