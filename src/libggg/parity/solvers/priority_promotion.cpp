@@ -19,8 +19,8 @@ PriorityPromotionSolver::Solution PriorityPromotionSolver::solve(const Graph &gr
     }
 
     // Initialize algorithm state
+    graph_ = &graph;
     initialize(graph);
-    build_adjacency_cache(graph);
 
     // Get vertices sorted by priority (highest to lowest) using new priority utilities
     sorted_vertices_ = graphs::priority_utilities::get_vertices_by_priority_descending(graph);
@@ -176,22 +176,6 @@ void PriorityPromotionSolver::initialize(const Graph &graph) {
     }
 }
 
-void PriorityPromotionSolver::build_adjacency_cache(const Graph &graph) {
-    // Initialize adjacency maps
-    predecessors_.clear();
-    successors_.clear();
-
-    // Build adjacency lists
-    const auto [EDGES_BEGIN, EDGES_END] = boost::edges(graph);
-    for (auto edge_it = EDGES_BEGIN; edge_it != EDGES_END; ++edge_it) {
-        Vertex source = boost::source(*edge_it, graph);
-        Vertex target = boost::target(*edge_it, graph);
-
-        successors_[source].push_back(target);
-        predecessors_[target].push_back(source);
-    }
-}
-
 void PriorityPromotionSolver::attract(int priority) {
     const int player = priority & 1;
     auto &region_vertices = regions_[priority];
@@ -209,7 +193,8 @@ void PriorityPromotionSolver::attract(int priority) {
         queue_.pop();
 
         // Check all predecessors of current vertex
-        for (Vertex pred : predecessors_[current]) {
+        for (auto in_edge : boost::make_iterator_range(boost::in_edges(current, *graph_))) {
+            Vertex pred = boost::source(in_edge, *graph_);
             if (is_disabled(pred) || get_region(pred) > priority) {
                 continue; // Skip disabled or higher priority vertices
             } else if (get_region(pred) == priority) {
@@ -228,7 +213,8 @@ void PriorityPromotionSolver::attract(int priority) {
             } else {
                 // Opponent player - check if forced (all successors in region or higher)
                 bool can_escape = false;
-                for (Vertex succ : successors_[pred]) {
+                for (auto out_edge : boost::make_iterator_range(boost::out_edges(pred, *graph_))) {
+                    Vertex succ = boost::target(out_edge, *graph_);
                     if (!is_disabled(succ) && get_region(succ) < priority) {
                         can_escape = true;
                         break;
@@ -347,7 +333,8 @@ void PriorityPromotionSolver::set_dominion(int priority, Solution &solution) {
         worklist.pop();
 
         // Check all non-disabled predecessors
-        for (Vertex pred : predecessors_[current]) {
+        for (auto in_edge : boost::make_iterator_range(boost::in_edges(current, *graph_))) {
+            Vertex pred = boost::source(in_edge, *graph_);
             if (is_disabled(pred) || full_attractor.count(pred)) {
                 continue; // Skip disabled or already in attractor
             }
@@ -363,7 +350,8 @@ void PriorityPromotionSolver::set_dominion(int priority, Solution &solution) {
                 bool all_to_attractor = true;
                 bool has_edges = false;
 
-                for (Vertex succ : successors_[pred]) {
+                for (auto out_edge : boost::make_iterator_range(boost::out_edges(pred, *graph_))) {
+                    Vertex succ = boost::target(out_edge, *graph_);
                     if (is_disabled(succ))
                         continue;
                     has_edges = true;
@@ -376,7 +364,8 @@ void PriorityPromotionSolver::set_dominion(int priority, Solution &solution) {
                 if (has_edges && all_to_attractor) {
                     should_add = true;
                     // For opponent, choose any edge to attractor
-                    for (Vertex succ : successors_[pred]) {
+                    for (auto out_edge : boost::make_iterator_range(boost::out_edges(pred, *graph_))) {
+                        Vertex succ = boost::target(out_edge, *graph_);
                         if (!is_disabled(succ) && full_attractor.count(succ)) {
                             strategy_map[pred] = succ;
                             break;
@@ -431,7 +420,8 @@ int PriorityPromotionSolver::get_region_status(int vertex_index, int priority) {
             }
         } else {
             // Opponent owns this vertex - check for escapes to lower regions
-            for (Vertex succ : successors_[v]) {
+            for (auto out_edge : boost::make_iterator_range(boost::out_edges(v, *graph_))) {
+                Vertex succ = boost::target(out_edge, *graph_);
                 if (is_disabled(succ))
                     continue;
                 if (get_region(succ) < priority) {
@@ -448,7 +438,8 @@ int PriorityPromotionSolver::get_region_status(int vertex_index, int priority) {
     for (Vertex v : regions_[priority]) {
         if (get_player(v) != player) {
             // Check successors for higher regions
-            for (Vertex succ : successors_[v]) {
+            for (auto out_edge : boost::make_iterator_range(boost::out_edges(v, *graph_))) {
+                Vertex succ = boost::target(out_edge, *graph_);
                 if (is_disabled(succ))
                     continue;
                 int succ_region = get_region(succ);

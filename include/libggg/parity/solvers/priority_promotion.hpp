@@ -20,7 +20,7 @@ namespace parity {
  * The algorithm iterates vertices from highest to lowest priority, maintaining
  * regions of vertices and promoting them to higher priorities when regions become
  * closed. When a region becomes a dominion, all vertices in it are solved.
- * 
+ *
  * Time complexity: O(2^n), Space: O(n)
  */
 
@@ -69,9 +69,10 @@ class PriorityPromotionSolver : public ggg::solvers::Solver<graph::Graph, ggg::s
     // Utility data structures
     std::queue<Vertex> queue_;
 
+    // Stored graph pointer (set at the start of solve(), valid for its duration)
+    const Graph *graph_;
+
     // Graph information - stored as maps for safe vertex ID handling
-    std::map<Vertex, std::vector<Vertex>> predecessors_;
-    std::map<Vertex, std::vector<Vertex>> successors_;
     std::map<Vertex, int> vertex_priority_;
     std::map<Vertex, int> vertex_player_;
 
@@ -86,12 +87,6 @@ class PriorityPromotionSolver : public ggg::solvers::Solver<graph::Graph, ggg::s
      * @param graph Input parity graph
      */
     void initialize(const Graph &graph);
-
-    /**
-     * @brief Build predecessor and successor lists for efficient access
-     * @param graph Input parity graph
-     */
-    void build_adjacency_cache(const Graph &graph);
 
     /**
      * @brief Attract vertices to a given priority region
