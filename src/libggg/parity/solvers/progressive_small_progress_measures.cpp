@@ -40,18 +40,12 @@ ggg::solutions::RSSolution<graph::Graph> ProgressiveSmallProgressMeasuresSolver:
     for (int n = boost::num_vertices(*pv) - 1; n >= 0; n--) {
         if (lift(n, -1)) {
             auto vertex = node_to_vertex(*pv, n);
-            auto all_vertices = boost::vertices(*pv);
-            for (auto other_vertex_it = all_vertices.first; other_vertex_it != all_vertices.second; ++other_vertex_it) {
-                auto other_vertex = *other_vertex_it;
-                auto outgoing_edges = boost::out_edges(other_vertex, *pv);
-                for (auto edge_it = outgoing_edges.first; edge_it != outgoing_edges.second; ++edge_it) {
-                    auto edge = *edge_it;
-                    if (boost::target(edge, *pv) == vertex) {
-                        int from_node = vertex_to_node(*pv, other_vertex);
-                        if (lift(from_node, n)) {
-                            todo_push(from_node);
-                        }
-                    }
+            const auto [in_edges_begin, in_edges_end] = boost::in_edges(vertex, *pv);
+            for (auto edge_it = in_edges_begin; edge_it != in_edges_end; ++edge_it) {
+                auto predecessor = boost::source(*edge_it, *pv);
+                int from_node = vertex_to_node(*pv, predecessor);
+                if (lift(from_node, n)) {
+                    todo_push(from_node);
                 }
             }
         }
@@ -63,17 +57,12 @@ ggg::solutions::RSSolution<graph::Graph> ProgressiveSmallProgressMeasuresSolver:
         int n = todo_pop();
         auto vertex = node_to_vertex(*pv, n);
 
-        for (auto vertex_it = vertices.first; vertex_it != vertices.second; ++vertex_it) {
-            auto other_vertex = *vertex_it;
-            auto outgoing_edges = boost::out_edges(other_vertex, *pv);
-            for (auto edge_it = outgoing_edges.first; edge_it != outgoing_edges.second; ++edge_it) {
-                auto edge = *edge_it;
-                if (boost::target(edge, *pv) == vertex) {
-                    int from_node = vertex_to_node(*pv, other_vertex);
-                    if (lift(from_node, n)) {
-                        todo_push(from_node);
-                    }
-                }
+        const auto [in_edges_begin, in_edges_end] = boost::in_edges(vertex, *pv);
+        for (auto edge_it = in_edges_begin; edge_it != in_edges_end; ++edge_it) {
+            auto predecessor = boost::source(*edge_it, *pv);
+            int from_node = vertex_to_node(*pv, predecessor);
+            if (lift(from_node, n)) {
+                todo_push(from_node);
             }
         }
 
@@ -311,54 +300,47 @@ void ProgressiveSmallProgressMeasuresSolver::update(int pl) {
         }
     }
 
-    auto vertices = boost::vertices(*pv);
-
     while (!q.empty()) {
         int n = q.front();
         q.pop();
         auto vertex = node_to_vertex(*pv, n);
 
-        for (auto vertex_it = vertices.first; vertex_it != vertices.second; ++vertex_it) {
-            auto other_vertex = *vertex_it;
-            auto outgoing_edges = boost::out_edges(other_vertex, *pv);
-            for (auto edge_it = outgoing_edges.first; edge_it != outgoing_edges.second; ++edge_it) {
-                auto edge = *edge_it;
-                if (boost::target(edge, *pv) == vertex) {
-                    int m = vertex_to_node(*pv, other_vertex);
-                    if (unstable[m])
+        const auto [in_edges_begin, in_edges_end] = boost::in_edges(vertex, *pv);
+        for (auto edge_it = in_edges_begin; edge_it != in_edges_end; ++edge_it) {
+            auto other_vertex = boost::source(*edge_it, *pv);
+            int m = vertex_to_node(*pv, other_vertex);
+            if (unstable[m])
+                continue;
+
+            if ((*pv)[other_vertex].player != pl) {
+                int best_to = -1;
+                const int d = (*pv)[other_vertex].priority;
+                auto out_edges = boost::out_edges(other_vertex, *pv);
+
+                for (auto out_it = out_edges.first; out_it != out_edges.second; ++out_it) {
+                    auto out_edge = *out_it;
+                    auto to_vertex = boost::target(out_edge, *pv);
+                    int to_node = vertex_to_node(*pv, to_vertex);
+                    if (unstable[to_node])
                         continue;
 
-                    if ((*pv)[other_vertex].player != pl) {
-                        int best_to = -1;
-                        const int d = (*pv)[other_vertex].priority;
-                        auto out_edges = boost::out_edges(other_vertex, *pv);
-
-                        for (auto edge_it = out_edges.first; edge_it != out_edges.second; ++edge_it) {
-                            auto out_edge = *edge_it;
-                            auto to_vertex = boost::target(out_edge, *pv);
-                            int to_node = vertex_to_node(*pv, to_vertex);
-                            if (unstable[to_node])
-                                continue;
-
-                            prog(tmp.data(), pms.data() + k * to_node, d, pl);
-                            if (best_to == -1 || pm_less(tmp.data(), best.data(), d, pl)) {
-                                for (int i = 0; i < k; i++) {
-                                    best[i] = tmp[i];
-                                }
-                                best_to = to_node;
-                            }
+                    prog(tmp.data(), pms.data() + k * to_node, d, pl);
+                    if (best_to == -1 || pm_less(tmp.data(), best.data(), d, pl)) {
+                        for (int i = 0; i < k; i++) {
+                            best[i] = tmp[i];
                         }
-
-                        if (best_to == -1)
-                            continue;
-
-                        if (pm_less(pms.data() + k * m, best.data(), d, pl))
-                            continue;
-
-                        unstable[m] = 1;
-                        q.push(m);
+                        best_to = to_node;
                     }
                 }
+
+                if (best_to == -1)
+                    continue;
+
+                if (pm_less(pms.data() + k * m, best.data(), d, pl))
+                    continue;
+
+                unstable[m] = 1;
+                q.push(m);
             }
         }
     }
