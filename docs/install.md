@@ -85,6 +85,23 @@ cmake -S . -B build \
 cmake --build build -j$(nproc)
 ```
 
+## Documentation Pages
+
+The most recent version is available online at <https://gamegraphgym.github.io/ggg/>.
+
+To generate the docs yourself, you need to have [Doxygen](https://www.doxygen.nl/) available in your PATH.
+The following will generate docs locally from within the ggg source directory.
+This uses the [doxygen-awesome](https://jothepro.github.io/doxygen-awesome-css/) theme (downloaded automatically).
+
+
+```bash
+cmake -S . -B build
+cmake --build build --target docs
+```
+
+The generated HTML documentation will be available at `build/docs/html/index.html`.
+
+
 ## Installation
 
 You can optionally install the library system-wide:
