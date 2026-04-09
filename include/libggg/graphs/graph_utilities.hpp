@@ -145,19 +145,25 @@ struct ParseError : public std::runtime_error {
  *  - std::shared_ptr<Graph> parse(std::istream&), parse(const std::string&)
  *  - void write(const Graph&, std::ostream&), write(const Graph&, const std::string&)
  *
- * @param VERTEX_FIELDS Macro that expands a field macro to declare vertex fields (F(type,name) ...)
+ * @param VERTEX_FIELDS Macro that expands a field macro to declare vertex fields
+ *                      (F(type, name, default_value) ...)
  * @param EDGE_FIELDS   Macro that expands a field macro to declare edge fields
+ *                      (F(type, name, default_value) ...)
  * @param GRAPH_FIELDS  Macro that expands a field macro to declare graph-level fields
+ *                      (F(type, name, default_value) ...)
+ *
+ * @note Each field entry must supply a default value as the third argument. Omitting the
+ *       default value will result in a compilation error.
  *
  * @note Doxygen cannot see the expanded declarations produced by this macro. This macro-level
  *       documentation describes the API surface the macro generates in the call-site namespace.
  *
  * @code
- * #define VERTEX_FIELDS(F) \
- *     F(std::string, name) \
- *     F(int, value)
- * #define EDGE_FIELDS(F)   F(double, weight)
- * #define GRAPH_FIELDS(F)  F(std::string, title)
+ * #define VERTEX_FIELDS(F)      \
+ *     F(std::string, name, "") \
+ *     F(int, value, 0)
+ * #define EDGE_FIELDS(F)   F(double, weight, 0.0)
+ * #define GRAPH_FIELDS(F)  F(std::string, title, "")
  * DEFINE_GAME_GRAPH(VERTEX_FIELDS, EDGE_FIELDS, GRAPH_FIELDS)
  * @endcode
  */
