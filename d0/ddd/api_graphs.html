@@ -107,19 +107,20 @@ Adding New Game Types</h1>
 <div class="fragment"><div class="line"><span class="comment">// my_graph.hpp</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="../../d8/d48/graph__utilities_8hpp.html">libggg/graphs/graph_utilities.hpp</a>&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// Define vertex properties</span></div>
+<div class="line"><span class="comment">// Define vertex properties with explicit default values</span></div>
+<div class="line"><span class="comment">// Each field requires: F(type, name, default_value)</span></div>
 <div class="line"><span class="preprocessor">#define VERTEX_FIELDS(F) \</span></div>
-<div class="line"><span class="preprocessor">    F(std::string, name) \</span></div>
-<div class="line"><span class="preprocessor">    F(int, player) \</span></div>
-<div class="line"><span class="preprocessor">    F(int, custom_property)</span></div>
+<div class="line"><span class="preprocessor">    F(std::string, name, &quot;&quot;) \</span></div>
+<div class="line"><span class="preprocessor">    F(int, player, -1) \</span></div>
+<div class="line"><span class="preprocessor">    F(int, custom_property, 0)</span></div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// Define edge properties</span></div>
+<div class="line"><span class="comment">// Define edge properties with explicit default values</span></div>
 <div class="line"><span class="preprocessor">#define EDGE_FIELDS(F) \</span></div>
-<div class="line"><span class="preprocessor">    F(std::string, label)</span></div>
+<div class="line"><span class="preprocessor">    F(std::string, label, &quot;&quot;)</span></div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// Define graph properties (if any)</span></div>
+<div class="line"><span class="comment">// Define graph properties with explicit default values (if any)</span></div>
 <div class="line"><span class="preprocessor">#define GRAPH_FIELDS(F) \</span></div>
-<div class="line"><span class="preprocessor">    F(std::string, title)</span></div>
+<div class="line"><span class="preprocessor">    F(std::string, title, &quot;&quot;)</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Generate the complete graph type with utilities</span></div>
 <div class="line"><a class="code hl_define" href="../../d8/d48/graph__utilities_8hpp.html#a7bb6a79103446ef2224cdc95d532649d">DEFINE_GAME_GRAPH</a>(VERTEX_FIELDS, EDGE_FIELDS, GRAPH_FIELDS)</div>
@@ -129,7 +130,7 @@ Adding New Game Types</h1>
 <div class="line">    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line">}</div>
 <div class="ttc" id="agraph__utilities_8hpp_html"><div class="ttname"><a href="../../d8/d48/graph__utilities_8hpp.html">graph_utilities.hpp</a></div><div class="ttdoc">Graph utilities for creating type-safe Boost.Graph wrappers with DOT format I/O support.</div></div>
-<div class="ttc" id="agraph__utilities_8hpp_html_a7bb6a79103446ef2224cdc95d532649d"><div class="ttname"><a href="../../d8/d48/graph__utilities_8hpp.html#a7bb6a79103446ef2224cdc95d532649d">DEFINE_GAME_GRAPH</a></div><div class="ttdeci">#define DEFINE_GAME_GRAPH(VERTEX_FIELDS, EDGE_FIELDS, GRAPH_FIELDS)</div><div class="ttdoc">Generates a complete Boost.Graph-based game graph type and helper functions.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d48/graph__utilities_8hpp_source.html#l00164">graph_utilities.hpp:164</a></div></div>
+<div class="ttc" id="agraph__utilities_8hpp_html_a7bb6a79103446ef2224cdc95d532649d"><div class="ttname"><a href="../../d8/d48/graph__utilities_8hpp.html#a7bb6a79103446ef2224cdc95d532649d">DEFINE_GAME_GRAPH</a></div><div class="ttdeci">#define DEFINE_GAME_GRAPH(VERTEX_FIELDS, EDGE_FIELDS, GRAPH_FIELDS)</div><div class="ttdoc">Generates a complete Boost.Graph-based game graph type and helper functions.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d48/graph__utilities_8hpp_source.html#l00170">graph_utilities.hpp:170</a></div></div>
 </div><!-- fragment --><p>This will generate (in the call-site namespace)</p>
 <ul>
 <li><code>Graph</code> - a Boost adjacency_list alias with the declared bundled properties</li>
