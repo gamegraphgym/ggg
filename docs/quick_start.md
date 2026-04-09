@@ -3,7 +3,8 @@
 ## Prerequisites
 
 Ensure you have the required dependencies installed:
-The following lists packages as in Ubuntu/Debian. For other platforms (macOS, Fedora/RHEL, Windows), see the [detailed build instructions](building.md#platform-specific-setup).
+The following lists packages as in Ubuntu/Debian. For other platforms (macOS, Fedora/RHEL, Windows), see the 
+[detailed build instructions](@ref install).
 
 ```bash
 sudo apt-get install -y build-essential cmake \
