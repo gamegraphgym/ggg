@@ -240,29 +240,24 @@ void MSCASolver::update_func(int pos) {
         }
     }
 
-    const auto [all_vertices_begin, all_vertices_end] = boost::vertices(*graph_);
-    for (const auto &pred_vertex : boost::make_iterator_range(all_vertices_begin, all_vertices_end)) {
+    const auto [in_edges_begin, in_edges_end] = boost::in_edges(vertex, *graph_);
+    for (const auto &in_edge : boost::make_iterator_range(in_edges_begin, in_edges_end)) {
+        const auto &pred_vertex = boost::source(in_edge, *graph_);
         int pred_idx = vertex_to_index_[pred_vertex];
 
-        const auto [out_edges_begin, out_edges_end] = boost::out_edges(pred_vertex, *graph_);
-        for (const auto &edge : boost::make_iterator_range(out_edges_begin, out_edges_end)) {
-            if (boost::target(edge, *graph_) == vertex) {
-                if (wf(pred_idx, pos) < 0) {
-                    if ((*graph_)[pred_vertex].player == 0) {
-                        if (wf(pred_idx, pos) == -1) {
-                            --count_[pred_idx];
-                            if (count_[pred_idx] == 0) {
-                                setL_[pred_idx] = true;
-                                setB_[pred_idx] = true;
-                            }
-                        }
-                    } else {
+        if (wf(pred_idx, pos) < 0) {
+            if ((*graph_)[pred_vertex].player == 0) {
+                if (wf(pred_idx, pos) == -1) {
+                    --count_[pred_idx];
+                    if (count_[pred_idx] == 0) {
                         setL_[pred_idx] = true;
                         setB_[pred_idx] = true;
-                        strategy_[pred_idx] = vertex;
                     }
                 }
-                break;
+            } else {
+                setL_[pred_idx] = true;
+                setB_[pred_idx] = true;
+                strategy_[pred_idx] = vertex;
             }
         }
     }
