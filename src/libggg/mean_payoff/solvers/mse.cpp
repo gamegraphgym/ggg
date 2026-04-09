@@ -133,33 +133,27 @@ SolutionType MSESolver::solve(const graph::Graph &graph) {
             }
         }
 
-        // Process predecessors by manually finding incoming edges
-        const auto [all_vertices_begin, all_vertices_end] = boost::vertices(graph);
-        for (const auto &other_vertex : boost::make_iterator_range(all_vertices_begin, all_vertices_end)) {
-            const auto [out_edges_begin, out_edges_end] = boost::out_edges(other_vertex, graph);
-            for (const auto &edge : boost::make_iterator_range(out_edges_begin, out_edges_end)) {
-                if (boost::target(edge, graph) == pos) {
-                    // Found a predecessor
-                    const auto predecessor = other_vertex;
-                    if (!b_atr[vertex_map[predecessor]] &&
-                        (current_cost[vertex_map[predecessor]] < limit) &&
-                        ((current_cost[vertex_map[pos]] == limit) ||
-                         (current_cost[vertex_map[predecessor]] <
-                          current_cost[vertex_map[pos]] + graph[predecessor].weight))) {
+        // Propagate to predecessors via in_edges.
+        const auto [in_edges_begin, in_edges_end] = boost::in_edges(pos, graph);
+        for (const auto &in_edge : boost::make_iterator_range(in_edges_begin, in_edges_end)) {
+            const auto predecessor = boost::source(in_edge, graph);
+            if (!b_atr[vertex_map[predecessor]] &&
+                (current_cost[vertex_map[predecessor]] < limit) &&
+                ((current_cost[vertex_map[pos]] == limit) ||
+                 (current_cost[vertex_map[predecessor]] <
+                  current_cost[vertex_map[pos]] + graph[predecessor].weight))) {
 
-                        if (graph[predecessor].player) {
-                            if (current_cost[vertex_map[predecessor]] >= old_cost + graph[predecessor].weight) {
-                                current_count[vertex_map[predecessor]]--;
-                            }
-                            if (current_count[vertex_map[predecessor]] <= 0) {
-                                t_atr.push(predecessor);
-                                b_atr[vertex_map[predecessor]] = true;
-                            }
-                        } else {
-                            t_atr.push(predecessor);
-                            b_atr[vertex_map[predecessor]] = true;
-                        }
+                if (graph[predecessor].player) {
+                    if (current_cost[vertex_map[predecessor]] >= old_cost + graph[predecessor].weight) {
+                        current_count[vertex_map[predecessor]]--;
                     }
+                    if (current_count[vertex_map[predecessor]] <= 0) {
+                        t_atr.push(predecessor);
+                        b_atr[vertex_map[predecessor]] = true;
+                    }
+                } else {
+                    t_atr.push(predecessor);
+                    b_atr[vertex_map[predecessor]] = true;
                 }
             }
         }
