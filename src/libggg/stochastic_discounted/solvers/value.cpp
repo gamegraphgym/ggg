@@ -75,14 +75,11 @@ auto StochasticDiscountedValueSolver::solve(const graphs_t &graph) -> ggg::solut
             sol[pos] = best;
             strategy[pos] = best_succ;
 
-            for (auto pred : boost::make_iterator_range(boost::vertices(graph))) {
-                for (auto e : boost::make_iterator_range(boost::out_edges(pred, graph))) {
-                    if (boost::target(e, graph) == pos) {
-                        if (!BAtr[pred]) {
-                            TAtr.push(pred);
-                            BAtr[pred] = true;
-                        }
-                    }
+            for (auto in_edge : boost::make_iterator_range(boost::in_edges(pos, graph))) {
+                auto pred = boost::source(in_edge, graph);
+                if (!BAtr[pred]) {
+                    TAtr.push(pred);
+                    BAtr[pred] = true;
                 }
             }
         }
