@@ -176,7 +176,9 @@ struct ParseError : public std::runtime_error {
     }                                                                                                 \
     /* Graph type alias (public in call-site namespace) */                                            \
     using Graph = boost::adjacency_list<                                                              \
-        boost::setS, boost::vecS, boost::directedS,                                                   \
+        boost::setS,                                                                                  \
+        boost::vecS,                                                                                  \
+        boost::bidirectionalS,                                                                        \
         detail_graphxx::VertexProps,                                                                  \
         detail_graphxx::EdgeProps,                                                                    \
         detail_graphxx::GraphProps>;                                                                  \
