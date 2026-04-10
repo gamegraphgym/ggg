@@ -1,5 +1,7 @@
 #include "libggg/stochastic_discounted/graph.hpp"
+#include <sstream>
 #include <string>
+#include <vector>
 
 #include <boost/test/unit_test.hpp>
 
@@ -157,6 +159,49 @@ BOOST_AUTO_TEST_CASE(ReachableThroughProbabilisticComplexTest) {
     BOOST_TEST(reachable.size() == 2);
     BOOST_TEST(reachable[v3] == 0.3);
     BOOST_TEST(reachable[v4] == 0.7);
+}
+
+BOOST_AUTO_TEST_CASE(WriteParseRoundTripPreservesProbabilityPrecision) {
+    using namespace ggg::stochastic_discounted::graph;
+
+    Graph graph;
+
+    auto stochastic = add_vertex(graph, "s", -1);
+
+    std::vector<Vertex> players;
+    players.reserve(7);
+    for (int i = 0; i < 7; ++i) {
+        players.push_back(add_vertex(graph, "p" + std::to_string(i), i % 2));
+    }
+
+    // Ensure every non-probabilistic vertex has a valid outgoing edge.
+    for (std::size_t i = 0; i < players.size(); ++i) {
+        add_edge(graph, players[i], stochastic, "p_to_s_" + std::to_string(i),
+                 static_cast<double>(i), 0.95, 0.0);
+    }
+
+    // These values are intentionally high-precision. With default stream precision,
+    // they can round so that the outgoing sum deviates from 1 by ~1e-6.
+    const std::vector<double> probs = {
+        0.123456789,
+        0.123456789,
+        0.123456789,
+        0.123456789,
+        0.123456789,
+        0.123456789,
+        1.0 - (6.0 * 0.123456789)};
+
+    for (std::size_t i = 0; i < players.size(); ++i) {
+        add_edge(graph, stochastic, players[i], "s_to_p_" + std::to_string(i),
+                 0.0, 0.0, probs[i]);
+    }
+
+    std::stringstream buffer;
+    write(graph, buffer);
+
+    auto parsed = parse(buffer);
+    BOOST_REQUIRE(parsed != nullptr);
+    BOOST_CHECK_NO_THROW(StandardValidator::validate(*parsed));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
