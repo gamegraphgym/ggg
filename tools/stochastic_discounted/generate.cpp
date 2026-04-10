@@ -1,6 +1,7 @@
 #include "libggg/stochastic_discounted/graph.hpp"
 #include "libggg/utils/game_graph_generator.hpp"
 #include <algorithm>
+#include <limits>
 #include <numeric>
 #include <random>
 #include <string>
@@ -12,7 +13,8 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
   public:
     StochasticDiscountedGameGenerator() : GameGraphGenerator("Stochastic Discounted Generator Options") {
         desc_.add_options()("player-vertices", po::value<int>()->default_value(10), "Number of player-owned vertices (players 0/1)");
-        desc_.add_options()("stochastic-vertices", po::value<int>()->default_value(10), "Number of stochastic vertices (player -1), must satisfy: player-vertices <= stochastic-vertices <= player-vertices^2");
+        desc_.add_options()("min-player-outgoing", po::value<int>()->default_value(1), "Minimum outgoing edges per player-owned vertex (must satisfy 1 <= min <= N-1)");
+        desc_.add_options()("max-player-outgoing", po::value<int>()->default_value(3), "Maximum outgoing edges per player-owned vertex (must satisfy min <= max <= N-1)");
         desc_.add_options()("min-weight", po::value<int>()->default_value(-10), "Minimum edge weight");
         desc_.add_options()("max-weight", po::value<int>()->default_value(10), "Maximum edge weight");
         desc_.add_options()("discount", po::value<double>()->default_value(0.95), "Discount factor (0 < discount < 1)");
@@ -32,8 +34,12 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
             std::cout << desc_ << std::endl;
             std::cout
                 << "Model-specific notes for this generator:\n"
-                << "  - Use --player-vertices and --stochastic-vertices to control game size.\n"
+                << "  - Let N = --player-vertices.\n"
+                << "  - For each player-owned vertex, outgoing edges to stochastic vertices are sampled in [min-player-outgoing, max-player-outgoing].\n"
+                << "  - Constraints: 1 <= min-player-outgoing <= max-player-outgoing <= N-1.\n"
                 << "  - --vertices is a shared base option and is ignored by this generator.\n"
+                << "  - Number of stochastic vertices is derived per game as the sum of sampled player out-degrees.\n"
+                << "  - For each stochastic vertex, outgoing edges to player-owned vertices are sampled in [1, N-1].\n"
                 << "  - Edge structure is strictly bipartite: (player 0/1 -> player -1) and (player -1 -> player 0/1).\n"
                 << "  - Reverse edge pairs are forbidden: if u->v exists, then v->u does not.\n"
                 << "  - Outgoing probabilities from each stochastic vertex are normalized to sum to 1.\n";
@@ -77,7 +83,8 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
   protected:
     bool validate_parameters(const po::variables_map &vm) override {
         const auto player_vertices = vm["player-vertices"].as<int>();
-        const auto stochastic_vertices = vm["stochastic-vertices"].as<int>();
+        const auto min_player_outgoing = vm["min-player-outgoing"].as<int>();
+        const auto max_player_outgoing = vm["max-player-outgoing"].as<int>();
         const auto discount = vm["discount"].as<double>();
         if (player_vertices <= 0) {
             std::cerr << "Error: player-vertices must be positive" << std::endl;
@@ -87,14 +94,19 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
             std::cerr << "Error: player-vertices must be >= 2 (player-vertices == 1 is unsatisfiable with the no-reverse-edge rule)" << std::endl;
             return false;
         }
-        if (stochastic_vertices < player_vertices) {
-            std::cerr << "Error: stochastic-vertices must be >= player-vertices" << std::endl;
+        const auto max_allowed = player_vertices - 1;
+        if (min_player_outgoing < 1 || min_player_outgoing > max_allowed) {
+            std::cerr << "Error: min-player-outgoing must satisfy 1 <= min-player-outgoing <= player-vertices-1" << std::endl;
+            return false;
+        }
+        if (max_player_outgoing < min_player_outgoing || max_player_outgoing > max_allowed) {
+            std::cerr << "Error: max-player-outgoing must satisfy min-player-outgoing <= max-player-outgoing <= player-vertices-1" << std::endl;
             return false;
         }
         const long long max_stochastic_vertices =
-            static_cast<long long>(player_vertices) * static_cast<long long>(player_vertices);
-        if (static_cast<long long>(stochastic_vertices) > max_stochastic_vertices) {
-            std::cerr << "Error: stochastic-vertices must be <= player-vertices^2" << std::endl;
+            static_cast<long long>(player_vertices) * static_cast<long long>(max_player_outgoing);
+        if (max_stochastic_vertices > static_cast<long long>(std::numeric_limits<int>::max())) {
+            std::cerr << "Error: configuration produces too many stochastic vertices" << std::endl;
             return false;
         }
         if (!(discount > 0.0 && discount < 1.0)) {
@@ -106,10 +118,16 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
 
     void print_generation_info(const po::variables_map &vm, const std::string &output_dir, int count, unsigned int seed) override {
         const auto player_vertices = vm["player-vertices"].as<int>();
-        const auto stochastic_vertices = vm["stochastic-vertices"].as<int>();
+        const auto min_player_outgoing = vm["min-player-outgoing"].as<int>();
+        const auto max_player_outgoing = vm["max-player-outgoing"].as<int>();
         std::cout << "Generating " << count << " stochastic discounted games" << std::endl;
         std::cout << "Player-owned vertices (players 0/1): " << player_vertices << std::endl;
-        std::cout << "Stochastic vertices (player -1): " << stochastic_vertices << std::endl;
+        std::cout << "Player outgoing edges range per vertex: [" << min_player_outgoing << ", "
+                  << max_player_outgoing << "]" << std::endl;
+        std::cout << "Derived stochastic vertices per game range: ["
+                  << player_vertices * min_player_outgoing << ", "
+                  << player_vertices * max_player_outgoing << "]" << std::endl;
+        std::cout << "Seed: " << seed << std::endl;
         std::cout << "Output directory: " << output_dir << std::endl;
     }
 
@@ -117,22 +135,33 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
 
     void generate_single_game(const po::variables_map &vm, std::mt19937 &gen, std::ofstream &file) override {
         const auto player_vertices = vm["player-vertices"].as<int>();
-        const auto stochastic_vertices = vm["stochastic-vertices"].as<int>();
+        const auto min_player_outgoing = vm["min-player-outgoing"].as<int>();
+        const auto max_player_outgoing = vm["max-player-outgoing"].as<int>();
         const auto min_weight = vm["min-weight"].as<int>();
         const auto max_weight = vm["max-weight"].as<int>();
         const auto discount = vm["discount"].as<double>();
 
-        auto graph = generate_stochastic_discounted_game(player_vertices, stochastic_vertices, min_weight, max_weight, discount, gen);
+        auto graph = generate_stochastic_discounted_game(player_vertices, min_player_outgoing, max_player_outgoing,
+                                                         min_weight, max_weight, discount, gen);
         ggg::stochastic_discounted::graph::write(graph, file);
     }
 
   private:
     static ggg::stochastic_discounted::graph::Graph generate_stochastic_discounted_game(int player_vertices,
-                                                                                        int stochastic_vertices,
+                                                                                        int min_player_outgoing,
+                                                                                        int max_player_outgoing,
                                                                                         int min_weight,
                                                                                         int max_weight,
                                                                                         double discount,
                                                                                         std::mt19937 &gen) {
+        std::uniform_int_distribution<int> player_outgoing_dist(min_player_outgoing, max_player_outgoing);
+        std::vector<int> player_outdegrees(player_vertices);
+        int stochastic_vertices = 0;
+        for (auto &outdeg : player_outdegrees) {
+            outdeg = player_outgoing_dist(gen);
+            stochastic_vertices += outdeg;
+        }
+
         const auto total_vertices = player_vertices + stochastic_vertices;
         std::uniform_int_distribution<int> player_dist(0, 1);
         std::uniform_int_distribution<int> weight_dist(min_weight, max_weight);
@@ -161,17 +190,23 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
         std::vector<std::vector<bool>> stoch_to_player(stochastic_vertices,
                                                        std::vector<bool>(player_vertices, false));
 
-        // Base coverage for players: each player gets at least one outgoing edge to a distinct
-        // stochastic vertex (possible since stochastic_vertices >= player_vertices).
-        std::vector<int> stoch_perm(stochastic_vertices);
-        std::iota(stoch_perm.begin(), stoch_perm.end(), 0);
-        std::shuffle(stoch_perm.begin(), stoch_perm.end(), gen);
+        // Assign each stochastic vertex to exactly one owning player so that player outdegree
+        // requirements are met exactly and each stochastic vertex has at least N-1 admissible
+        // targets for outgoing stochastic->player edges.
+        std::vector<int> stochastic_owner;
+        stochastic_owner.reserve(stochastic_vertices);
         for (int p = 0; p < player_vertices; ++p) {
-            player_to_stoch[p][stoch_perm[p]] = true;
+            for (int k = 0; k < player_outdegrees[p]; ++k) {
+                stochastic_owner.push_back(p);
+            }
+        }
+        std::shuffle(stochastic_owner.begin(), stochastic_owner.end(), gen);
+        for (int s = 0; s < stochastic_vertices; ++s) {
+            player_to_stoch[stochastic_owner[s]][s] = true;
         }
 
-        // Base coverage for stochastic vertices: each stochastic vertex gets at least one
-        // outgoing edge to a player that does NOT already point to it.
+        // For each stochastic vertex, pick random outdegree in [1, N-1] and connect to player
+        // vertices that do not violate the no-reverse-edge invariant.
         for (int s = 0; s < stochastic_vertices; ++s) {
             std::vector<int> allowed;
             allowed.reserve(player_vertices);
@@ -181,52 +216,15 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
                 }
             }
 
-            // By construction of the base player pass, this should always hold.
-            if (allowed.empty()) {
-                throw std::runtime_error("Internal generator error: no admissible stochastic target");
+            if (allowed.size() != static_cast<std::size_t>(player_vertices - 1)) {
+                throw std::runtime_error("Internal generator error: unexpected admissible stochastic target count");
             }
 
+            std::uniform_int_distribution<int> stoch_outdegree_dist(1, player_vertices - 1);
+            const int outdegree = stoch_outdegree_dist(gen);
             std::shuffle(allowed.begin(), allowed.end(), gen);
-            stoch_to_player[s][allowed.front()] = true;
-        }
-
-        // Add extra player->stochastic edges while preserving the no-reverse-edge invariant.
-        for (int p = 0; p < player_vertices; ++p) {
-            std::vector<int> candidates;
-            candidates.reserve(stochastic_vertices);
-            for (int s = 0; s < stochastic_vertices; ++s) {
-                if (!player_to_stoch[p][s] && !stoch_to_player[s][p]) {
-                    candidates.push_back(s);
-                }
-            }
-
-            if (!candidates.empty()) {
-                std::shuffle(candidates.begin(), candidates.end(), gen);
-                std::uniform_int_distribution<int> extra_count_dist(0, static_cast<int>(candidates.size()));
-                const int extra = extra_count_dist(gen);
-                for (int i = 0; i < extra; ++i) {
-                    player_to_stoch[p][candidates[i]] = true;
-                }
-            }
-        }
-
-        // Add extra stochastic->player edges while preserving the no-reverse-edge invariant.
-        for (int s = 0; s < stochastic_vertices; ++s) {
-            std::vector<int> candidates;
-            candidates.reserve(player_vertices);
-            for (int p = 0; p < player_vertices; ++p) {
-                if (!stoch_to_player[s][p] && !player_to_stoch[p][s]) {
-                    candidates.push_back(p);
-                }
-            }
-
-            if (!candidates.empty()) {
-                std::shuffle(candidates.begin(), candidates.end(), gen);
-                std::uniform_int_distribution<int> extra_count_dist(0, static_cast<int>(candidates.size()));
-                const int extra = extra_count_dist(gen);
-                for (int i = 0; i < extra; ++i) {
-                    stoch_to_player[s][candidates[i]] = true;
-                }
+            for (int i = 0; i < outdegree; ++i) {
+                stoch_to_player[s][allowed[i]] = true;
             }
         }
 
