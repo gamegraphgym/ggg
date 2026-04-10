@@ -6,8 +6,12 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/property_map/dynamic_property_map.hpp>
-#include <set>
+#include <boost/property_map/transform_value_property_map.hpp>
+#include <iomanip>
+#include <limits>
+#include <sstream>
 #include <stdexcept>
+#include <type_traits>
 
 namespace ggg {
 /**
@@ -30,6 +34,23 @@ namespace ggg {
  * @{
  */
 namespace graphs {
+
+namespace detail {
+struct DotValueFormatter {
+    template <typename T>
+    std::string operator()(const T &value) const {
+        std::ostringstream oss;
+        if constexpr (std::is_floating_point_v<std::remove_cv_t<std::remove_reference_t<T>>>) {
+            oss << std::setprecision(std::numeric_limits<std::remove_cv_t<std::remove_reference_t<T>>>::max_digits10)
+                << value;
+        } else {
+            oss << value;
+        }
+        return oss.str();
+    }
+};
+} // namespace detail
+
 /**
  * @brief Validator for out-degree range of vertices
  *
@@ -125,6 +146,12 @@ struct ParseError : public std::runtime_error {
 #define REGISTER_EDGE_FIELD_IMPL(type, name, ...) dp.property(#name, boost::get(&Props::name, g));
 #define REGISTER_GRAPH_FIELD_IMPL(type, name, ...) dp.property(#name, boost::get(&Props::name, g));
 
+// Write-time registration maps all fields through string conversion with
+// high-precision formatting for floating-point values.
+#define REGISTER_VERTEX_FIELD_WRITE_IMPL(type, name, ...) dp.property(#name, boost::make_transform_value_property_map(ggg::graphs::detail::DotValueFormatter{}, boost::get(&Props::name, g)));
+#define REGISTER_EDGE_FIELD_WRITE_IMPL(type, name, ...) dp.property(#name, boost::make_transform_value_property_map(ggg::graphs::detail::DotValueFormatter{}, boost::get(&Props::name, g)));
+#define REGISTER_GRAPH_FIELD_WRITE_IMPL(type, name, ...) dp.property(#name, boost::make_transform_value_property_map(ggg::graphs::detail::DotValueFormatter{}, boost::get(&Props::name, g)));
+
 // Helper macros for generating add_vertex and add_edge parameters
 #define ADD_VERTEX_PARAM(type, name, ...) , const type &name
 #define ADD_VERTEX_ASSIGN(type, name, ...) v.name = name;
@@ -218,6 +245,28 @@ struct ParseError : public std::runtime_error {
         }                                                                                             \
     }                                                                                                 \
     /**                                                                                               \
+     * @brief Register dynamic properties for DOT writing with explicit value formatting              \
+     *                                                                                                \
+     * Floating-point values are rendered with max_digits10 precision to preserve                     \
+     * round-trip stability for parse+validate workflows. */                                          \
+    inline void register_dynamic_properties_for_write(boost::dynamic_properties &dp, const Graph &g) {\
+        /* Register vertex properties */                                                              \
+        {                                                                                             \
+            using Props [[maybe_unused]] = detail_graphxx::VertexProps;                               \
+            VERTEX_FIELDS(REGISTER_VERTEX_FIELD_WRITE_IMPL)                                           \
+        }                                                                                             \
+        /* Register edge properties */                                                                \
+        {                                                                                             \
+            using Props [[maybe_unused]] = detail_graphxx::EdgeProps;                                 \
+            EDGE_FIELDS(REGISTER_EDGE_FIELD_WRITE_IMPL)                                               \
+        }                                                                                             \
+        /* Register graph properties */                                                               \
+        {                                                                                             \
+            using Props [[maybe_unused]] = detail_graphxx::GraphProps;                                \
+            GRAPH_FIELDS(REGISTER_GRAPH_FIELD_WRITE_IMPL)                                             \
+        }                                                                                             \
+    }                                                                                                 \
+    /**                                                                                               \
      * @brief Add a vertex with the provided property values                                          \
      * @param graph The graph to which the vertex is added                                            \
      * @param ...   Values for each vertex property as declared by VERTEX_FIELDS                      \
@@ -297,7 +346,7 @@ struct ParseError : public std::runtime_error {
      * that bundled properties are emitted as DOT attributes. */                                      \
     inline void write(const Graph &g, std::ostream &os) {                                             \
         boost::dynamic_properties dp(boost::ignore_other_properties);                                 \
-        register_dynamic_properties(dp, const_cast<Graph &>(g));                                      \
+        register_dynamic_properties_for_write(dp, g);                                                 \
         boost::write_graphviz_dp(os, g, dp, "name");                                                  \
         if (!os.good()) {                                                                             \
             throw std::ios_base::failure("Failed to write graph to output stream");                   \
