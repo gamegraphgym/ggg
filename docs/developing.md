@@ -13,7 +13,7 @@ The repository is organized as follows:
 ├── include/      # Public C++ headers for the library
 ├── src/          # Implementations
 ├── tests/        # Unit and integration tests
-└── tools/        # CLI tools (e.g., game generators, benchmarks)
+└── tools/        # CLI tools (game solvers and generators, benchmarks)
 ```
 
 ## Development Setup

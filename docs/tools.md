@@ -4,6 +4,9 @@ GGG provides macros to define command-line tools with a uniform interface, input
 
 ## Game solvers
 
+The executables for game solvers are called `ggg_X_solver_Y`, where `X` identifies the game graph type and `Y` is the name of the algorithm. For instance, the "priority promotion" algorithm for solving Parity games is compiled into a binary  named `ggg_parity_solver_priority_promotion`.
+
+
 ### Input File Formats {#input_formats}
 
 GGG provides parsing and writing game graphs in [Graphviz DOT](https://graphviz.org/doc/info/lang.html) format with custom attributes for the dynamic properties defined on the graph type.
@@ -30,4 +33,8 @@ digraph ParityGame {
 
 ## Random Game Graph Generators
 
+The executables for randome game graph generators are called `ggg_X_generate`, where `X` identifies the game graph type. For instance, a generator for Parity game graphs is compiled into a binary named `ggg_parity_generate`.
+
 ## Benchmarking Scripts
+
+GGG ships some convenience scripts in `/extra/scripts` to run and plot benchmarks and convert file formats.
