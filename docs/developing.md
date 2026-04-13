@@ -29,14 +29,11 @@ cmake -S . -B build \
 cmake --build build
 ```
 
-> [!note]
-> Language Server Support  
-> To use [clangd](https://clangd.llvm.org/) for C++ language server support, generate a `compile_commands.json` file:
->
-> ```bash
-> cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-> ln -s build/compile_commands.json .
-> ```
+@note To use [clangd](https://clangd.llvm.org/) for C++ language server support, generate a `compile_commands.json` file:
+```bash
+cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+ln -s build/compile_commands.json .
+```
 
 ## Code Style Guidelines
 
