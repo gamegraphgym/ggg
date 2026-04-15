@@ -79,7 +79,7 @@ run_solver() {
   edges=$2
 
   start=$(date +%s.%N)
-  if output=$(timeout "$timeout_sec" "$solver_path" --time-only < "$game" 2>&1); then
+  if output=$(timeout "$timeout_sec" "$solver_path" --time-only "$game" 2>&1); then
     end=$(date +%s.%N)
     elapsed=$(echo "$end - $start" | bc | sed 's/^\./0./')
     status="success"
