@@ -7,5 +7,5 @@ var searchData=
   ['rsolution_4',['RSolution',['../da/d7c/classggg_1_1solutions_1_1RSolution.html#aa8006b235401742f6ed8ecf5757be1ce',1,'ggg::solutions::RSolution']]],
   ['rsqsolution_5',['RSQSolution',['../d3/da4/classggg_1_1solutions_1_1RSQSolution.html#aeefd14b8364f348c7f12222e5895b52d',1,'ggg::solutions::RSQSolution']]],
   ['rssolution_6',['RSSolution',['../dd/d77/classggg_1_1solutions_1_1RSSolution.html#a3b999d9c9b4d4689fdfb2ec1eb3a8690',1,'ggg::solutions::RSSolution']]],
-  ['run_7',['run',['../db/d7c/classggg_1_1utils_1_1GameGraphGenerator.html#a1e5949062b00b19279c1b586dee8650f',1,'ggg::utils::GameGraphGenerator::run()'],['../d7/dbd/classggg_1_1utils_1_1GameSolverWrapper.html#af2dcfbeec7852e662e1435de5fd10082',1,'ggg::utils::GameSolverWrapper::run()']]]
+  ['run_7',['run',['../db/d7c/classggg_1_1utils_1_1GameGraphGenerator.html#a1e5949062b00b19279c1b586dee8650f',1,'ggg::utils::GameGraphGenerator::run()'],['../d7/dbd/classggg_1_1utils_1_1GameSolverWrapper.html#af2dcfbeec7852e662e1435de5fd10082',1,'ggg::utils::GameSolverWrapper::run()'],['../d3/df5/classStochasticDiscountedGameGenerator.html#a541a750eef9b3881459bb25a53c6a067',1,'StochasticDiscountedGameGenerator::run()']]]
 ];

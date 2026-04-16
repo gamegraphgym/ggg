@@ -1,5 +1,6 @@
 var namespaceggg_1_1graphs =
 [
+    [ "detail", "d5/df5/namespaceggg_1_1graphs_1_1detail.html", "d5/df5/namespaceggg_1_1graphs_1_1detail" ],
     [ "discount_utilities", "db/d9f/namespaceggg_1_1graphs_1_1discount__utilities.html", "db/d9f/namespaceggg_1_1graphs_1_1discount__utilities" ],
     [ "player_utilities", "d3/d98/namespaceggg_1_1graphs_1_1player__utilities.html", "d3/d98/namespaceggg_1_1graphs_1_1player__utilities" ],
     [ "priority_utilities", "dc/dc0/namespaceggg_1_1graphs_1_1priority__utilities.html", "dc/dc0/namespaceggg_1_1graphs_1_1priority__utilities" ],

@@ -3,6 +3,7 @@ var hierarchy =
     [ "ggg::graphs::CompositeValidator< GraphType, Validators >", "d0/d9d/structggg_1_1graphs_1_1CompositeValidator.html", null ],
     [ "ggg::stochastic_discounted::graph::CycleValidator", "da/d06/structggg_1_1stochastic__discounted_1_1graph_1_1CycleValidator.html", null ],
     [ "ggg::graphs::discount_utilities::DiscountValidator", "df/d20/structggg_1_1graphs_1_1discount__utilities_1_1DiscountValidator.html", null ],
+    [ "ggg::graphs::detail::DotValueFormatter", "d7/d82/structggg_1_1graphs_1_1detail_1_1DotValueFormatter.html", null ],
     [ "ggg::graphs::weight_utilities::EdgeWeightValidator< MinWeight, MaxWeight >", "d3/dc7/structggg_1_1graphs_1_1weight__utilities_1_1EdgeWeightValidator.html", null ],
     [ "ggg::stochastic_discounted::graph::FilteredValidator", "d8/d0d/structggg_1_1stochastic__discounted_1_1graph_1_1FilteredValidator.html", null ],
     [ "ggg::utils::GameGraphGenerator", "db/d7c/classggg_1_1utils_1_1GameGraphGenerator.html", [

@@ -104,6 +104,7 @@ $(document).ready(function(){initNavTree('d7/d83/tools.html','../../'); initResi
 <div class="textblock"><p>GGG provides macros to define command-line tools with a uniform interface, input parsing and validation.</p>
 <h1><a class="anchor" id="game-solvers"></a>
 Game solvers</h1>
+<p>The executables for game solvers are called <code>ggg_X_solver_Y</code>, where <code>X</code> identifies the game graph type and <code>Y</code> is the name of the algorithm. For instance, the "priority promotion" algorithm for solving Parity games is compiled into a binary named <code>ggg_parity_solver_priority_promotion</code>.</p>
 <h2><a class="anchor" id="input_formats"></a>
 Input File Formats</h2>
 <p>GGG provides parsing and writing game graphs in <a href="https://graphviz.org/doc/info/lang.html">Graphviz DOT</a> format with custom attributes for the dynamic properties defined on the graph type.</p>
@@ -125,8 +126,10 @@ Input File Formats</h2>
 <div class="line">}</div>
 </div><!-- fragment --><h1><a class="anchor" id="random-game-graph-generators"></a>
 Random Game Graph Generators</h1>
+<p>The executables for randome game graph generators are called <code>ggg_X_generate</code>, where <code>X</code> identifies the game graph type. For instance, a generator for Parity game graphs is compiled into a binary named <code>ggg_parity_generate</code>.</p>
 <h1><a class="anchor" id="benchmarking-scripts"></a>
 Benchmarking Scripts</h1>
+<p>GGG ships some convenience scripts in <code>/extra/scripts</code> to run and plot benchmarks and convert file formats. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

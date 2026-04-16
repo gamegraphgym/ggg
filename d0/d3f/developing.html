@@ -111,7 +111,7 @@ Project Structure</h1>
 <div class="line">├── include/      # Public C++ headers for the library</div>
 <div class="line">├── src/          # Implementations</div>
 <div class="line">├── tests/        # Unit and integration tests</div>
-<div class="line">└── tools/        # CLI tools (e.g., game generators, benchmarks)</div>
+<div class="line">└── tools/        # CLI tools (game solvers and generators, benchmarks)</div>
 </div><!-- fragment --><h1><a class="anchor" id="development-setup"></a>
 Development Setup</h1>
 <p>Set up development build as follows.</p>
@@ -121,12 +121,9 @@ Development Setup</h1>
 <div class="line">    -DBUILD_TESTING=ON</div>
 <div class="line"> </div>
 <div class="line">cmake --build build</div>
-</div><!-- fragment --><blockquote class="doxtable">
-<p>&zwj;[!note] Language Server Support <br  />
- To use <a href="https://clangd.llvm.org/">clangd</a> for C++ language server support, generate a <code>compile_commands.json</code> file:</p>
-<div class="fragment"><div class="line">cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>To use <a href="https://clangd.llvm.org/">clangd</a> for C++ language server support, generate a <code>compile_commands.json</code> file: <div class="fragment"><div class="line">cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON</div>
 <div class="line">ln -s build/compile_commands.json .</div>
-</div><!-- fragment --> </blockquote>
+</div><!-- fragment --></dd></dl>
 <h1><a class="anchor" id="code-style-guidelines"></a>
 Code Style Guidelines</h1>
 <h2><a class="anchor" id="use-boost-graph-library-features-where-possible"></a>

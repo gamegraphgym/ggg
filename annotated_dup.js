@@ -5,6 +5,9 @@ var annotated_dup =
         [ "AttractorSolver", "d3/d39/classggg_1_1buechi_1_1AttractorSolver.html", "d3/d39/classggg_1_1buechi_1_1AttractorSolver" ]
       ] ],
       [ "graphs", "d6/da5/namespaceggg_1_1graphs.html", [
+        [ "detail", "d5/df5/namespaceggg_1_1graphs_1_1detail.html", [
+          [ "DotValueFormatter", "d7/d82/structggg_1_1graphs_1_1detail_1_1DotValueFormatter.html", "d7/d82/structggg_1_1graphs_1_1detail_1_1DotValueFormatter" ]
+        ] ],
         [ "discount_utilities", "db/d9f/namespaceggg_1_1graphs_1_1discount__utilities.html", [
           [ "DiscountValidator", "df/d20/structggg_1_1graphs_1_1discount__utilities_1_1DiscountValidator.html", "df/d20/structggg_1_1graphs_1_1discount__utilities_1_1DiscountValidator" ]
         ] ],
