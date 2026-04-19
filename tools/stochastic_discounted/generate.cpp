@@ -88,13 +88,13 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
     int run(int argc, char *argv[]) {
         po::variables_map vm;
         try {
-                         const auto args = normalize_stochastic_aliases(argc, argv);
-                     po::store(po::command_line_parser(args)
-                             .options(desc_)
-                             .style(po::command_line_style::default_style |
+            const auto args = normalize_stochastic_aliases(argc, argv);
+            po::store(po::command_line_parser(args)
+                          .options(desc_)
+                          .style(po::command_line_style::default_style |
                                  po::command_line_style::allow_long_disguise)
-                             .run(),
-                         vm);
+                          .run(),
+                      vm);
             po::notify(vm);
         } catch (const std::exception &e) {
             std::cerr << "Error parsing options: " << e.what() << std::endl;
@@ -302,8 +302,10 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
         auto has_deterministic_path_to_stoch = [&](int start_player, int target_stoch, double prob_threshold = 0.99) -> bool {
             std::vector<bool> visited_stoch(stochastic_vertices, false);
             std::function<bool(int)> dfs = [&](int curr_stoch) -> bool {
-                if (visited_stoch[curr_stoch]) return false;
-                if (curr_stoch == target_stoch) return true;
+                if (visited_stoch[curr_stoch])
+                    return false;
+                if (curr_stoch == target_stoch)
+                    return true;
                 visited_stoch[curr_stoch] = true;
 
                 // Check all player targets from current stochastic vertex

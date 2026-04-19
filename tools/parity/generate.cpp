@@ -1,9 +1,9 @@
 #include "libggg/parity/graph.hpp"
 #include "libggg/utils/game_graph_generator.hpp"
 #include <algorithm>
+#include <filesystem>
 #include <random>
 #include <string>
-#include <filesystem>
 #include <vector>
 
 namespace po = boost::program_options;
@@ -20,7 +20,7 @@ class ParityGameGenerator : public ggg::utils::GameGraphGenerator {
         desc_.add_options()("min-out-degree", po::value<int>()->default_value(1), "Minimum out-degree per vertex");
         desc_.add_options()("max-out-degree", po::value<int>()->default_value(-1), "Maximum out-degree per vertex (-1 means vertices-1)");
     }
-    
+
     static std::vector<std::string> normalize_parity_aliases(int argc, char *argv[]) {
         std::vector<std::string> args;
         args.reserve(argc);
@@ -40,7 +40,7 @@ class ParityGameGenerator : public ggg::utils::GameGraphGenerator {
         }
         return args;
     }
-    
+
     void print_help() const {
         std::cout << "Parity Game Generator Options:\n"
                   << "  -h [ --help ]                       Show help message\n"
@@ -70,26 +70,26 @@ class ParityGameGenerator : public ggg::utils::GameGraphGenerator {
             std::cerr << "Error parsing options: " << e.what() << std::endl;
             return 1;
         }
-        
+
         if (vm.count("help")) {
             print_help();
             return 0;
         }
-        
+
         const auto output_dir = vm["output-dir"].as<std::string>();
         const auto count = vm["count"].as<int>();
         unsigned int seed = vm.count("seed") ? vm["seed"].as<unsigned int>() : std::random_device{}();
         const bool verbose = vm["verbose"].as<bool>();
-        
+
         if (!validate_parameters(vm))
             return 1;
-        
+
         std::filesystem::create_directories(output_dir);
-        
+
         std::mt19937 gen(seed);
-        
+
         print_generation_info(vm, output_dir, count, seed);
-        
+
         for (int i = 0; i < count; ++i) {
             const auto filename = std::filesystem::path(output_dir) / (get_filename_prefix() + std::to_string(i) + ".dot");
             std::ofstream ofs(filename);
@@ -97,13 +97,13 @@ class ParityGameGenerator : public ggg::utils::GameGraphGenerator {
                 std::cerr << "Failed to open output file: " << filename << std::endl;
                 return 1;
             }
-            
+
             generate_single_game(vm, gen, ofs);
-            
+
             if (verbose)
                 std::cout << "Wrote: " << filename << std::endl;
         }
-        
+
         return 0;
     }
 
@@ -178,10 +178,10 @@ class ParityGameGenerator : public ggg::utils::GameGraphGenerator {
   private:
     // Internal single-game generator
     static ggg::parity::graph::Graph generate_parity_game(int vertices,
-                                                         int max_priority,
-                                                         int min_out_degree,
-                                                         int max_out_degree,
-                                                         std::mt19937 &gen) {
+                                                          int max_priority,
+                                                          int min_out_degree,
+                                                          int max_out_degree,
+                                                          std::mt19937 &gen) {
 
         std::uniform_int_distribution<int> player_dist(0, 1);
         std::uniform_int_distribution<int> priority_dist(0, max_priority);

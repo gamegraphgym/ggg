@@ -61,7 +61,7 @@ auto StochasticDiscountedValueSolver::solve(const graphs_t &graph) -> ggg::solut
             oldcost = sol[pos];
             best_succ = -1;
             const auto [out_edges_begin, out_edges_end] = boost::out_edges(pos,
-                                                                            graph);
+                                                                           graph);
             for (const auto &gedge :
                  boost::make_iterator_range(out_edges_begin, out_edges_end)) {
                 const auto successor = boost::target(gedge, graph);
@@ -136,5 +136,5 @@ auto StochasticDiscountedValueSolver::solve(const graphs_t &graph) -> ggg::solut
     return solution;
 }
 
-}  // namespace stochastic_discounted
-}  // namespace ggg
+} // namespace stochastic_discounted
+} // namespace ggg

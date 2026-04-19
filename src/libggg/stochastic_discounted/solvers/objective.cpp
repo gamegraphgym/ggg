@@ -23,7 +23,7 @@ bool StochasticDiscountedObjectiveSolver::switch_str(const graphs_t &graph) {
         }
 
         const auto [out_edges_begin, out_edges_end] = boost::out_edges(vertex,
-                                                                        graph);
+                                                                       graph);
         for (const auto &gedge :
              boost::make_iterator_range(out_edges_begin, out_edges_end)) {
             const auto successor = boost::target(gedge, graph);
@@ -74,7 +74,7 @@ int StochasticDiscountedObjectiveSolver::setup_matrix_rows(
 
     for (const auto &vertex : g::get_non_probabilistic_vertices(graph)) {
         const auto [out_edges_begin, out_edges_end] = boost::out_edges(vertex,
-                                                                        graph);
+                                                                       graph);
         for (const auto &gedge :
              boost::make_iterator_range(out_edges_begin, out_edges_end)) {
             std::fill(matrix_coeff[row].begin(), matrix_coeff[row].end(), 0.0);
@@ -183,7 +183,7 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
     obj_coeff.clear();
 
     for (const auto &vertex : boost::make_iterator_range(vertices_begin,
-                                                        vertices_end)) {
+                                                         vertices_end)) {
         const auto [out_begin, out_end] = boost::out_edges(vertex, graph);
         if (out_begin != out_end) {
             strategy[vertex] = boost::target(*out_begin, graph);
@@ -264,7 +264,7 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
                     double newval = graph[new_edge.first].weight;
                     const auto reach2 =
                         g::get_reachable_through_probabilistic(graph, vertex,
-                                                         successor);
+                                                               successor);
                     for (const auto &[target, prob] : reach2) {
                         newval += prob * graph[new_edge.first].discount * sol[target];
                     }
@@ -337,7 +337,7 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
     }
 
     for (const auto &vertex : boost::make_iterator_range(vertices_begin,
-                                                        vertices_end)) {
+                                                         vertices_end)) {
         if (sol[vertex] >= 0.0) {
             solution.set_winning_player(vertex, 0);
         } else {
@@ -354,5 +354,5 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
     return solution;
 }
 
-}  // namespace stochastic_discounted
-}  // namespace ggg
+} // namespace stochastic_discounted
+} // namespace ggg

@@ -258,7 +258,6 @@ class Simplex {
         return false;
     }
 
-
     void get_full_results(std::vector<double> &x_out, double &objective, bool use_original_variables) const {
         int total_variables = tableau[0].size() - 1; // excludes RHS
         x_out.resize(use_original_variables ? numVariables - 1 : total_variables);
@@ -293,7 +292,7 @@ class Simplex {
         // Objective value
         objective = tableau[numConstraints].back();
     }
-/*
+    /*
     void update_objective_row(const std::vector<double> &new_obj_coeff, double new_rhs) {
         int w_index = origVars;
         int total_cols = tableau[0].size();
@@ -334,7 +333,7 @@ class Simplex {
             }
         }
     }
-*/
+    */
   private:
     std::vector<std::vector<double>> tableau;
     std::vector<int> basis;
