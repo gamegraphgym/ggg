@@ -258,18 +258,42 @@ class Simplex {
         return false;
     }
 
-    void set_objective_at(int i) {
-        int obj_row_index = tableau.size() - 1;
-        // Assuming tableau is a 2D vector and the first row [0] is the objective function
-        if (obj_row_index < 0 || i < 0 || i >= tableau[obj_row_index].size()) {
-            return;
-        }
-        // Erase the objective function: set all values to 0
-        std::fill(tableau[obj_row_index].begin(), tableau[obj_row_index].end(), 0.0);
-        // Assign x at column i
-        tableau[obj_row_index][i] = pivotValue;
-    }
 
+    void get_full_results(std::vector<double> &x_out, double &objective, bool use_original_variables) const {
+        int total_variables = tableau[0].size() - 1; // excludes RHS
+        x_out.resize(use_original_variables ? numVariables - 1 : total_variables);
+        // Initialize all variables to 0
+        for (double &i : x_out) {
+            i = 0.0;
+        }
+        // Step 1: Extract basic variable values
+        std::vector<double> x_full;
+        x_full.resize(total_variables);
+        for (int i = 0; i < total_variables; ++i) {
+            x_full[i] = 0.0;
+        }
+        for (int i = 0; i < numConstraints; ++i) {
+            int var_index = basis[i];
+            if (var_index < total_variables) {
+                x_full[var_index] = tableau[i].back();
+            }
+        }
+        // Step 2: If requested, transform back to original variables: x_i = x'_i - W
+        if (use_original_variables) {
+            double w = x_full[numVariables - 1]; // shared W is last among x'_i
+            for (int i = 0; i < numVariables - 1; ++i) {
+                x_out[i] = x_full[i] - w;
+            }
+        } else {
+            // Otherwise return raw tableau variable values
+            for (int i = 0; i < total_variables; ++i) {
+                x_out[i] = x_full[i];
+            }
+        }
+        // Objective value
+        objective = tableau[numConstraints].back();
+    }
+/*
     void update_objective_row(const std::vector<double> &new_obj_coeff, double new_rhs) {
         int w_index = origVars;
         int total_cols = tableau[0].size();
@@ -310,219 +334,10 @@ class Simplex {
             }
         }
     }
-
-    auto fixed_calculate_simplex(int pivot_col) -> bool {
-        // Ratio test
-        int pivot_row = -1;
-        double min_ratio = 1e20;
-        for (int i = 0; i < numConstraints; ++i) {
-            double coeff = tableau[i][pivot_col];
-            double rhs_val = tableau[i].back();
-            if (coeff > 1e-8) {
-                double ratio = rhs_val / coeff;
-                if (ratio < min_ratio) {
-                    min_ratio = ratio;
-                    pivot_row = i;
-                }
-            }
-        }
-        if (pivot_row != -1) {
-            perform_pivot(pivot_row, pivot_col);
-            return true;
-        }
-        return false;
-    }
-
-    auto all_variables_have_non_basic_slack(const int *actions) -> bool {
-        int num_slack_vars = numConstraints; // each constraint gets one
-        int slack_offset = origVars + 1;
-        int artificial_offset = slack_offset + num_slack_vars;
-        int rhs_column = artificial_offset + artificialVar;
-        std::vector<bool> has_non_basic_slack(origVars, false);
-        for (int s = 0; s < num_slack_vars; ++s) {
-            int col = slack_offset + s;
-            int var = *(actions + s);
-            if (var < 0 || var >= origVars || col >= rhs_column) {
-                continue;
-            }
-            bool is_basic = std::find(basis.begin(), basis.end(), col) != basis.end();
-            if (!is_basic) {
-                has_non_basic_slack[var] = true;
-            }
-        }
-        for (int i = 0; i < origVars; ++i) {
-            if (!has_non_basic_slack[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    auto evaluate_candidate_slack(const int *actions) -> int {
-        int slack_offset = numVariables;
-        int artificial_offset = tableau[0].size();
-        int num_slack = artificial_offset - slack_offset;
-        // Identify slack variables in the basis
-        std::vector<int> slack_in_basis;
-        for (int col : basis) {
-            if (col >= slack_offset && col < artificial_offset) {
-                slack_in_basis.push_back(col);
-            }
-        }
-        std::vector<bool> tried(num_slack, false);
-        // Keep track of which slack candidates we've examined
-        bool found_valid = false;
-        int candidate_col = 0;
-        while (true) {
-            candidate_col = -1;
-            // Search for next untried candidate slack variable
-            for (int i = 0; i < num_slack; ++i) {
-                if (tried[i]) {
-                    continue;
-                }
-                int col = slack_offset + i;
-                // Skip if in basis
-                if (std::find(slack_in_basis.begin(), slack_in_basis.end(), col) != slack_in_basis.end()) {
-                    tried[i] = true;
-                    // mark as tried even if it’s in basis
-                    continue;
-                }
-                bool has_positive = false;
-                for (int row = 0; row < numConstraints; ++row) {
-                    if (tableau[row][col] > 0) {
-                        has_positive = true;
-                        break;
-                    }
-                }
-                if (has_positive) {
-                    candidate_col = col;
-                    tried[i] = true;
-                    break;
-                }
-                tried[i] = true;
-            }
-            if (candidate_col == -1 || candidate_col > numVariables + numConstraints) {
-                break;
-            }
-            int candidate_slack_index = candidate_col - slack_offset;
-            int candidate_var = *(actions + candidate_slack_index);
-            // Find other slack variables in the basis associated with different variables
-            std::map<int, std::pair<int, double>> best_slack_per_var;
-            // var -> {col, rhs}
-            for (int col : slack_in_basis) {
-                int slack_index = col - slack_offset;
-                int var = *(actions + slack_index);
-                if (var == candidate_var) {
-                    continue;
-                }
-                for (int row = 0; row < numConstraints; ++row) {
-                    if (std::fabs(tableau[row][col] - 1.0) < 1e-8) {
-                        double rhs = tableau[row].back();
-                        auto it = best_slack_per_var.find(var);
-                        if (it == best_slack_per_var.end() || rhs < it->second.second) {
-                            best_slack_per_var[var] = {col, rhs};
-                        }
-                    }
-                }
-            }
-            std::vector<int> other_slack_cols;
-            other_slack_cols.reserve(best_slack_per_var.size());
-            for (const auto &[var, pair] : best_slack_per_var) {
-                other_slack_cols.push_back(pair.first);
-            }
-            // Sum candidate values in rows where other slacks = 1
-            double sum = 0.0;
-            for (int row = 0; row < numConstraints; ++row) {
-                for (int slack_col : other_slack_cols) {
-                    double slack_value = tableau[row][slack_col];
-                    if (std::fabs(slack_value - 1.0) < 1e-8) {
-                        double candidate_value = tableau[row][candidate_col];
-                        sum += candidate_value;
-                    }
-                }
-            }
-            if (sum > 1e-8) // warning negative, dirty values close to 0
-            {
-                pivotValue = -sum; // swap sign
-                found_valid = true;
-                break;
-            }
-        }
-        if (!found_valid) {
-            return -1;
-        }
-        return candidate_col;
-    }
-
-    void get_full_results(std::vector<double> &x_out, double &objective, bool use_original_variables) const {
-        int total_variables = tableau[0].size() - 1; // excludes RHS
-        x_out.resize(use_original_variables ? numVariables - 1 : total_variables);
-        // Initialize all variables to 0
-        for (double &i : x_out) {
-            i = 0.0;
-        }
-        // Step 1: Extract basic variable values
-        std::vector<double> x_full;
-        x_full.resize(total_variables);
-        for (int i = 0; i < total_variables; ++i) {
-            x_full[i] = 0.0;
-        }
-        for (int i = 0; i < numConstraints; ++i) {
-            int var_index = basis[i];
-            if (var_index < total_variables) {
-                x_full[var_index] = tableau[i].back();
-            }
-        }
-        // Step 2: If requested, transform back to original variables: x_i = x'_i - W
-        if (use_original_variables) {
-            double w = x_full[numVariables - 1]; // shared W is last among x'_i
-            for (int i = 0; i < numVariables - 1; ++i) {
-                x_out[i] = x_full[i] - w;
-            }
-        } else {
-            // Otherwise return raw tableau variable values
-            for (int i = 0; i < total_variables; ++i) {
-                x_out[i] = x_full[i];
-            }
-        }
-        // Objective value
-        objective = tableau[numConstraints].back();
-    }
-
-    void print_tableau() const {
-        LGG_INFO("Tableau Matrix:");
-        for (const auto &row : tableau) {
-            for (double val : row) {
-                LGG_INFO(std::setw(10), std::fixed, std::setprecision(4), val);
-            }
-        }
-    }
-
-    void print_basis() const {
-        LGG_INFO("Basis Variables:");
-        for (int i = 0; i < basis.size(); ++i) {
-            LGG_INFO("Row ", i, " -> x_", basis[i]);
-        }
-    }
-
-    void print_problem() const {
-        LGG_INFO("Problem Summary:");
-        LGG_INFO("Variables: ", numVariables);
-        LGG_INFO("Constraints: ", numConstraints);
-        LGG_INFO("Tableau size: ", tableau.size(), " x ", tableau[0].size());
-    }
-
-    void print_constraints_info() const {
-        LGG_INFO("Constraints Info:");
-        for (int i = 0; i < constraintType.size(); ++i) {
-            LGG_INFO("Constraint ", i, ": ", constraintType[i]);
-        }
-    }
-
+*/
   private:
     std::vector<std::vector<double>> tableau;
     std::vector<int> basis;
-    std::vector<std::string> constraintType;
     int numConstraints;
     int numVariables;
     double pivotValue = 0.0;

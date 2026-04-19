@@ -51,8 +51,8 @@ ggg_add_parity_solver_cli(priority_promotion solvers/priority_promotion.cpp ${CM
 ggg_add_parity_solver_cli(progressive_small_progress_measures solvers/progressive_small_progress_measures.cpp ${CMAKE_SOURCE_DIR}/src/libggg/parity/solvers/progressive_small_progress_measures.cpp)
 ggg_add_parity_solver_cli(recursive solvers/recursive.cpp ${CMAKE_SOURCE_DIR}/src/libggg/parity/solvers/recursive.cpp)
 
-# Parity generator CLI (generate_parity.cpp)
-add_executable(ggg_parity_generate ${CMAKE_CURRENT_SOURCE_DIR}/generate_parity.cpp)
+# Parity generator CLI (generate.cpp)
+add_executable(ggg_parity_generate ${CMAKE_CURRENT_SOURCE_DIR}/generate.cpp)
 target_link_libraries(ggg_parity_generate PUBLIC ggg)
 target_link_libraries(ggg_parity_generate PRIVATE Boost::program_options Boost::filesystem)
 target_include_directories(ggg_parity_generate PRIVATE ${CMAKE_SOURCE_DIR}/include)

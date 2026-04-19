@@ -35,9 +35,9 @@ class RSQSolution : public RSolution<GraphType>, public SSolution<GraphType, Str
 
     friend std::ostream &operator<<(std::ostream &os, const RSQSolution<GraphType, StrategyType, ValueType> &sol) {
         detail::stream_map_label(os, "Winning regions", sol.get_winning_regions(), [](std::ostream &os, int player) -> std::ostream & { os << player; return os; });
-        os << ' ';
+        os << '\n';
         detail::stream_map_label(os, "Strategy", sol.get_strategies(), [&](std::ostream &os2, const StrategyType &s) -> std::ostream & { return ggg::strategy::to_stream<GraphType>(os2, s); });
-        os << ' ';
+        os << '\n';
         detail::stream_map_label(os, "Values", sol.get_values(), [](std::ostream &os, const ValueType &v) -> std::ostream & { os << v; return os; });
         return os;
     }

@@ -27,7 +27,13 @@ class GameGraphGenerator {
     int run(int argc, char *argv[]) {
         po::variables_map vm;
         try {
-            po::store(po::parse_command_line(argc, argv, desc_), vm);
+            const auto args = normalize_aliases(argc, argv);
+            po::store(po::command_line_parser(args)
+                          .options(desc_)
+                          .style(po::command_line_style::default_style |
+                                 po::command_line_style::allow_long_disguise)
+                          .run(),
+                      vm);
             po::notify(vm);
         } catch (const std::exception &e) {
             std::cerr << "Error parsing options: " << e.what() << std::endl;
@@ -71,6 +77,29 @@ class GameGraphGenerator {
     }
 
   protected:
+    static std::vector<std::string> normalize_aliases(int argc, char *argv[]) {
+        std::vector<std::string> args;
+        args.reserve(argc);
+        for (int i = 0; i < argc; ++i) {
+            std::string arg(argv[i]);
+            if (arg == "-pv" || arg == "--pv") {
+                args.emplace_back("--player-vertices");
+            } else if (arg == "-mo" || arg == "--mo") {
+                args.emplace_back("--min-out-degree");
+            } else if (arg == "-mxo" || arg == "--mxo") {
+                args.emplace_back("--max-out-degree");
+            } else if (arg == "-mw" || arg == "--mw") {
+                args.emplace_back("--min-weight");
+            } else if (arg == "-mxw" || arg == "--mxw") {
+                args.emplace_back("--max-weight");
+            } else if (arg == "-d" || arg == "--d") {
+                args.emplace_back("--discount");
+            } else {
+                args.emplace_back(std::move(arg));
+            }
+        }
+        return args;
+    }
     po::options_description desc_;
 
     virtual bool validate_parameters(const po::variables_map &vm) = 0;
