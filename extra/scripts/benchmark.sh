@@ -4,13 +4,81 @@
 # no dependancies or libraries required
 # Flat structure: all games in a single directory
 # SubDir structure: games in type-subdirectories
-# Usage: bash benchmark.sh <games_dir> <solver_dir> [timeout] [output_file]
+# Usage: bash benchmark.sh <games_dir> <solver_dir> [timeout] [output_file] [--solver <name>]... [--solvers <name1,name2,...>]
 
 set -eu
 shopt -s nullglob
 
+declare -A invalid_solvers
+declare -A selected_solver_names
+declare -A matched_solver_names
+
+usage() {
+  echo "Usage: $0 <games_dir> <solvers_dir> [timeout_seconds] [output_file] [--solver <name>]... [--solvers <name1,name2,...>]" >&2
+}
+
+append_selected_solvers() {
+  local value="$1"
+  local solver_name
+
+  IFS=',' read -r -a solver_names <<< "$value"
+  for solver_name in "${solver_names[@]}"; do
+    [ -n "$solver_name" ] || continue
+    selected_solver_names["$solver_name"]=1
+  done
+}
+
+solver_is_selected() {
+  local solver_name="$1"
+
+  if [ ${#selected_solver_names[@]} -eq 0 ]; then
+    return 0
+  fi
+
+  [ -n "${selected_solver_names[$solver_name]+x}" ]
+}
+
+positional_args=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --solver)
+      [ $# -ge 2 ] || {
+        echo "Missing value for --solver" >&2
+        usage
+        exit 1
+      }
+      append_selected_solvers "$2"
+      shift 2
+      ;;
+    --solvers)
+      [ $# -ge 2 ] || {
+        echo "Missing value for --solvers" >&2
+        usage
+        exit 1
+      }
+      append_selected_solvers "$2"
+      shift 2
+      ;;
+    --)
+      shift
+      positional_args+=("$@")
+      break
+      ;;
+    *)
+      positional_args+=("$1")
+      shift
+      ;;
+  esac
+done
+
+set -- "${positional_args[@]}"
+
 if [ $# -lt 2 ]; then
-  echo "Usage: $0 <games_dir> <solvers_dir> [timeout_seconds] [output_file]" >&2
+  usage
   exit 1
 fi
 
@@ -66,6 +134,57 @@ parse_time() {
   fi
 }
 
+check_solver() {
+  local solver_path="$1"
+  local output rc first_line solver
+
+  solver=$(basename "$solver_path")
+  if output=$(timeout 5 "$solver_path" --help 2>&1); then
+    return 0
+  fi
+
+  rc=$?
+  if [ $rc -eq 124 ]; then
+    return 0
+  fi
+
+  first_line=$(printf "%s\n" "$output" | head -n 1)
+  if [ -z "$first_line" ]; then
+    first_line="unknown startup failure"
+  fi
+
+  invalid_solvers["$solver_path"]="$first_line"
+  echo "Skipping $solver: $first_line" >&2
+  return 1
+}
+
+collect_solvers() {
+  local solver_path solver_name
+
+  solver_paths=()
+  for solver_path in "$solvers_dir"/*; do
+    [ -x "$solver_path" ] || continue
+    solver_name=$(basename "$solver_path")
+    solver_is_selected "$solver_name" || continue
+    matched_solver_names["$solver_name"]=1
+    check_solver "$solver_path" || continue
+    solver_paths+=("$solver_path")
+  done
+
+  if [ ${#selected_solver_names[@]} -gt 0 ]; then
+    for solver_name in "${!selected_solver_names[@]}"; do
+      if [ -z "${matched_solver_names[$solver_name]+x}" ]; then
+        echo "Requested solver not found: $solver_name" >&2
+      fi
+    done
+  fi
+
+  if [ ${#solver_paths[@]} -eq 0 ]; then
+    echo "No runnable solvers found in $solvers_dir" >&2
+    exit 1
+  fi
+}
+
 # Solver execution function
 run_solver() {
   local solver_path="$1" game="$2" type="$3"
@@ -107,11 +226,12 @@ run_solver() {
 }
 
 # Directory structure
+collect_solvers
+
 files=("$games_dir"/*.dot)
 if [ ${#files[@]} -gt 0 ]; then
   # Flat structure
-  for solver_path in "$solvers_dir"/*; do
-    [ -x "$solver_path" ] || continue
+  for solver_path in "${solver_paths[@]}"; do
     for game in "${files[@]}"; do
       [ -f "$game" ] || continue
       run_solver "$solver_path" "$game" ""
@@ -127,8 +247,7 @@ else
       echo "No .dot files in $subdir"
       continue
     fi
-    for solver_path in "$solvers_dir"/*; do
-      [ -x "$solver_path" ] || continue
+    for solver_path in "${solver_paths[@]}"; do
       for game in "${subfiles[@]}"; do
         run_solver "$solver_path" "$game" "$type"
       done
