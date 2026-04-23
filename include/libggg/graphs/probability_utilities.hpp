@@ -57,17 +57,17 @@ struct ProbabilityValidator {
                     if (prob <= 0.0 || prob > 1.0) {
                         throw GraphValidationError(
                             "Invalid probability " + std::to_string(prob) +
-                            " on edge from vertex '" + graph[vertex].name +
-                            "' (must be in range (0, 1])");
+                            " on edge from vertex " + std::to_string(vertex) +
+                            " (must be in range (0, 1])");
                     }
                     sum += prob;
                 }
 
                 // Check that probabilities sum to 1.0 (with small epsilon for floating point)
-                if (std::abs(sum - 1.0) > 1e-8) {
+                if (std::abs(sum - 1.0) > 1e-5) {
                     throw GraphValidationError(
-                        "Probabilities on outgoing edges from vertex '" +
-                        graph[vertex].name + "' sum to " + std::to_string(sum) +
+                        "Probabilities on outgoing edges from vertex " +
+                        std::to_string(vertex) + " sum to " + std::to_string(sum) +
                         " (must sum to 1.0)");
                 }
             }

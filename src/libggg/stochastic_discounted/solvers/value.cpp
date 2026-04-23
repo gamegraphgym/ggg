@@ -29,9 +29,16 @@ auto StochasticDiscountedValueSolver::solve(const graphs_t &graph) -> ggg::solut
 
     const auto [vertices_begin, vertices_end] = boost::vertices(graph);
 
+    // Initialize all vertices
+    for (const auto &vertex :
+         boost::make_iterator_range(vertices_begin, vertices_end)) {
+        sol[vertex] = 0.0;
+        BAtr[vertex] = false;
+    }
+
+    // Add non-probabilistic vertices to the work queue
     for (const auto &vertex : g::get_non_probabilistic_vertices(graph)) {
         strategy[vertex] = -1;
-        sol[vertex] = 0.0;
         TAtr.push(vertex);
         BAtr[vertex] = true;
     }
@@ -40,52 +47,81 @@ auto StochasticDiscountedValueSolver::solve(const graphs_t &graph) -> ggg::solut
     int best_succ;
     double sum;
     double best;
-    while (TAtr.nonempty()) {
-        iterations++;
-        pos = TAtr.pop();
-        BAtr[pos] = false;
-        oldcost = sol[pos];
-        best_succ = -1;
-        const auto [out_edges_begin, out_edges_end] = boost::out_edges(pos, graph);
-        for (const auto &gedge : boost::make_iterator_range(out_edges_begin, out_edges_end)) {
-            const auto successor = boost::target(gedge, graph);
-            const auto curre = edge(pos, successor, graph);
-            const auto reach = g::get_reachable_through_probabilistic(graph, pos, successor);
-            if (best_succ == -1) {
-                best_succ = successor;
-                best = 0;
-                for (const auto &[TARGET, PROB] : reach) {
-                    best += (PROB * graph[curre.first].discount * sol[TARGET]);
-                }
-                best += graph[curre.first].weight;
-            } else {
-                sum = 0;
-                for (const auto &[TARGET, PROB] : reach) {
-                    sum += (PROB * graph[curre.first].discount * sol[TARGET]);
-                }
-                sum += graph[curre.first].weight;
-                if ((graph[pos].player == 0 && sum > best) || (graph[pos].player == 1 && sum < best)) {
+    double max_change;
+    const double epsilon = 1e-10;
+
+    // Outer loop: continue until convergence
+    do {
+        max_change = 0.0;
+
+        while (TAtr.nonempty()) {
+            iterations++;
+            pos = TAtr.pop();
+            BAtr[pos] = false;
+            oldcost = sol[pos];
+            best_succ = -1;
+            const auto [out_edges_begin, out_edges_end] = boost::out_edges(pos,
+                                                                           graph);
+            for (const auto &gedge :
+                 boost::make_iterator_range(out_edges_begin, out_edges_end)) {
+                const auto successor = boost::target(gedge, graph);
+                const auto curre = edge(pos, successor, graph);
+                const auto reach = g::get_reachable_through_probabilistic(
+                    graph, pos, successor);
+                if (best_succ == -1) {
                     best_succ = successor;
-                    best = sum;
+                    best = 0;
+                    for (const auto &[TARGET, PROB] : reach) {
+                        best += (PROB * graph[curre.first].discount *
+                                 sol[TARGET]);
+                    }
+                    best += graph[curre.first].weight;
+                } else {
+                    sum = 0;
+                    for (const auto &[TARGET, PROB] : reach) {
+                        sum += (PROB * graph[curre.first].discount *
+                                sol[TARGET]);
+                    }
+                    sum += graph[curre.first].weight;
+                    if ((graph[pos].player == 0 && sum > best) ||
+                        (graph[pos].player == 1 && sum < best)) {
+                        best_succ = successor;
+                        best = sum;
+                    }
+                }
+            }
+            if (sol[pos] != best || strategy[pos] == -1) {
+                lifts++;
+                double change = std::abs(sol[pos] - best);
+                max_change = std::max(max_change, change);
+                sol[pos] = best;
+                strategy[pos] = best_succ;
+
+                for (auto in_edge :
+                     boost::make_iterator_range(boost::in_edges(pos, graph))) {
+                    auto pred = boost::source(in_edge, graph);
+                    if (!BAtr[pred]) {
+                        TAtr.push(pred);
+                        BAtr[pred] = true;
+                    }
                 }
             }
         }
-        if (sol[pos] != best || strategy[pos] == -1) {
-            lifts++;
-            sol[pos] = best;
-            strategy[pos] = best_succ;
 
-            for (auto in_edge : boost::make_iterator_range(boost::in_edges(pos, graph))) {
-                auto pred = boost::source(in_edge, graph);
-                if (!BAtr[pred]) {
-                    TAtr.push(pred);
-                    BAtr[pred] = true;
+        // Re-add all non-probabilistic vertices if not converged
+        if (max_change > epsilon) {
+            for (const auto &vertex :
+                 g::get_non_probabilistic_vertices(graph)) {
+                if (!BAtr[vertex]) {
+                    TAtr.push(vertex);
+                    BAtr[vertex] = true;
                 }
             }
         }
-    }
+    } while (max_change > epsilon);
 
-    for (const auto &vertex : boost::make_iterator_range(vertices_begin, vertices_end)) {
+    for (const auto &vertex :
+         boost::make_iterator_range(vertices_begin, vertices_end)) {
         if (sol[vertex] >= 0) {
             solution.set_winning_player(vertex, 0);
         } else {

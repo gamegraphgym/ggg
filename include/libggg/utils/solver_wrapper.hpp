@@ -255,10 +255,9 @@ class GameSolverWrapper {
                     // One struct with time and solution JSON
                     std::cout << "{\"time\": " << time_to_solve << ", \"solution\": " << solution.to_json() << "}" << std::endl;
                 } else {
-                    // plain: use operator<< on solution
+                    // plain: use operator<< on solution with formatted output
                     std::cout << "Game solved in " << time_to_solve << " ms." << std::endl;
-                    std::cout << "Solution:\n"
-                              << solution << std::endl;
+                    std::cout << solution << std::endl;
                 }
             }
 

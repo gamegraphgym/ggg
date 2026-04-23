@@ -1,6 +1,8 @@
 #include "libggg/stochastic_discounted/graph.hpp"
 #include "libggg/utils/game_graph_generator.hpp"
 #include <algorithm>
+#include <functional>
+#include <iomanip>
 #include <limits>
 #include <numeric>
 #include <random>
@@ -11,19 +13,90 @@ namespace po = boost::program_options;
 
 class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator {
   public:
+    static std::vector<std::string> normalize_stochastic_aliases(int argc, char *argv[]) {
+        std::vector<std::string> args;
+        args.reserve(argc);
+        for (int i = 0; i < argc; ++i) {
+            std::string arg(argv[i]);
+            if (arg == "-vx" || arg == "--vx") {
+                args.emplace_back("--player-vertices");
+            } else if (arg == "-mo" || arg == "--mo") {
+                args.emplace_back("--min-player-outgoing");
+            } else if (arg == "-mxo" || arg == "--mxo") {
+                args.emplace_back("--max-player-outgoing");
+            } else if (arg == "-mw" || arg == "--mw") {
+                args.emplace_back("--min-weight");
+            } else if (arg == "-mxw" || arg == "--mxw") {
+                args.emplace_back("--max-weight");
+            } else if (arg == "-d" || arg == "--d") {
+                args.emplace_back("--discount");
+            } else {
+                args.emplace_back(std::move(arg));
+            }
+        }
+        return args;
+    }
     StochasticDiscountedGameGenerator() : GameGraphGenerator("Stochastic Discounted Generator Options") {
-        desc_.add_options()("player-vertices", po::value<int>()->default_value(10), "Number of player-owned vertices (players 0/1)");
-        desc_.add_options()("min-player-outgoing", po::value<int>()->default_value(1), "Minimum outgoing edges per player-owned vertex (must satisfy 1 <= min <= N-1)");
-        desc_.add_options()("max-player-outgoing", po::value<int>()->default_value(3), "Maximum outgoing edges per player-owned vertex (must satisfy min <= max <= N-1)");
-        desc_.add_options()("min-weight", po::value<int>()->default_value(-10), "Minimum edge weight");
-        desc_.add_options()("max-weight", po::value<int>()->default_value(10), "Maximum edge weight");
-        desc_.add_options()("discount", po::value<double>()->default_value(0.95), "Discount factor (0 < discount < 1)");
+        desc_.add_options()("player-vertices,vx", po::value<int>()->default_value(10), "Number of player-owned vertices (players 0/1)");
+        desc_.add_options()("min-player-outgoing,mo", po::value<int>()->default_value(1), "Minimum outgoing edges per player-owned vertex (must satisfy 1 <= min <= N-1)");
+        desc_.add_options()("max-player-outgoing,mxo", po::value<int>()->default_value(3), "Maximum outgoing edges per player-owned vertex (must satisfy min <= max <= N-1)");
+        desc_.add_options()("min-weight,mw", po::value<int>()->default_value(-10), "Minimum edge weight");
+        desc_.add_options()("max-weight,mxw", po::value<int>()->default_value(10), "Maximum edge weight");
+        desc_.add_options()("discount,d", po::value<double>()->default_value(0.95), "Discount factor (0 < discount < 1)");
+    }
+
+    void write_dot(const ggg::stochastic_discounted::graph::Graph &g, std::ostream &os) {
+        os << std::fixed << std::setprecision(7);
+        os << "digraph G {\n";
+        // Vertices
+        for (auto v : boost::make_iterator_range(boost::vertices(g))) {
+            os << "v" << v << " [name=\"" << g[v].name << "\", player=" << g[v].player << "];\n";
+        }
+        // Edges
+        for (auto e : boost::make_iterator_range(boost::edges(g))) {
+            auto source = boost::source(e, g);
+            auto target = boost::target(e, g);
+            os << "v" << source << "->v" << target << "  [";
+            if (g[source].player != -1) {
+                os << "discount=" << g[e].discount << ", label=\"" << g[source].name << "->" << g[target].name << "\", weight=" << g[e].weight;
+            } else {
+                os << "label=\"" << g[source].name << "->" << g[target].name << "\", probability=" << g[e].probability;
+            }
+            os << "];\n";
+        }
+        os << "}\n";
+    }
+
+    void print_help() const {
+        std::cout << "Stochastic Discounted Generator Options:\n"
+                  << "  -h [ --help ]                         Show help message\n"
+                  << "  -o [ --output-dir ] arg (=./generated)\n"
+                  << "                                        Output directory\n"
+                  << "  --seed arg                            Random seed (default: random)\n"
+                  << "  --verbose                             Verbose output\n"
+                  << "  -c [ --count ] arg (=1)               Number of games to generate\n"
+                  << "  --player-vertices, -vx arg (=10)      Number of player-owned vertices (players 0/1)\n"
+                  << "  --min-player-outgoing, -mo arg (=1)  Minimum outgoing edges per player-owned vertex (must satisfy 1 <= min <= N-1)\n"
+                  << "  --max-player-outgoing, -mxo arg (=3)  Maximum outgoing edges per player-owned vertex (must satisfy min <= max <= N-1)\n"
+                  << "  --min-weight, -mw arg (=-10)          Minimum edge weight\n"
+                  << "  --max-weight, -mxw arg (=10)          Maximum edge weight\n"
+                  << "  --discount, -d arg (=0.95)            Discount factor (0 < discount < 1)\n\n"
+                  << "Additional notes for this generator:\n"
+                  << "  - Constraints: 1 <= min-player-outgoing <= max-player-outgoing <= -1+player-vertices.\n"
+                  << "  - Edge structure is alternating between player-owned and stochastic vertices.\n"
+                  << "  - Outgoing probabilities from each stochastic vertex are normalized to sum to 1.\n";
     }
 
     int run(int argc, char *argv[]) {
         po::variables_map vm;
         try {
-            po::store(po::parse_command_line(argc, argv, desc_), vm);
+            const auto args = normalize_stochastic_aliases(argc, argv);
+            po::store(po::command_line_parser(args)
+                          .options(desc_)
+                          .style(po::command_line_style::default_style |
+                                 po::command_line_style::allow_long_disguise)
+                          .run(),
+                      vm);
             po::notify(vm);
         } catch (const std::exception &e) {
             std::cerr << "Error parsing options: " << e.what() << std::endl;
@@ -31,18 +104,7 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
         }
 
         if (vm.count("help")) {
-            std::cout << desc_ << std::endl;
-            std::cout
-                << "Model-specific notes for this generator:\n"
-                << "  - Let N = --player-vertices.\n"
-                << "  - For each player-owned vertex, outgoing edges to stochastic vertices are sampled in [min-player-outgoing, max-player-outgoing].\n"
-                << "  - Constraints: 1 <= min-player-outgoing <= max-player-outgoing <= N-1.\n"
-                << "  - --vertices is a shared base option and is ignored by this generator.\n"
-                << "  - Number of stochastic vertices is derived per game as the sum of sampled player out-degrees.\n"
-                << "  - For each stochastic vertex, outgoing edges to player-owned vertices are sampled in [1, N-1].\n"
-                << "  - Edge structure is strictly bipartite: (player 0/1 -> player -1) and (player -1 -> player 0/1).\n"
-                << "  - Reverse edge pairs are forbidden: if u->v exists, then v->u does not.\n"
-                << "  - Outgoing probabilities from each stochastic vertex are normalized to sum to 1.\n";
+            print_help();
             return 0;
         }
 
@@ -91,7 +153,7 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
             return false;
         }
         if (player_vertices == 1) {
-            std::cerr << "Error: player-vertices must be >= 2 (player-vertices == 1 is unsatisfiable with the no-reverse-edge rule)" << std::endl;
+            std::cerr << "Error: player-vertices must be >= 2" << std::endl;
             return false;
         }
         const auto max_allowed = player_vertices - 1;
@@ -143,7 +205,7 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
 
         auto graph = generate_stochastic_discounted_game(player_vertices, min_player_outgoing, max_player_outgoing,
                                                          min_weight, max_weight, discount, gen);
-        ggg::stochastic_discounted::graph::write(graph, file);
+        write_dot(graph, file);
     }
 
   private:
@@ -184,7 +246,7 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
         }
 
         // Directed bipartite incidence matrices.
-        // Invariant for every pair (p, s): not both player_to_stoch[p][s] and stoch_to_player[s][p].
+        // Constraint: no deterministic cycles (cycles where all s->p edges have probability 1).
         std::vector<std::vector<bool>> player_to_stoch(player_vertices,
                                                        std::vector<bool>(stochastic_vertices, false));
         std::vector<std::vector<bool>> stoch_to_player(stochastic_vertices,
@@ -205,26 +267,19 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
             player_to_stoch[stochastic_owner[s]][s] = true;
         }
 
-        // For each stochastic vertex, pick random outdegree in [1, N-1] and connect to player
-        // vertices that do not violate the no-reverse-edge invariant.
+        // For each stochastic vertex, pick random outdegree in [1, N-1] and connect to player vertices.
         for (int s = 0; s < stochastic_vertices; ++s) {
-            std::vector<int> allowed;
-            allowed.reserve(player_vertices);
+            std::vector<int> all_players;
+            all_players.reserve(player_vertices);
             for (int p = 0; p < player_vertices; ++p) {
-                if (!player_to_stoch[p][s]) {
-                    allowed.push_back(p);
-                }
+                all_players.push_back(p);
             }
 
-            if (allowed.size() != static_cast<std::size_t>(player_vertices - 1)) {
-                throw std::runtime_error("Internal generator error: unexpected admissible stochastic target count");
-            }
-
-            std::uniform_int_distribution<int> stoch_outdegree_dist(1, player_vertices - 1);
+            std::uniform_int_distribution<int> stoch_outdegree_dist(1, player_vertices);
             const int outdegree = stoch_outdegree_dist(gen);
-            std::shuffle(allowed.begin(), allowed.end(), gen);
-            for (int i = 0; i < outdegree; ++i) {
-                stoch_to_player[s][allowed[i]] = true;
+            std::shuffle(all_players.begin(), all_players.end(), gen);
+            for (int i = 0; i < outdegree && i < static_cast<int>(all_players.size()); ++i) {
+                stoch_to_player[s][all_players[i]] = true;
             }
         }
 
@@ -239,6 +294,49 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
             }
         }
 
+        // Track stochastic->player edge probabilities to enforce no deterministic cycles.
+        // prob_matrix[s][p] = probability of s->p, or -1 if edge doesn't exist.
+        std::vector<std::vector<double>> prob_matrix(stochastic_vertices,
+                                                     std::vector<double>(player_vertices, -1.0));
+
+        // Helper lambda to detect if a deterministic path exists from a player to a stochastic vertex.
+        // A path is deterministic if all s->p edges have probability >= prob_threshold.
+        auto has_deterministic_path_to_stoch = [&](int start_player, int target_stoch, double prob_threshold = 0.99) -> bool {
+            std::vector<bool> visited_stoch(stochastic_vertices, false);
+            std::function<bool(int)> dfs = [&](int curr_stoch) -> bool {
+                if (visited_stoch[curr_stoch])
+                    return false;
+                if (curr_stoch == target_stoch)
+                    return true;
+                visited_stoch[curr_stoch] = true;
+
+                // Check all player targets from current stochastic vertex
+                for (int p = 0; p < player_vertices; ++p) {
+                    if (prob_matrix[curr_stoch][p] >= prob_threshold) {
+                        if (p == start_player) {
+                            visited_stoch[curr_stoch] = false;
+                            return true; // Found cycle back to start player
+                        }
+
+                        // Try to continue from player p to other stochastic vertices
+                        for (int next_s = 0; next_s < stochastic_vertices; ++next_s) {
+                            if (!visited_stoch[next_s] && player_to_stoch[p][next_s]) {
+                                if (dfs(next_s)) {
+                                    visited_stoch[curr_stoch] = false;
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                visited_stoch[curr_stoch] = false;
+                return false;
+            };
+
+            // Start DFS from target stochastic vertex
+            return dfs(target_stoch);
+        };
+
         // Materialize stochastic->player edges: probabilities sum to exactly 1 per stochastic vertex.
         for (int s = 0; s < stochastic_vertices; ++s) {
             std::vector<int> targets;
@@ -249,20 +347,101 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
                 }
             }
 
+            // Assign probabilities, ensuring no deterministic cycles.
             std::vector<double> probs(targets.size());
             double total = 0.0;
             for (auto &pr : probs) {
                 pr = prob_dist(gen);
                 total += pr;
             }
-            double assigned = 0.0;
-            for (std::size_t i = 0; i + 1 < probs.size(); ++i) {
-                probs[i] /= total;
-                assigned += probs[i];
+            if (total <= 0.0) {
+                double equal = 1.0 / static_cast<double>(probs.size());
+                for (auto &pr : probs) {
+                    pr = equal;
+                }
+            } else {
+                for (auto &pr : probs) {
+                    pr /= total;
+                }
             }
-            probs.back() = 1.0 - assigned;
 
+            auto normalize_probs = [&](std::vector<double> &values) {
+                double sum = 0.0;
+                for (auto v : values) {
+                    sum += v;
+                }
+                if (sum <= 0.0) {
+                    double equal = 1.0 / static_cast<double>(values.size());
+                    for (auto &v : values) {
+                        v = equal;
+                    }
+                } else {
+                    for (auto &v : values) {
+                        v /= sum;
+                    }
+                }
+            };
+
+            auto add_alternate_target = [&](std::vector<int> &targets, std::vector<double> &probs) {
+                int current = targets[0];
+                int alternate = (current + 1) % player_vertices;
+                while (alternate == current) {
+                    alternate = (alternate + 1) % player_vertices;
+                }
+                targets.push_back(alternate);
+                probs.push_back(0.0);
+            };
+
+            auto break_prob1_cycle = [&](std::size_t idx) {
+                if (targets.size() == 1) {
+                    const double preserved = 0.98;
+                    probs[0] = preserved;
+                    add_alternate_target(targets, probs);
+                    probs[1] = 1.0 - preserved;
+                    return;
+                }
+                const double preserved = 0.98;
+                probs[idx] = preserved;
+                double remaining = 1.0 - preserved;
+                double other_sum = 0.0;
+                for (std::size_t j = 0; j < probs.size(); ++j) {
+                    if (j == idx) {
+                        continue;
+                    }
+                    other_sum += probs[j];
+                }
+                if (other_sum <= 0.0) {
+                    double equal = remaining / static_cast<double>(probs.size() - 1);
+                    for (std::size_t j = 0; j < probs.size(); ++j) {
+                        if (j != idx) {
+                            probs[j] = equal;
+                        }
+                    }
+                } else {
+                    for (std::size_t j = 0; j < probs.size(); ++j) {
+                        if (j != idx) {
+                            probs[j] = probs[j] / other_sum * remaining;
+                        }
+                    }
+                }
+            };
+
+            bool adjusted = true;
+            while (adjusted) {
+                adjusted = false;
+                for (std::size_t i = 0; i < targets.size(); ++i) {
+                    if (probs[i] >= 0.99 && has_deterministic_path_to_stoch(targets[i], s, 0.99)) {
+                        break_prob1_cycle(i);
+                        normalize_probs(probs);
+                        adjusted = true;
+                        break;
+                    }
+                }
+            }
+
+            // Assign to prob_matrix and materialize edges
             for (std::size_t i = 0; i < targets.size(); ++i) {
+                prob_matrix[s][targets[i]] = probs[i];
                 ggg::stochastic_discounted::graph::add_edge(
                     graph, vdesc[player_vertices + s], vdesc[targets[i]],
                     std::string(""), 0, 0.0, probs[i]);
