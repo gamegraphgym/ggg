@@ -2,6 +2,7 @@
 #include "libggg/utils/game_graph_generator.hpp"
 #include <algorithm>
 #include <functional>
+#include <iomanip>
 #include <limits>
 #include <numeric>
 #include <random>
@@ -45,6 +46,7 @@ class StochasticDiscountedGameGenerator : public ggg::utils::GameGraphGenerator 
     }
 
     void write_dot(const ggg::stochastic_discounted::graph::Graph &g, std::ostream &os) {
+        os << std::fixed << std::setprecision(7);
         os << "digraph G {\n";
         // Vertices
         for (auto v : boost::make_iterator_range(boost::vertices(g))) {

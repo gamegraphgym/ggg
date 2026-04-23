@@ -226,7 +226,7 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
                    n_obj_coeff);
     solve_simplex(solver, matrix_coeff, obj_coeff_low, obj_coeff_up, var_low,
                   var_up, n_obj_coeff, sol_vec, obj);
-    //solver.purge_artificial_columns();
+    // solver.purge_artificial_columns();
 
     for (size_t i = 0; i < sol_vec.size(); ++i) {
         sol[reverseMap[i]] = -sol_vec[i];
@@ -319,9 +319,9 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
         calculate_obj_coefficients(graph, obj_coeff);
         n_obj_coeff = obj_coeff;
 
-        //RESET
-        //solver.update_objective_row(n_obj_coeff, 0.0);
-        //solver.normalize_objective_row();
+        // RESET
+        // solver.update_objective_row(n_obj_coeff, 0.0);
+        // solver.normalize_objective_row();
         solver = Simplex(matrix_coeff, obj_coeff_low, obj_coeff_up, var_low,
                          var_up, n_obj_coeff);
         solve_simplex(solver, matrix_coeff, obj_coeff_low, obj_coeff_up, var_low,
