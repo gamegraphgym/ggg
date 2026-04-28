@@ -231,7 +231,12 @@ count_dot() {
   echo "$vertices $edges"
 }
 
-# Parse solver output time
+# Parse solver output time, use period separator for decimals
+normalize_decimal() {
+  local val="$1"
+  printf "%s" "$val" | tr ',' '.' | sed 's/^\./0./'
+}
+
 parse_time() {
   local output="$1"
   local fallback="$2"
@@ -241,15 +246,14 @@ parse_time() {
     t=$(printf "%s\n" "$output" | grep "Time to solve:" | awk '{print $4}')
     unit=$(printf "%s\n" "$output" | grep "Time to solve:" | awk '{print $5}')
     if [ "$unit" = "ms" ]; then
-      awk "BEGIN { printf \"%.9f\\n\", $t/1000 }" | sed 's/^\./0./'
-    else
-      printf "%.9f\n" "$t" | sed 's/^\./0./'
+      t=$(awk "BEGIN { printf \"%.9f\", $t/1000 }")
     fi
+    normalize_decimal "$t"
   elif printf "%s\n" "$output" | grep -q "^Time:"; then
     val=$(printf "%s\n" "$output" | grep "^Time:" | awk '{print $2}' | sed 's/s//')
-    printf "%.9f\n" "$val" | sed 's/^\./0./'
+    normalize_decimal "$val"
   else
-    printf "%.9f\n" "$fallback" | sed 's/^\./0./'
+    normalize_decimal "$fallback"
   fi
 }
 
@@ -327,7 +331,8 @@ run_solver() {
   start=$(date +%s.%N)
   if output=$(timeout "$timeout_sec" "$solver_path" --time-only "$game" 2>&1); then
     end=$(date +%s.%N)
-    elapsed=$(echo "$end - $start" | bc | sed 's/^\./0./')
+    elapsed=$(echo "$end - $start" | bc)
+    elapsed=$(normalize_decimal "$elapsed")
     status="success"
     time_val=$(parse_time "$output" "$elapsed")
   else
