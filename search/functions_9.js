@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['nonempty_0',['nonempty',['../d5/d5a/classUintqueue.html#a3fa730fd192b79d1228605af07f5de81',1,'Uintqueue']]],
-  ['normalize_5fobjective_5frow_1',['normalize_objective_row',['../d8/dff/classSimplex.html#a3dbffc53daa29aad2b6555e8c426687f',1,'Simplex']]]
+  ['operator_28_29_0',['operator()',['../d7/d82/structggg_1_1graphs_1_1detail_1_1DotValueFormatter.html#a7c0bd253af403e4277326658a178946e',1,'ggg::graphs::detail::DotValueFormatter']]],
+  ['operator_3c_3c_1',['operator&lt;&lt;',['../d0/dca/namespaceggg_1_1solutions.html#aec9f575db3c183ebd0b603ff3d2b619b',1,'ggg::solutions']]],
+  ['operator_5b_5d_2',['operator[]',['../d5/d5a/classUintqueue.html#a34e90820282961e70877386b904ccc9f',1,'Uintqueue']]]
 ];

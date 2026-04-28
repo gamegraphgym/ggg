@@ -354,46 +354,45 @@ $(document).ready(function(){initNavTree('dd/dd6/solver__wrapper_8hpp_source.htm
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>                    <span class="comment">// One struct with time and solution JSON</span></div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>                    std::cout &lt;&lt; <span class="stringliteral">&quot;{\&quot;time\&quot;: &quot;</span> &lt;&lt; time_to_solve &lt;&lt; <span class="stringliteral">&quot;, \&quot;solution\&quot;: &quot;</span> &lt;&lt; solution.to_json() &lt;&lt; <span class="stringliteral">&quot;}&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>                    <span class="comment">// plain: use operator&lt;&lt; on solution</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>                    <span class="comment">// plain: use operator&lt;&lt; on solution with formatted output</span></div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>                    std::cout &lt;&lt; <span class="stringliteral">&quot;Game solved in &quot;</span> &lt;&lt; time_to_solve &lt;&lt; <span class="stringliteral">&quot; ms.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                    std::cout &lt;&lt; <span class="stringliteral">&quot;Solution:\n&quot;</span></div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>                              &lt;&lt; solution &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>                }</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            }</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span> </div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        } <span class="keywordflow">catch</span> (<span class="keyword">const</span> <a class="code hl_struct" href="../../d9/d0d/structggg_1_1graphs_1_1ParseError.html">ggg::graphs::ParseError</a> &amp;e) {</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>            <a class="code hl_define" href="../../d0/da9/logging_8hpp.html#adae8ba2826d319edb4830cd42d906fde">LGG_ERROR</a>(<span class="stringliteral">&quot;ParseError caught: &quot;</span>, e.what());</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            std::cerr &lt;&lt; <span class="stringliteral">&quot;Parse error: &quot;</span> &lt;&lt; e.what() &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>            <span class="keywordflow">return</span> 2;</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        } <span class="keywordflow">catch</span> (<span class="keyword">const</span> <a class="code hl_class" href="../../d7/dab/classggg_1_1graphs_1_1GraphValidationError.html">ggg::graphs::GraphValidationError</a> &amp;e) {</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>            <span class="comment">// Catch validation errors that might occur during parsing or other stages</span></div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>            <a class="code hl_define" href="../../d0/da9/logging_8hpp.html#adae8ba2826d319edb4830cd42d906fde">LGG_ERROR</a>(<span class="stringliteral">&quot;Validation error: &quot;</span>, e.what());</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>            std::cerr &lt;&lt; <span class="stringliteral">&quot;Validation Error: &quot;</span> &lt;&lt; e.what() &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>            <span class="keywordflow">return</span> 3;</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception &amp;e) {</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>            <a class="code hl_define" href="../../d0/da9/logging_8hpp.html#adae8ba2826d319edb4830cd42d906fde">LGG_ERROR</a>(<span class="stringliteral">&quot;Exception caught: &quot;</span>, e.what());</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>            std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: &quot;</span> &lt;&lt; e.what() &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>            <span class="keywordflow">return</span> 1;</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        }</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    }</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                    std::cout &lt;&lt; solution &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>                }</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            }</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span> </div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        } <span class="keywordflow">catch</span> (<span class="keyword">const</span> <a class="code hl_struct" href="../../d9/d0d/structggg_1_1graphs_1_1ParseError.html">ggg::graphs::ParseError</a> &amp;e) {</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>            <a class="code hl_define" href="../../d0/da9/logging_8hpp.html#adae8ba2826d319edb4830cd42d906fde">LGG_ERROR</a>(<span class="stringliteral">&quot;ParseError caught: &quot;</span>, e.what());</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>            std::cerr &lt;&lt; <span class="stringliteral">&quot;Parse error: &quot;</span> &lt;&lt; e.what() &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            <span class="keywordflow">return</span> 2;</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        } <span class="keywordflow">catch</span> (<span class="keyword">const</span> <a class="code hl_class" href="../../d7/dab/classggg_1_1graphs_1_1GraphValidationError.html">ggg::graphs::GraphValidationError</a> &amp;e) {</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>            <span class="comment">// Catch validation errors that might occur during parsing or other stages</span></div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>            <a class="code hl_define" href="../../d0/da9/logging_8hpp.html#adae8ba2826d319edb4830cd42d906fde">LGG_ERROR</a>(<span class="stringliteral">&quot;Validation error: &quot;</span>, e.what());</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>            std::cerr &lt;&lt; <span class="stringliteral">&quot;Validation Error: &quot;</span> &lt;&lt; e.what() &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>            <span class="keywordflow">return</span> 3;</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception &amp;e) {</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>            <a class="code hl_define" href="../../d0/da9/logging_8hpp.html#adae8ba2826d319edb4830cd42d906fde">LGG_ERROR</a>(<span class="stringliteral">&quot;Exception caught: &quot;</span>, e.what());</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>            std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: &quot;</span> &lt;&lt; e.what() &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>            <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        }</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    }</div>
 </div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>};</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>};</div>
 </div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
-<div class="foldopen" id="foldopen00291" data-start="" data-end="">
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno"><a class="line" href="../../dd/dd6/solver__wrapper_8hpp.html#a46c34de467569005f3ae5361f1636f5f">  291</a></span><span class="preprocessor">#define GGG_GAME_SOLVER_MAIN(GraphType, ParserFunc, ValidatorType, SolverType)                                             \</span></div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="preprocessor">    int main(int argc, char *argv[]) {                                                                                     \</span></div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="preprocessor">        auto parser_func = [](auto &amp;&amp;input) { return ParserFunc(input); };                                                 \</span></div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="preprocessor">        auto validator_func = [](const GraphType &amp;graph) { ValidatorType::validate(graph); };                              \</span></div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="preprocessor">        return ggg::utils::GameSolverWrapper&lt;GraphType, SolverType, decltype(parser_func), decltype(validator_func)&gt;::run( \</span></div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">            argc, argv, parser_func, validator_func);                                                                      \</span></div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="preprocessor">    }</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
+<div class="foldopen" id="foldopen00290" data-start="" data-end="">
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno"><a class="line" href="../../dd/dd6/solver__wrapper_8hpp.html#a46c34de467569005f3ae5361f1636f5f">  290</a></span><span class="preprocessor">#define GGG_GAME_SOLVER_MAIN(GraphType, ParserFunc, ValidatorType, SolverType)                                             \</span></div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="preprocessor">    int main(int argc, char *argv[]) {                                                                                     \</span></div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="preprocessor">        auto parser_func = [](auto &amp;&amp;input) { return ParserFunc(input); };                                                 \</span></div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="preprocessor">        auto validator_func = [](const GraphType &amp;graph) { ValidatorType::validate(graph); };                              \</span></div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="preprocessor">        return ggg::utils::GameSolverWrapper&lt;GraphType, SolverType, decltype(parser_func), decltype(validator_func)&gt;::run( \</span></div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="preprocessor">            argc, argv, parser_func, validator_func);                                                                      \</span></div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">    }</span></div>
 </div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span> </div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>} <span class="comment">// namespace utils</span></div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>} <span class="comment">// namespace ggg</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>} <span class="comment">// namespace utils</span></div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>} <span class="comment">// namespace ggg</span></div>
 <div class="ttc" id="aclassggg_1_1graphs_1_1GraphValidationError_html"><div class="ttname"><a href="../../d7/dab/classggg_1_1graphs_1_1GraphValidationError.html">ggg::graphs::GraphValidationError</a></div><div class="ttdoc">Custom exception for graph validation failures.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/dc4/validator_8hpp_source.html#l00015">validator.hpp:15</a></div></div>
 <div class="ttc" id="aclassggg_1_1utils_1_1GameSolverWrapper_html"><div class="ttname"><a href="../../d7/dbd/classggg_1_1utils_1_1GameSolverWrapper.html">ggg::utils::GameSolverWrapper</a></div><div class="ttdoc">Generic wrapper for game solvers.</div><div class="ttdef"><b>Definition</b> <a href="../../dd/dd6/solver__wrapper_8hpp_source.html#l00040">solver_wrapper.hpp:40</a></div></div>
 <div class="ttc" id="aclassggg_1_1utils_1_1GameSolverWrapper_html_af2dcfbeec7852e662e1435de5fd10082"><div class="ttname"><a href="../../d7/dbd/classggg_1_1utils_1_1GameSolverWrapper.html#af2dcfbeec7852e662e1435de5fd10082">ggg::utils::GameSolverWrapper::run</a></div><div class="ttdeci">static int run(int argc, char *argv[], ParserFunc parser_func, ValidatorFunc validator_func)</div><div class="ttdef"><b>Definition</b> <a href="../../dd/dd6/solver__wrapper_8hpp_source.html#l00199">solver_wrapper.hpp:199</a></div></div>

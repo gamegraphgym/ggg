@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['all_5fvariables_5fhave_5fnon_5fbasic_5fslack_0',['all_variables_have_non_basic_slack',['../d8/dff/classSimplex.html#ae8abe93474b02a424d3b115593a39246',1,'Simplex']]]
+  ['back_0',['back',['../d5/d5a/classUintqueue.html#ae7886f7d6b050382db416a98e1e6d082',1,'Uintqueue']]],
+  ['back2_1',['back2',['../d5/d5a/classUintqueue.html#a3b586ab49ad39aac424724416f82e40b',1,'Uintqueue']]]
 ];

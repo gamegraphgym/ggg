@@ -8,6 +8,9 @@ var searchData=
   ['none_5',['NONE',['../dd/de8/namespaceggg_1_1utils.html#a39f8b709ba73ab516698bae2f3892d53ab50339a10e1de285ac99d4c3990b8693',1,'ggg::utils']]],
   ['nonempty_6',['nonempty',['../d5/d5a/classUintqueue.html#a3fa730fd192b79d1228605af07f5de81',1,'Uintqueue']]],
   ['noopvalidator_7',['NoOpValidator',['../d0/d60/structggg_1_1graphs_1_1NoOpValidator.html',1,'ggg::graphs']]],
-  ['normalize_5fobjective_5frow_8',['normalize_objective_row',['../d8/dff/classSimplex.html#a3dbffc53daa29aad2b6555e8c426687f',1,'Simplex']]],
-  ['numeric_20indices_9',['* appropriate value conversion callables. Keys are written as numeric indices',['../d7/d06/namespaceggg.html#autotoc_md-appropriate-value-conversion-callables-keys-are-written-as-numeric-indices',1,'']]]
+  ['normalize_5faliases_8',['normalize_aliases',['../db/d7c/classggg_1_1utils_1_1GameGraphGenerator.html#aa80c5db7ec53cfdcfbef7e271c767e0b',1,'ggg::utils::GameGraphGenerator']]],
+  ['normalize_5fmpv_5faliases_9',['normalize_mpv_aliases',['../d3/dfe/classMPVGameGenerator.html#a94d85b4055891404fa82c070116c267a',1,'MPVGameGenerator']]],
+  ['normalize_5fparity_5faliases_10',['normalize_parity_aliases',['../dd/d7c/classParityGameGenerator.html#ab58e1349435b2a26bafce0e168058eaf',1,'ParityGameGenerator']]],
+  ['normalize_5fstochastic_5faliases_11',['normalize_stochastic_aliases',['../d3/df5/classStochasticDiscountedGameGenerator.html#a683544d0039588e3f288bc00f6cc1775',1,'StochasticDiscountedGameGenerator']]],
+  ['numeric_20indices_12',['* appropriate value conversion callables. Keys are written as numeric indices',['../d7/d06/namespaceggg.html#autotoc_md-appropriate-value-conversion-callables-keys-are-written-as-numeric-indices',1,'']]]
 ];

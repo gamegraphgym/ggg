@@ -150,17 +150,17 @@ $(document).ready(function(){initNavTree('d2/d3d/probability__utilities_8hpp_sou
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                    <span class="keywordflow">if</span> (prob &lt;= 0.0 || prob &gt; 1.0) {</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                        <span class="keywordflow">throw</span> <a class="code hl_class" href="../../d7/dab/classggg_1_1graphs_1_1GraphValidationError.html">GraphValidationError</a>(</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                            <span class="stringliteral">&quot;Invalid probability &quot;</span> + std::to_string(prob) +</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                            <span class="stringliteral">&quot; on edge from vertex &#39;&quot;</span> + graph[vertex].name +</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                            <span class="stringliteral">&quot;&#39; (must be in range (0, 1])&quot;</span>);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                            <span class="stringliteral">&quot; on edge from vertex &quot;</span> + std::to_string(vertex) +</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                            <span class="stringliteral">&quot; (must be in range (0, 1])&quot;</span>);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                    }</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                    sum += prob;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                }</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                <span class="comment">// Check that probabilities sum to 1.0 (with small epsilon for floating point)</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                <span class="keywordflow">if</span> (std::abs(sum - 1.0) &gt; 1e-8) {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                <span class="keywordflow">if</span> (std::abs(sum - 1.0) &gt; 1e-5) {</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                    <span class="keywordflow">throw</span> <a class="code hl_class" href="../../d7/dab/classggg_1_1graphs_1_1GraphValidationError.html">GraphValidationError</a>(</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                        <span class="stringliteral">&quot;Probabilities on outgoing edges from vertex &#39;&quot;</span> +</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                        graph[vertex].name + <span class="stringliteral">&quot;&#39; sum to &quot;</span> + std::to_string(sum) +</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                        <span class="stringliteral">&quot;Probabilities on outgoing edges from vertex &quot;</span> +</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                        std::to_string(vertex) + <span class="stringliteral">&quot; sum to &quot;</span> + std::to_string(sum) +</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                        <span class="stringliteral">&quot; (must sum to 1.0)&quot;</span>);</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                }</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            }</div>

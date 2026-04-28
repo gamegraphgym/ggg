@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['main_0',['main',['../dd/d4b/stochastic__discounted_2generate_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;generate.cpp'],['../d0/d2d/generate__parity_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;generate_parity.cpp'],['../de/d75/mean__payoff_2generate_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;generate.cpp']]],
+  ['main_0',['main',['../dd/d4b/stochastic__discounted_2generate_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;generate.cpp'],['../dd/d23/parity_2generate_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;generate.cpp'],['../de/d75/mean__payoff_2generate_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;generate.cpp']]],
   ['manual_20integration_1',['Manual Integration',['../d9/d87/install.html#manual-integration',1,'']]],
   ['map_5fmember_5fjson_2',['map_member_json',['../d9/db1/namespaceggg_1_1solutions_1_1detail.html#a561ea3e5771288db5f886183c06865af',1,'ggg::solutions::detail']]],
   ['maps_3',['* Small helpers (internal) for creating compact JSON-like strings and streaming maps.',['../d7/d06/namespaceggg.html#autotoc_md-small-helpers-internal-for-creating-compact-json-like-strings-and-streaming-maps',1,'']]],

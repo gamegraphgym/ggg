@@ -138,80 +138,116 @@ $(document).ready(function(){initNavTree('d9/dea/src_2libggg_2stochastic__discou
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keyword">const</span> <span class="keyword">auto</span> [vertices_begin, vertices_end] = boost::vertices(graph);</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;vertex : <a class="code hl_function" href="../../de/d8f/namespaceggg_1_1stochastic__discounted_1_1graph.html#a318af7c0bd285453ada39647e9b25304">g::get_non_probabilistic_vertices</a>(graph)) {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        strategy[vertex] = -1;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        sol[vertex] = 0.0;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        TAtr.push(vertex);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        BAtr[vertex] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="comment">// Initialize all vertices</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;vertex :</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>         boost::make_iterator_range(vertices_begin, vertices_end)) {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        sol[vertex] = 0.0;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        BAtr[vertex] = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    }</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">int</span> pos;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">int</span> best_succ;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">double</span> sum;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">double</span> best;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordflow">while</span> (TAtr.nonempty()) {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        iterations++;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        pos = TAtr.pop();</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        BAtr[pos] = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        oldcost = sol[pos];</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        best_succ = -1;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keyword">const</span> <span class="keyword">auto</span> [out_edges_begin, out_edges_end] = boost::out_edges(pos, graph);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;gedge : boost::make_iterator_range(out_edges_begin, out_edges_end)) {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keyword">const</span> <span class="keyword">auto</span> successor = boost::target(gedge, graph);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            <span class="keyword">const</span> <span class="keyword">auto</span> curre = edge(pos, successor, graph);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            <span class="keyword">const</span> <span class="keyword">auto</span> reach = <a class="code hl_function" href="../../de/d8f/namespaceggg_1_1stochastic__discounted_1_1graph.html#a761d904a5add2bad22851f50517ba3ef">g::get_reachable_through_probabilistic</a>(graph, pos, successor);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordflow">if</span> (best_succ == -1) {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                best_succ = successor;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                best = 0;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[TARGET, PROB] : reach) {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                    best += (PROB * graph[curre.first].discount * sol[TARGET]);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                }</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                best += graph[curre.first].weight;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                sum = 0;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[TARGET, PROB] : reach) {</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                    sum += (PROB * graph[curre.first].discount * sol[TARGET]);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                }</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                sum += graph[curre.first].weight;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                <span class="keywordflow">if</span> ((graph[pos].player == 0 &amp;&amp; sum &gt; best) || (graph[pos].player == 1 &amp;&amp; sum &lt; best)) {</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                    best_succ = successor;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                    best = sum;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                }</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            }</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        }</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keywordflow">if</span> (sol[pos] != best || strategy[pos] == -1) {</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>            lifts++;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            sol[pos] = best;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            strategy[pos] = best_succ;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> in_edge : boost::make_iterator_range(boost::in_edges(pos, graph))) {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                <span class="keyword">auto</span> pred = boost::source(in_edge, graph);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                <span class="keywordflow">if</span> (!BAtr[pred]) {</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                    TAtr.push(pred);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                    BAtr[pred] = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                }</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            }</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        }</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    }</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;vertex : boost::make_iterator_range(vertices_begin, vertices_end)) {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keywordflow">if</span> (sol[vertex] &gt;= 0) {</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            solution.<a class="code hl_function" href="../../da/d7c/classggg_1_1solutions_1_1RSolution.html#a943eb3be93ad133238885109012bcca3">set_winning_player</a>(vertex, 0);</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            solution.<a class="code hl_function" href="../../da/d7c/classggg_1_1solutions_1_1RSolution.html#a943eb3be93ad133238885109012bcca3">set_winning_player</a>(vertex, 1);</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        }</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        solution.<a class="code hl_function" href="../../da/da0/classggg_1_1solutions_1_1SSolution.html#a2f650ef535022c38f75fa46daeac4f2b">set_strategy</a>(vertex, strategy[vertex]);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        solution.<a class="code hl_function" href="../../dd/d5b/classggg_1_1solutions_1_1QSolution.html#a0b1c0924deed2bf6f22a655b2390956d">set_value</a>(vertex, sol[vertex]);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    }</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <a class="code hl_define" href="../../d0/da9/logging_8hpp.html#a098c3553fefc52c9abe407b135577180">LGG_TRACE</a>(<span class="stringliteral">&quot;Solved with &quot;</span>, iterations, <span class="stringliteral">&quot; iterations&quot;</span>);</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <a class="code hl_define" href="../../d0/da9/logging_8hpp.html#a098c3553fefc52c9abe407b135577180">LGG_TRACE</a>(<span class="stringliteral">&quot;Solved with &quot;</span>, lifts, <span class="stringliteral">&quot; lifts&quot;</span>);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordflow">return</span> solution;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>}</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// Add non-probabilistic vertices to the work queue</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;vertex : <a class="code hl_function" href="../../de/d8f/namespaceggg_1_1stochastic__discounted_1_1graph.html#a318af7c0bd285453ada39647e9b25304">g::get_non_probabilistic_vertices</a>(graph)) {</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        strategy[vertex] = -1;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        TAtr.push(vertex);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        BAtr[vertex] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">int</span> pos;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">int</span> best_succ;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">double</span> sum;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">double</span> best;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">double</span> max_change;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> epsilon = 1e-10;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// Outer loop: continue until convergence</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">do</span> {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        max_change = 0.0;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">while</span> (TAtr.nonempty()) {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            iterations++;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            pos = TAtr.pop();</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            BAtr[pos] = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            oldcost = sol[pos];</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            best_succ = -1;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            <span class="keyword">const</span> <span class="keyword">auto</span> [out_edges_begin, out_edges_end] = boost::out_edges(pos,</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                                                                           graph);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;gedge :</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                 boost::make_iterator_range(out_edges_begin, out_edges_end)) {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                <span class="keyword">const</span> <span class="keyword">auto</span> successor = boost::target(gedge, graph);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                <span class="keyword">const</span> <span class="keyword">auto</span> curre = edge(pos, successor, graph);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                <span class="keyword">const</span> <span class="keyword">auto</span> reach = <a class="code hl_function" href="../../de/d8f/namespaceggg_1_1stochastic__discounted_1_1graph.html#a761d904a5add2bad22851f50517ba3ef">g::get_reachable_through_probabilistic</a>(</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                    graph, pos, successor);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                <span class="keywordflow">if</span> (best_succ == -1) {</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                    best_succ = successor;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                    best = 0;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[TARGET, PROB] : reach) {</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                        best += (PROB * graph[curre.first].discount *</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                                 sol[TARGET]);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                    }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                    best += graph[curre.first].weight;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                    sum = 0;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[TARGET, PROB] : reach) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                        sum += (PROB * graph[curre.first].discount *</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                                sol[TARGET]);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                    }</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                    sum += graph[curre.first].weight;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                    <span class="keywordflow">if</span> ((graph[pos].player == 0 &amp;&amp; sum &gt; best) ||</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                        (graph[pos].player == 1 &amp;&amp; sum &lt; best)) {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                        best_succ = successor;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                        best = sum;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                    }</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            }</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="keywordflow">if</span> (sol[pos] != best || strategy[pos] == -1) {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                lifts++;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                <span class="keywordtype">double</span> change = std::abs(sol[pos] - best);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                max_change = std::max(max_change, change);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                sol[pos] = best;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                strategy[pos] = best_succ;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> in_edge :</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                     boost::make_iterator_range(boost::in_edges(pos, graph))) {</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                    <span class="keyword">auto</span> pred = boost::source(in_edge, graph);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                    <span class="keywordflow">if</span> (!BAtr[pred]) {</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                        TAtr.push(pred);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                        BAtr[pred] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                    }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            }</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        }</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="comment">// Re-add all non-probabilistic vertices if not converged</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keywordflow">if</span> (max_change &gt; epsilon) {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;vertex :</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                 <a class="code hl_function" href="../../de/d8f/namespaceggg_1_1stochastic__discounted_1_1graph.html#a318af7c0bd285453ada39647e9b25304">g::get_non_probabilistic_vertices</a>(graph)) {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                <span class="keywordflow">if</span> (!BAtr[vertex]) {</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                    TAtr.push(vertex);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                    BAtr[vertex] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                }</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            }</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        }</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    } <span class="keywordflow">while</span> (max_change &gt; epsilon);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;vertex :</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>         boost::make_iterator_range(vertices_begin, vertices_end)) {</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        <span class="keywordflow">if</span> (sol[vertex] &gt;= 0) {</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            solution.<a class="code hl_function" href="../../da/d7c/classggg_1_1solutions_1_1RSolution.html#a943eb3be93ad133238885109012bcca3">set_winning_player</a>(vertex, 0);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            solution.<a class="code hl_function" href="../../da/d7c/classggg_1_1solutions_1_1RSolution.html#a943eb3be93ad133238885109012bcca3">set_winning_player</a>(vertex, 1);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        }</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        solution.<a class="code hl_function" href="../../da/da0/classggg_1_1solutions_1_1SSolution.html#a2f650ef535022c38f75fa46daeac4f2b">set_strategy</a>(vertex, strategy[vertex]);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        solution.<a class="code hl_function" href="../../dd/d5b/classggg_1_1solutions_1_1QSolution.html#a0b1c0924deed2bf6f22a655b2390956d">set_value</a>(vertex, sol[vertex]);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    }</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <a class="code hl_define" href="../../d0/da9/logging_8hpp.html#a098c3553fefc52c9abe407b135577180">LGG_TRACE</a>(<span class="stringliteral">&quot;Solved with &quot;</span>, iterations, <span class="stringliteral">&quot; iterations&quot;</span>);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <a class="code hl_define" href="../../d0/da9/logging_8hpp.html#a098c3553fefc52c9abe407b135577180">LGG_TRACE</a>(<span class="stringliteral">&quot;Solved with &quot;</span>, lifts, <span class="stringliteral">&quot; lifts&quot;</span>);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="keywordflow">return</span> solution;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>}</div>
 </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>} <span class="comment">// namespace stochastic_discounted</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>} <span class="comment">// namespace ggg</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>} <span class="comment">// namespace stochastic_discounted</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>} <span class="comment">// namespace ggg</span></div>
 <div class="ttc" id="aclassggg_1_1solutions_1_1QSolution_html_a0b1c0924deed2bf6f22a655b2390956d"><div class="ttname"><a href="../../dd/d5b/classggg_1_1solutions_1_1QSolution.html#a0b1c0924deed2bf6f22a655b2390956d">ggg::solutions::QSolution::set_value</a></div><div class="ttdeci">void set_value(Vertex vertex, const ValueType &amp;value)</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d4d/qsolution_8hpp_source.html#l00038">qsolution.hpp:38</a></div></div>
 <div class="ttc" id="aclassggg_1_1solutions_1_1RSQSolution_html"><div class="ttname"><a href="../../d3/da4/classggg_1_1solutions_1_1RSQSolution.html">ggg::solutions::RSQSolution</a></div><div class="ttdoc">Convenience solution combining Regions, Strategies and Quantitative values.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d8e/rsqsolution_8hpp_source.html#l00022">rsqsolution.hpp:22</a></div></div>
 <div class="ttc" id="aclassggg_1_1solutions_1_1RSolution_html_a943eb3be93ad133238885109012bcca3"><div class="ttname"><a href="../../da/d7c/classggg_1_1solutions_1_1RSolution.html#a943eb3be93ad133238885109012bcca3">ggg::solutions::RSolution::set_winning_player</a></div><div class="ttdeci">void set_winning_player(Vertex vertex, int player)</div><div class="ttdef"><b>Definition</b> <a href="../../d4/df1/rsolution_8hpp_source.html#l00044">rsolution.hpp:44</a></div></div>
@@ -224,7 +260,7 @@ $(document).ready(function(){initNavTree('d9/dea/src_2libggg_2stochastic__discou
 <div class="ttc" id="anamespaceggg_1_1stochastic__discounted_1_1graph_html"><div class="ttname"><a href="../../de/d8f/namespaceggg_1_1stochastic__discounted_1_1graph.html">ggg::stochastic_discounted::graph</a></div><div class="ttdef"><b>Definition</b> <a href="../../d8/d75/stochastic__discounted_2graph_8hpp_source.html#l00017">stochastic_discounted/graph.hpp:17</a></div></div>
 <div class="ttc" id="anamespaceggg_1_1stochastic__discounted_1_1graph_html_a318af7c0bd285453ada39647e9b25304"><div class="ttname"><a href="../../de/d8f/namespaceggg_1_1stochastic__discounted_1_1graph.html#a318af7c0bd285453ada39647e9b25304">ggg::stochastic_discounted::graph::get_non_probabilistic_vertices</a></div><div class="ttdeci">auto get_non_probabilistic_vertices(const Graph &amp;g)</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d75/stochastic__discounted_2graph_8hpp_source.html#l00156">stochastic_discounted/graph.hpp:156</a></div></div>
 <div class="ttc" id="anamespaceggg_1_1stochastic__discounted_1_1graph_html_a761d904a5add2bad22851f50517ba3ef"><div class="ttname"><a href="../../de/d8f/namespaceggg_1_1stochastic__discounted_1_1graph.html#a761d904a5add2bad22851f50517ba3ef">ggg::stochastic_discounted::graph::get_reachable_through_probabilistic</a></div><div class="ttdeci">std::map&lt; Vertex, double &gt; get_reachable_through_probabilistic(const Graph &amp;g, Vertex source, Vertex successor)</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d75/stochastic__discounted_2graph_8hpp_source.html#l00161">stochastic_discounted/graph.hpp:161</a></div></div>
-<div class="ttc" id="anamespaceggg_1_1stochastic__discounted_html_a8bb6620c12b5d5c3d70081a1e147fb04"><div class="ttname"><a href="../../dd/d91/namespaceggg_1_1stochastic__discounted.html#a8bb6620c12b5d5c3d70081a1e147fb04">ggg::stochastic_discounted::graphs_t</a></div><div class="ttdeci">g::Graph graphs_t</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d36/src_2libggg_2stochastic__discounted_2solvers_2objective_8cpp_source.html#l00009">src/libggg/stochastic_discounted/solvers/objective.cpp:9</a></div></div>
+<div class="ttc" id="anamespaceggg_1_1stochastic__discounted_html_a8bb6620c12b5d5c3d70081a1e147fb04"><div class="ttname"><a href="../../dd/d91/namespaceggg_1_1stochastic__discounted.html#a8bb6620c12b5d5c3d70081a1e147fb04">ggg::stochastic_discounted::graphs_t</a></div><div class="ttdeci">g::Graph graphs_t</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d36/src_2libggg_2stochastic__discounted_2solvers_2objective_8cpp_source.html#l00012">src/libggg/stochastic_discounted/solvers/objective.cpp:12</a></div></div>
 <div class="ttc" id="anamespaceggg_html"><div class="ttname"><a href="../../d7/d06/namespaceggg.html">ggg</a></div><div class="ttdoc">Main namespace for the Game Graph Gym library.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/deb/attractor_8hpp_source.html#l00009">attractor.hpp:9</a></div></div>
 <div class="ttc" id="avalue_8hpp_html"><div class="ttname"><a href="../../d6/dda/value_8hpp.html">value.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

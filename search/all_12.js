@@ -17,7 +17,7 @@ var searchData=
   ['requirements_20and_20dependencies_14',['System Requirements and Dependencies',['../d9/d87/install.html#system-requirements-and-dependencies',1,'']]],
   ['resize_15',['resize',['../d5/d5a/classUintqueue.html#a687851a4f1566c7743e15cafe2819e8f',1,'Uintqueue']]],
   ['rsolution_16',['rsolution',['../da/d7c/classggg_1_1solutions_1_1RSolution.html',1,'ggg::solutions::RSolution&lt; GraphType &gt;'],['../da/d7c/classggg_1_1solutions_1_1RSolution.html#aa8006b235401742f6ed8ecf5757be1ce',1,'ggg::solutions::RSolution::RSolution()']]],
-  ['rsolution_20graphtype_17',['rsolution graphtype',['../dc/df9/api_overview.html#rsolutiongraphtype',1,'RSolution&lt;GraphType&gt;'],['../dc/d22/api_solvers.html#rsolutiongraphtype-1',1,'RSolution&lt;GraphType&gt;']]],
+  ['rsolution_20graphtype_17',['rsolution graphtype',['../dc/d22/api_solvers.html#rsolutiongraphtype-1',1,'RSolution&lt;GraphType&gt;'],['../dc/df9/api_overview.html#rsolutiongraphtype',1,'RSolution&lt;GraphType&gt;']]],
   ['rsolution_2ehpp_18',['rsolution.hpp',['../d4/df1/rsolution_8hpp.html',1,'']]],
   ['rsolution_3c_20graph_3a_3agraph_20_3e_19',['RSolution&lt; graph::Graph &gt;',['../da/d7c/classggg_1_1solutions_1_1RSolution.html',1,'ggg::solutions']]],
   ['rsqsolution_20',['rsqsolution',['../d3/da4/classggg_1_1solutions_1_1RSQSolution.html#aeefd14b8364f348c7f12222e5895b52d',1,'ggg::solutions::RSQSolution::RSQSolution()'],['../d3/da4/classggg_1_1solutions_1_1RSQSolution.html',1,'ggg::solutions::RSQSolution&lt; GraphType, StrategyType, ValueType &gt;']]],
@@ -25,7 +25,7 @@ var searchData=
   ['rssolution_22',['rssolution',['../dd/d77/classggg_1_1solutions_1_1RSSolution.html#a3b999d9c9b4d4689fdfb2ec1eb3a8690',1,'ggg::solutions::RSSolution::RSSolution()'],['../dd/d77/classggg_1_1solutions_1_1RSSolution.html',1,'ggg::solutions::RSSolution&lt; GraphType, StrategyType &gt;']]],
   ['rssolution_2ehpp_23',['rssolution.hpp',['../d8/d3b/rssolution_8hpp.html',1,'']]],
   ['rssolution_3c_20graph_3a_3agraph_20_3e_24',['RSSolution&lt; graph::Graph &gt;',['../dd/d77/classggg_1_1solutions_1_1RSSolution.html',1,'ggg::solutions']]],
-  ['run_25',['run',['../d3/df5/classStochasticDiscountedGameGenerator.html#a541a750eef9b3881459bb25a53c6a067',1,'StochasticDiscountedGameGenerator::run()'],['../d7/dbd/classggg_1_1utils_1_1GameSolverWrapper.html#af2dcfbeec7852e662e1435de5fd10082',1,'ggg::utils::GameSolverWrapper::run()'],['../db/d7c/classggg_1_1utils_1_1GameGraphGenerator.html#a1e5949062b00b19279c1b586dee8650f',1,'ggg::utils::GameGraphGenerator::run()']]],
+  ['run_25',['run',['../d3/df5/classStochasticDiscountedGameGenerator.html#a541a750eef9b3881459bb25a53c6a067',1,'StochasticDiscountedGameGenerator::run()'],['../dd/d7c/classParityGameGenerator.html#adad75dc4e544118f2f79755e409250b8',1,'ParityGameGenerator::run()'],['../d3/dfe/classMPVGameGenerator.html#a429c6bd50cf4b073d1fd024000144de0',1,'MPVGameGenerator::run()'],['../d7/dbd/classggg_1_1utils_1_1GameSolverWrapper.html#af2dcfbeec7852e662e1435de5fd10082',1,'ggg::utils::GameSolverWrapper::run()'],['../db/d7c/classggg_1_1utils_1_1GameGraphGenerator.html#a1e5949062b00b19279c1b586dee8650f',1,'ggg::utils::GameGraphGenerator::run()']]],
   ['running_20tests_26',['Running Tests',['../d0/d3f/developing.html#running-tests',1,'']]],
   ['running_20your_20first_20example_27',['Running Your First Example',['../da/d0d/quick_start.html#running-your-first-example',1,'']]]
 ];

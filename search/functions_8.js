@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['main_0',['main',['../de/d75/mean__payoff_2generate_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;generate.cpp'],['../d0/d2d/generate__parity_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;generate_parity.cpp'],['../dd/d4b/stochastic__discounted_2generate_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;generate.cpp']]],
-  ['map_5fmember_5fjson_1',['map_member_json',['../d9/db1/namespaceggg_1_1solutions_1_1detail.html#a561ea3e5771288db5f886183c06865af',1,'ggg::solutions::detail']]],
-  ['merge_5fjson_5fmembers_2',['merge_json_members',['../d9/db1/namespaceggg_1_1solutions_1_1detail.html#a263530635d89393cfcd3d23e5f374311',1,'ggg::solutions::detail']]],
-  ['mpvgamegenerator_3',['MPVGameGenerator',['../d3/dfe/classMPVGameGenerator.html#a9429e9db878831f394e5d84f6b9bcb00',1,'MPVGameGenerator']]]
+  ['nonempty_0',['nonempty',['../d5/d5a/classUintqueue.html#a3fa730fd192b79d1228605af07f5de81',1,'Uintqueue']]],
+  ['normalize_5faliases_1',['normalize_aliases',['../db/d7c/classggg_1_1utils_1_1GameGraphGenerator.html#aa80c5db7ec53cfdcfbef7e271c767e0b',1,'ggg::utils::GameGraphGenerator']]],
+  ['normalize_5fmpv_5faliases_2',['normalize_mpv_aliases',['../d3/dfe/classMPVGameGenerator.html#a94d85b4055891404fa82c070116c267a',1,'MPVGameGenerator']]],
+  ['normalize_5fparity_5faliases_3',['normalize_parity_aliases',['../dd/d7c/classParityGameGenerator.html#ab58e1349435b2a26bafce0e168058eaf',1,'ParityGameGenerator']]],
+  ['normalize_5fstochastic_5faliases_4',['normalize_stochastic_aliases',['../d3/df5/classStochasticDiscountedGameGenerator.html#a683544d0039588e3f288bc00f6cc1775',1,'StochasticDiscountedGameGenerator']]]
 ];
