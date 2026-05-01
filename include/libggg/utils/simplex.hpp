@@ -341,6 +341,7 @@ class Simplex {
             }
         }
     }
+
   private:
     std::vector<std::vector<double>> tableau;
     std::vector<int> basis;
