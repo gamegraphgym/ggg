@@ -35,13 +35,13 @@ After building, try running the basic usage example. All binaries are placed in 
 ```bash
 # Generate some test games (generator executables live in build/bin)
 # Example: parity generator
-./build/bin/ggg_parity_generate -o test_games -n 5 -v 20
+./build/bin/ggg_parity_generate -o test_games -c 5 --vertices 20
 
 # Run a solver on the generated games (solver CLIs are in build/bin/)
-./build/bin/ggg_parity_solver_recursive test_games/game_0.dot
+./build/bin/ggg_parity_solver_recursive test_games/parity_game_0.dot
 
 # As above but with debug log on stderr (and moved to log.txt)
-./build/bin/ggg_parity_solver_recursive test_games/game_0.dot -vv 2&> log.txt
+./build/bin/ggg_parity_solver_recursive test_games/parity_game_0.dot -vv 2> log.txt
 ```
 
 ## Using the API in Your Code
@@ -54,13 +54,15 @@ Here's a minimal example of using Game Graph Gym in your own project:
 
 int main() {
     // Load a Parity Graph from DOT file
-    auto game = ggg::graphs::parse_parity_graph_from_file("game.dot");
+    auto game = ggg::parity::graph::parse("game.dot");
     
     // Solve using a solver that provides regions and strategies (RS solution)
-    auto solver = std::make_unique<ggg::parity::RecursiveParitySolver>();
-    auto solution = solver->solve(game);
+    ggg::parity::RecursiveParitySolver solver;
+    auto solution = solver.solve(*game);
 
-    // Inspect results (solved-state flag removed)
+    // Inspect result for one vertex
+    const auto [vb, ve] = boost::vertices(*game);
+    const auto v0 = *vb;
     std::cout << "Vertex v0 won by player: "
               << solution.get_winning_player(v0) << std::endl;
 }

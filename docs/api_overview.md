@@ -41,7 +41,7 @@ This will generate (in the call-site namespace)
 - `add_vertex()` and `add_edge()` - convenience helpers whose parameter lists
     match the declared vertex/edge fields
 - `parse(std::istream&)` and `parse(const std::string&)` - DOT parsers that
-    return `std::shared_ptr<Graph>` on success (or `nullptr` on failure)
+    return `std::shared_ptr<Graph>` on success and throw on parse/file errors
 - `write(std::ostream&)` and `write(const std::string&)` - DOT writers
 
 To use the generated types and functions:
@@ -240,7 +240,7 @@ public:
         for (auto it = vertices_begin; it != vertices_end; ++it) {
             const auto vertex = *it;
             const auto winner = computeWinner(game, vertex);
-            solution.setWinningPlayer(vertex, winner);
+            solution.set_winning_player(vertex, winner);
         }
 
         return solution;
@@ -271,8 +271,8 @@ GGG_GAME_SOLVER_MAIN(
 
 The macro generates a complete `main()` function that:
 
-1. Parses command-line arguments (supports `--csv`, `--time-only`, `--solver-name`)
-2. Reads the graph from stdin using the provided parser
+1. Parses command-line arguments (supports `--format`, `--time-only`, `--solver-name`, and `-v` when logging is enabled)
+2. Reads the graph from the required positional input path (`<input>`), using `-` for stdin
 3. Validates the graph using the specified validator
 4. Runs the solver
 5. Outputs the solution

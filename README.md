@@ -59,7 +59,7 @@ All solver binaries provide a standardized command-line interface:
 - `--solver-name`: Display solver name and exit
 - `-v`: Increase verbosity (can be used multiple times: `-v`, `-vv`, `-vvv`) when logging is enabled
 
-The first non-option positional argument is interpreted as the input path (use `-` for stdin). If omitted, the input defaults to `-` (stdin).
+The first non-option positional argument is interpreted as the input path (use `-` for stdin). This positional `<input>` argument is required.
 
 All binaries are placed into `build/bin`.
 Solvers follow the naming scheme `ggg_X_solver_Y` where `X` refers to the type of game (parity, mean_payoff,...) and `Y` is the name of the algorithm it implements.
@@ -70,7 +70,7 @@ So far, supported are (two-player, zero-sum, non-stochastic) games with parity, 
 Game graphs can be imported from and exported to [Graphviz DOT](https://graphviz.org/doc/info/lang.html) format with custom attributes for vertices and (directed) edges:
 
 - **All Game Graph Types** admit properties `name` (string), `player` (int) on vertices and `label` (string) on edges.
-- **Parity game graphs** add a property `priority` (int) on edges;
+- **Parity game graphs** add a property `priority` (int) on vertices;
 - **Mean-Payoff game graphs** add a property `weight` (int) on vertices.
 
 By design, it is rather easy to define your own game graph types with custom edge/vertex/graph properties and automatically derive data structures, parsers and writers for the DOT like format.

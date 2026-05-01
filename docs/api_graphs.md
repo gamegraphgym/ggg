@@ -39,7 +39,7 @@ This will generate (in the call-site namespace)
 - `add_vertex()` and `add_edge()` - convenience helpers whose parameter lists
     match the declared vertex/edge fields
 - `parse(std::istream&)` and `parse(const std::string&)` - DOT parsers that
-    return `std::shared_ptr<Graph>` on success (or `nullptr` on failure)
+    return `std::shared_ptr<Graph>` on success and throw on parse/file errors
 - `write(std::ostream&)` and `write(const std::string&)` - DOT writers
 
 To use the generated types and functions:
