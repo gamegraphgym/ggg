@@ -292,8 +292,8 @@ class Simplex {
         // Objective value
         objective = tableau[numConstraints].back();
     }
-    /*
-    void update_objective_row(const std::vector<double> &new_obj_coeff, double new_rhs) {
+
+    void update_objective_row(const std::vector<double> &new_obj_coeff) {
         int w_index = origVars;
         int total_cols = tableau[0].size();
         // Clear current objective row (excluding RHS)
@@ -306,18 +306,26 @@ class Simplex {
             tableau[numConstraints][j] = -cj;       // x'_j gets -c_j
             tableau[numConstraints][w_index] += cj; // shared W gets +c_j
         }
-        // Override objective RHS value
-        tableau[numConstraints].back() = new_rhs;
+        // Reset objective RHS for canonicalization
+        tableau[numConstraints].back() = 0.0;
     }
 
     void normalize_objective_row() {
         int total_cols = tableau[0].size();
-        int total_rows = tableau.size();
-        int objective_row = numConstraints;
-        for (int col = 0; col < total_cols - 1; ++col) {
-            double cost = tableau[objective_row][col];
-            if (std::fabs(cost) < 1e-8) {
-                continue; // Skip zero or negligible cost
+        for (int i = 0; i < numConstraints; ++i) {
+            int basic_var = basis[i];
+            double coeff = tableau[numConstraints][basic_var];
+            if (std::fabs(coeff) < 1e-12) {
+                continue;
+            }
+            double factor = coeff;
+            for (int col = 0; col < total_cols; ++col) {
+                tableau[numConstraints][col] -= factor * tableau[i][col];
+            }
+        }
+        for (int col = 0; col < total_cols; ++col) {
+            if (std::fabs(tableau[numConstraints][col]) < 1e-12) {
+                tableau[numConstraints][col] = 0.0;
             }
         }
     }
@@ -333,7 +341,6 @@ class Simplex {
             }
         }
     }
-    */
   private:
     std::vector<std::vector<double>> tableau;
     std::vector<int> basis;

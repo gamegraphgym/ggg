@@ -1,10 +1,12 @@
-#include "libggg/stochastic_discounted/solvers/objective.hpp"
+﻿#include "libggg/stochastic_discounted/solvers/objective.hpp"
 #include "libggg/utils/logging.hpp"
 #include <boost/graph/graph_utility.hpp>
 #include <cmath>
 #include <limits>
 #include <random>
 
+// Note: This is a simple implementation of an objective improvement solver for stochastic discounted games.
+// It only works on games with max out degree 2.
 namespace ggg {
 namespace stochastic_discounted {
 
@@ -23,7 +25,7 @@ bool StochasticDiscountedObjectiveSolver::switch_str(const graphs_t &graph) {
         }
 
         const auto [out_edges_begin, out_edges_end] = boost::out_edges(vertex,
-                                                                       graph);
+                                                                        graph);
         for (const auto &gedge :
              boost::make_iterator_range(out_edges_begin, out_edges_end)) {
             const auto successor = boost::target(gedge, graph);
@@ -74,7 +76,7 @@ int StochasticDiscountedObjectiveSolver::setup_matrix_rows(
 
     for (const auto &vertex : g::get_non_probabilistic_vertices(graph)) {
         const auto [out_edges_begin, out_edges_end] = boost::out_edges(vertex,
-                                                                       graph);
+                                                                        graph);
         for (const auto &gedge :
              boost::make_iterator_range(out_edges_begin, out_edges_end)) {
             std::fill(matrix_coeff[row].begin(), matrix_coeff[row].end(), 0.0);
@@ -129,19 +131,13 @@ void StochasticDiscountedObjectiveSolver::calculate_obj_coefficients(
                 obj_coeff[matrixMap[target]] +=
                     prob * graph[curre.first].discount;
             }
-            cff += -graph[curre.first].weight;
+            cff += graph[curre.first].weight;
         }
     }
 }
 
 void StochasticDiscountedObjectiveSolver::solve_simplex(
     Simplex &solver,
-    const std::vector<std::vector<double>> &matrix_coeff,
-    const std::vector<double> &obj_coeff_low,
-    const std::vector<double> &obj_coeff_up,
-    const std::vector<double> &var_low,
-    const std::vector<double> &var_up,
-    const std::vector<double> &n_obj_coeff,
     std::vector<double> &sol_vec,
     double &obj) {
     while (solver.remove_artificial_variables()) {
@@ -183,7 +179,7 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
     obj_coeff.clear();
 
     for (const auto &vertex : boost::make_iterator_range(vertices_begin,
-                                                         vertices_end)) {
+                                                        vertices_end)) {
         const auto [out_begin, out_end] = boost::out_edges(vertex, graph);
         if (out_begin != out_end) {
             strategy[vertex] = boost::target(*out_begin, graph);
@@ -224,12 +220,17 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
     std::vector<double> sol_vec(num_real_vertices);
     Simplex solver(matrix_coeff, obj_coeff_low, obj_coeff_up, var_low, var_up,
                    n_obj_coeff);
-    solve_simplex(solver, matrix_coeff, obj_coeff_low, obj_coeff_up, var_low,
-                  var_up, n_obj_coeff, sol_vec, obj);
-    // solver.purge_artificial_columns();
+    solve_simplex(solver, sol_vec, obj);
+
+    // Optionally purge artificial columns after first phase
+    solver.purge_artificial_columns();
 
     for (size_t i = 0; i < sol_vec.size(); ++i) {
-        sol[reverseMap[i]] = -sol_vec[i];
+        sol[reverseMap[i]] = sol_vec[i];
+    }
+    obj = 0.0;
+    for (size_t i = 0; i < sol_vec.size(); ++i) {
+        obj += obj_coeff[i] * sol_vec[i];
     }
 
     bool stale = false;
@@ -264,7 +265,7 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
                     double newval = graph[new_edge.first].weight;
                     const auto reach2 =
                         g::get_reachable_through_probabilistic(graph, vertex,
-                                                               successor);
+                                                         successor);
                     for (const auto &[target, prob] : reach2) {
                         newval += prob * graph[new_edge.first].discount * sol[target];
                     }
@@ -317,18 +318,24 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
         }
 
         calculate_obj_coefficients(graph, obj_coeff);
-        n_obj_coeff = obj_coeff;
+        for (std::size_t i = 0; i < n_obj_coeff.size(); ++i) {
+            n_obj_coeff[i] = obj_coeff[i] * (-1);
+        }
 
-        // RESET
-        // solver.update_objective_row(n_obj_coeff, 0.0);
-        // solver.normalize_objective_row();
-        solver = Simplex(matrix_coeff, obj_coeff_low, obj_coeff_up, var_low,
-                         var_up, n_obj_coeff);
-        solve_simplex(solver, matrix_coeff, obj_coeff_low, obj_coeff_up, var_low,
-                      var_up, n_obj_coeff, sol_vec, obj);
+        // Use solver reuse pattern instead of full reconstruction
+        solver.update_objective_row(n_obj_coeff);
+        solver.normalize_objective_row();
+        while (solver.calculate_simplex()) {
+            lpiter++;
+        }
+        solver.get_full_results(sol_vec, obj, true);
 
         for (size_t i = 0; i < sol_vec.size(); ++i) {
             sol[reverseMap[i]] = sol_vec[i];
+        }
+        obj = 0.0;
+        for (size_t i = 0; i < sol_vec.size(); ++i) {
+            obj += obj_coeff[i] * sol_vec[i];
         }
     }
 
@@ -337,7 +344,7 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
     }
 
     for (const auto &vertex : boost::make_iterator_range(vertices_begin,
-                                                         vertices_end)) {
+                                                        vertices_end)) {
         if (sol[vertex] >= 0.0) {
             solution.set_winning_player(vertex, 0);
         } else {
@@ -354,5 +361,5 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
     return solution;
 }
 
-} // namespace stochastic_discounted
-} // namespace ggg
+}  // namespace stochastic_discounted
+}  // namespace ggg

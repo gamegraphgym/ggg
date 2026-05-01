@@ -36,12 +36,6 @@ class StochasticDiscountedObjectiveSolver : public ggg::solvers::Solver<graph::G
                                     std::vector<double> &obj_coeff);
 
     void solve_simplex(Simplex &solver,
-                       const std::vector<std::vector<double>> &matrix_coeff,
-                       const std::vector<double> &obj_coeff_low,
-                       const std::vector<double> &obj_coeff_up,
-                       const std::vector<double> &var_low,
-                       const std::vector<double> &var_up,
-                       const std::vector<double> &n_obj_coeff,
                        std::vector<double> &sol,
                        double &obj);
 
@@ -52,7 +46,6 @@ class StochasticDiscountedObjectiveSolver : public ggg::solvers::Solver<graph::G
     int num_real_vertices;
     std::map<graph::Vertex, size_t> matrixMap;
     std::map<int, graph::Vertex> reverseMap;
-    const graph::Graph *graph_;
     std::map<graph::Vertex, int> strategy;
     std::map<graph::Vertex, double> sol;
     std::vector<double> obj_coeff;
