@@ -15,16 +15,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install apt-fast
-        run: |
-          sudo add-apt-repository -y ppa:apt-fast/stable
-          sudo apt-get update
-          sudo apt-get install -y apt-fast
-
       - name: Install dependencies
         run: |
-          sudo apt-fast update
-          sudo apt-fast install -y libboost-all-dev cmake build-essential clang-tidy
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y -o Acquire::Retries=3 \
+            libboost-all-dev cmake build-essential clang-tidy
 
       - name: Configure CMake (generate compile database)
         run: |

@@ -11,16 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Install apt-fast
-        run: |
-          sudo add-apt-repository -y ppa:apt-fast/stable
-          sudo apt-get update
-          sudo apt-get install -y apt-fast
-
       - name: Install dependencies
         run: |
-          sudo apt-fast update
-          sudo apt-fast install -y libboost-graph-dev libboost-program-options-dev libboost-filesystem-dev libboost-system-dev doxygen graphviz cmake
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y -o Acquire::Retries=3 \
+            libboost-graph-dev libboost-program-options-dev \
+            libboost-filesystem-dev libboost-system-dev \
+            doxygen graphviz cmake
       - name: Configure CMake
         run: cmake -S . -B build
       - name: Build documentation
