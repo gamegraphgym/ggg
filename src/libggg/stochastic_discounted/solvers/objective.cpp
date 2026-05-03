@@ -5,8 +5,6 @@
 #include <limits>
 #include <random>
 
-// Note: This is a simple implementation of an objective improvement solver for stochastic discounted games.
-// It only works on games with max out degree 2.
 namespace ggg {
 namespace stochastic_discounted {
 
