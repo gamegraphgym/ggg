@@ -1,4 +1,4 @@
-#include "libggg/stochastic_discounted/solvers/objective.hpp"
+﻿#include "libggg/stochastic_discounted/solvers/objective.hpp"
 #include "libggg/utils/logging.hpp"
 #include <boost/graph/graph_utility.hpp>
 #include <cmath>
@@ -129,19 +129,13 @@ void StochasticDiscountedObjectiveSolver::calculate_obj_coefficients(
                 obj_coeff[matrixMap[target]] +=
                     prob * graph[curre.first].discount;
             }
-            cff += -graph[curre.first].weight;
+            cff += graph[curre.first].weight;
         }
     }
 }
 
 void StochasticDiscountedObjectiveSolver::solve_simplex(
     Simplex &solver,
-    const std::vector<std::vector<double>> &matrix_coeff,
-    const std::vector<double> &obj_coeff_low,
-    const std::vector<double> &obj_coeff_up,
-    const std::vector<double> &var_low,
-    const std::vector<double> &var_up,
-    const std::vector<double> &n_obj_coeff,
     std::vector<double> &sol_vec,
     double &obj) {
     while (solver.remove_artificial_variables()) {
@@ -224,12 +218,17 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
     std::vector<double> sol_vec(num_real_vertices);
     Simplex solver(matrix_coeff, obj_coeff_low, obj_coeff_up, var_low, var_up,
                    n_obj_coeff);
-    solve_simplex(solver, matrix_coeff, obj_coeff_low, obj_coeff_up, var_low,
-                  var_up, n_obj_coeff, sol_vec, obj);
-    // solver.purge_artificial_columns();
+    solve_simplex(solver, sol_vec, obj);
+
+    // Optionally purge artificial columns after first phase
+    solver.purge_artificial_columns();
 
     for (size_t i = 0; i < sol_vec.size(); ++i) {
-        sol[reverseMap[i]] = -sol_vec[i];
+        sol[reverseMap[i]] = sol_vec[i];
+    }
+    obj = 0.0;
+    for (size_t i = 0; i < sol_vec.size(); ++i) {
+        obj += obj_coeff[i] * sol_vec[i];
     }
 
     bool stale = false;
@@ -317,18 +316,24 @@ auto StochasticDiscountedObjectiveSolver::solve(const graphs_t &graph)
         }
 
         calculate_obj_coefficients(graph, obj_coeff);
-        n_obj_coeff = obj_coeff;
+        for (std::size_t i = 0; i < n_obj_coeff.size(); ++i) {
+            n_obj_coeff[i] = obj_coeff[i] * (-1);
+        }
 
-        // RESET
-        // solver.update_objective_row(n_obj_coeff, 0.0);
-        // solver.normalize_objective_row();
-        solver = Simplex(matrix_coeff, obj_coeff_low, obj_coeff_up, var_low,
-                         var_up, n_obj_coeff);
-        solve_simplex(solver, matrix_coeff, obj_coeff_low, obj_coeff_up, var_low,
-                      var_up, n_obj_coeff, sol_vec, obj);
+        // Use solver reuse pattern instead of full reconstruction
+        solver.update_objective_row(n_obj_coeff);
+        solver.normalize_objective_row();
+        while (solver.calculate_simplex()) {
+            lpiter++;
+        }
+        solver.get_full_results(sol_vec, obj, true);
 
         for (size_t i = 0; i < sol_vec.size(); ++i) {
             sol[reverseMap[i]] = sol_vec[i];
+        }
+        obj = 0.0;
+        for (size_t i = 0; i < sol_vec.size(); ++i) {
+            obj += obj_coeff[i] * sol_vec[i];
         }
     }
 

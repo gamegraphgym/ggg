@@ -13,7 +13,7 @@ import json
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.ticker import LogFormatter
+from matplotlib.ticker import LogFormatterSciNotation
 from matplotlib.patches import Rectangle
 
 def create_performance_by_game_type(json_path):
@@ -107,7 +107,7 @@ def create_performance_by_game_type(json_path):
     ax.tick_params(axis='y', labelsize=11)
     ax.grid(True, axis='y', alpha=0.3)
     ax.legend(title='Solver', fontsize=11, title_fontsize=12)
-    ax.yaxis.set_major_formatter(LogFormatter(base=10, labelOnlyBase=False))
+    ax.yaxis.set_major_formatter(LogFormatterSciNotation(base=10, labelOnlyBase=False))
 
     # Overlay timeout indicators
     n_game_types = len(time_pivot.index)
