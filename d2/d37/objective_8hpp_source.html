@@ -137,37 +137,30 @@ $(document).ready(function(){initNavTree('d2/d37/objective_8hpp_source.html','..
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                                    std::vector&lt;double&gt; &amp;obj_coeff);</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">void</span> solve_simplex(<a class="code hl_class" href="../../d8/dff/classSimplex.html">Simplex</a> &amp;solver,</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                       <span class="keyword">const</span> std::vector&lt;std::vector&lt;double&gt;&gt; &amp;matrix_coeff,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                       <span class="keyword">const</span> std::vector&lt;double&gt; &amp;obj_coeff_low,</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                       <span class="keyword">const</span> std::vector&lt;double&gt; &amp;obj_coeff_up,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                       <span class="keyword">const</span> std::vector&lt;double&gt; &amp;var_low,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                       <span class="keyword">const</span> std::vector&lt;double&gt; &amp;var_up,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                       <span class="keyword">const</span> std::vector&lt;double&gt; &amp;n_obj_coeff,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                       std::vector&lt;double&gt; &amp;sol,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                       <span class="keywordtype">double</span> &amp;obj);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    uint switches;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    uint iterations;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    uint lpiter;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    uint stales;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">int</span> num_real_vertices;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    std::map&lt;graph::Vertex, size_t&gt; matrixMap;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::map&lt;int, graph::Vertex&gt; reverseMap;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">const</span> graph::Graph *graph_;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::map&lt;graph::Vertex, int&gt; strategy;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    std::map&lt;graph::Vertex, double&gt; sol;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    std::vector&lt;double&gt; obj_coeff;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">double</span> cff;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>};</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                       std::vector&lt;double&gt; &amp;sol,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                       <span class="keywordtype">double</span> &amp;obj);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    uint switches;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    uint iterations;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    uint lpiter;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    uint stales;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">int</span> num_real_vertices;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    std::map&lt;graph::Vertex, size_t&gt; matrixMap;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    std::map&lt;int, graph::Vertex&gt; reverseMap;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::map&lt;graph::Vertex, int&gt; strategy;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::map&lt;graph::Vertex, double&gt; sol;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::vector&lt;double&gt; obj_coeff;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">double</span> cff;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
 </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>} <span class="comment">// namespace stochastic_discounted</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>} <span class="comment">// namespace ggg</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>} <span class="comment">// namespace stochastic_discounted</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>} <span class="comment">// namespace ggg</span></div>
 <div class="ttc" id="aclassSimplex_html"><div class="ttname"><a href="../../d8/dff/classSimplex.html">Simplex</a></div><div class="ttdef"><b>Definition</b> <a href="../../d9/d17/simplex_8hpp_source.html#l00017">simplex.hpp:17</a></div></div>
 <div class="ttc" id="aclassggg_1_1solutions_1_1RSQSolution_html"><div class="ttname"><a href="../../d3/da4/classggg_1_1solutions_1_1RSQSolution.html">ggg::solutions::RSQSolution</a></div><div class="ttdoc">Convenience solution combining Regions, Strategies and Quantitative values.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d8e/rsqsolution_8hpp_source.html#l00022">rsqsolution.hpp:22</a></div></div>
 <div class="ttc" id="aclassggg_1_1solvers_1_1Solver_html"><div class="ttname"><a href="../../d4/de2/classggg_1_1solvers_1_1Solver.html">ggg::solvers::Solver</a></div><div class="ttdoc">Generic solver interface for game graphs.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00040">solver.hpp:40</a></div></div>
 <div class="ttc" id="aclassggg_1_1stochastic__discounted_1_1StochasticDiscountedObjectiveSolver_html"><div class="ttname"><a href="../../df/dda/classggg_1_1stochastic__discounted_1_1StochasticDiscountedObjectiveSolver.html">ggg::stochastic_discounted::StochasticDiscountedObjectiveSolver</a></div><div class="ttdoc">Objective Improvement solver for stochastic discounted games.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d37/objective_8hpp_source.html#l00021">objective.hpp:21</a></div></div>
-<div class="ttc" id="aclassggg_1_1stochastic__discounted_1_1StochasticDiscountedObjectiveSolver_html_a2829e5f305d3f33f59281ba2b6a8bc57"><div class="ttname"><a href="../../df/dda/classggg_1_1stochastic__discounted_1_1StochasticDiscountedObjectiveSolver.html#a2829e5f305d3f33f59281ba2b6a8bc57">ggg::stochastic_discounted::StochasticDiscountedObjectiveSolver::solve</a></div><div class="ttdeci">auto solve(const graph::Graph &amp;graph) -&gt; ObjectiveSolutionType override</div><div class="ttdoc">Solve the given game graph and return a solution.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d36/src_2libggg_2stochastic__discounted_2solvers_2objective_8cpp_source.html#l00155">src/libggg/stochastic_discounted/solvers/objective.cpp:155</a></div></div>
+<div class="ttc" id="aclassggg_1_1stochastic__discounted_1_1StochasticDiscountedObjectiveSolver_html_a2829e5f305d3f33f59281ba2b6a8bc57"><div class="ttname"><a href="../../df/dda/classggg_1_1stochastic__discounted_1_1StochasticDiscountedObjectiveSolver.html#a2829e5f305d3f33f59281ba2b6a8bc57">ggg::stochastic_discounted::StochasticDiscountedObjectiveSolver::solve</a></div><div class="ttdeci">auto solve(const graph::Graph &amp;graph) -&gt; ObjectiveSolutionType override</div><div class="ttdoc">Solve the given game graph and return a solution.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d36/src_2libggg_2stochastic__discounted_2solvers_2objective_8cpp_source.html#l00149">src/libggg/stochastic_discounted/solvers/objective.cpp:149</a></div></div>
 <div class="ttc" id="aclassggg_1_1stochastic__discounted_1_1StochasticDiscountedObjectiveSolver_html_a46326bce6a1cccf5ef119de1c37ddfce"><div class="ttname"><a href="../../df/dda/classggg_1_1stochastic__discounted_1_1StochasticDiscountedObjectiveSolver.html#a46326bce6a1cccf5ef119de1c37ddfce">ggg::stochastic_discounted::StochasticDiscountedObjectiveSolver::get_name</a></div><div class="ttdeci">std::string get_name() const override</div><div class="ttdoc">Get solver name/description.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d37/objective_8hpp_source.html#l00024">objective.hpp:24</a></div></div>
 <div class="ttc" id="anamespaceggg_html"><div class="ttname"><a href="../../d7/d06/namespaceggg.html">ggg</a></div><div class="ttdoc">Main namespace for the Game Graph Gym library.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/deb/attractor_8hpp_source.html#l00009">attractor.hpp:9</a></div></div>
 <div class="ttc" id="asimplex_8hpp_html"><div class="ttname"><a href="../../d9/d17/simplex_8hpp.html">simplex.hpp</a></div></div>

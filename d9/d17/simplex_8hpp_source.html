@@ -411,62 +411,79 @@ $(document).ready(function(){initNavTree('d9/d17/simplex_8hpp_source.html','../.
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>        objective = tableau[numConstraints].back();</div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    }</div>
 </div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    <span class="comment">/*</span></div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="comment">    void update_objective_row(const std::vector&lt;double&gt; &amp;new_obj_coeff, double new_rhs) {</span></div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="comment">        int w_index = origVars;</span></div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span><span class="comment">        int total_cols = tableau[0].size();</span></div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span><span class="comment">        // Clear current objective row (excluding RHS)</span></div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span><span class="comment">        for (int j = 0; j &lt; total_cols - 1; ++j) {</span></div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span><span class="comment">            tableau[numConstraints][j] = 0.0;</span></div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span><span class="comment">        }</span></div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span><span class="comment">        // Apply new objective coefficients for transformed variables</span></div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span><span class="comment">        for (int j = 0; j &lt; origVars; ++j) {</span></div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span><span class="comment">            double cj = new_obj_coeff[j];</span></div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span><span class="comment">            tableau[numConstraints][j] = -cj;       // x&#39;_j gets -c_j</span></div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span><span class="comment">            tableau[numConstraints][w_index] += cj; // shared W gets +c_j</span></div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span><span class="comment">        }</span></div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="comment">        // Override objective RHS value</span></div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span><span class="comment">        tableau[numConstraints].back() = new_rhs;</span></div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span><span class="comment">    }</span></div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span><span class="comment"></span> </div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span><span class="comment">    void normalize_objective_row() {</span></div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span><span class="comment">        int total_cols = tableau[0].size();</span></div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span><span class="comment">        int total_rows = tableau.size();</span></div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span><span class="comment">        int objective_row = numConstraints;</span></div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span><span class="comment">        for (int col = 0; col &lt; total_cols - 1; ++col) {</span></div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span><span class="comment">            double cost = tableau[objective_row][col];</span></div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span><span class="comment">            if (std::fabs(cost) &lt; 1e-8) {</span></div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span><span class="comment">                continue; // Skip zero or negligible cost</span></div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span><span class="comment">            }</span></div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span><span class="comment">        }</span></div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span><span class="comment">    }</span></div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span><span class="comment"></span> </div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span><span class="comment">    void purge_artificial_columns() {</span></div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span><span class="comment">        int artificial_offset = numVariables + numConstraints;</span></div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span><span class="comment">        int total_cols = tableau[0].size();</span></div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span><span class="comment">        int total_rows = tableau.size();</span></div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span><span class="comment">        // Clear each artificial column across all rows</span></div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span><span class="comment">        for (int col = artificial_offset; col &lt; total_cols - 1; ++col) {</span></div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span><span class="comment">            for (int row = 0; row &lt; total_rows; ++row) {</span></div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span><span class="comment">                tableau[row][col] = 0.0;</span></div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span><span class="comment">            }</span></div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span><span class="comment">        }</span></div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span><span class="comment">    }</span></div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span><span class="comment">    */</span></div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    std::vector&lt;std::vector&lt;double&gt;&gt; tableau;</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    std::vector&lt;int&gt; basis;</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    <span class="keywordtype">int</span> numConstraints;</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    <span class="keywordtype">int</span> numVariables;</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    <span class="keywordtype">double</span> pivotValue = 0.0;</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    <span class="keywordtype">int</span> artificialVar = 0;</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="keywordtype">int</span> origVars;</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>};</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
+<div class="foldopen" id="foldopen00296" data-start="{" data-end="}">
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno"><a class="line" href="../../d8/dff/classSimplex.html#a30fba6ded970fd1da41cf33f94526d9c">  296</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="../../d8/dff/classSimplex.html#a30fba6ded970fd1da41cf33f94526d9c">update_objective_row</a>(<span class="keyword">const</span> std::vector&lt;double&gt; &amp;new_obj_coeff) {</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        <span class="keywordtype">int</span> w_index = origVars;</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        <span class="keywordtype">int</span> total_cols = tableau[0].size();</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>        <span class="comment">// Clear current objective row (excluding RHS)</span></div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; total_cols - 1; ++j) {</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>            tableau[numConstraints][j] = 0.0;</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        }</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        <span class="comment">// Apply new objective coefficients for transformed variables</span></div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; origVars; ++j) {</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>            <span class="keywordtype">double</span> cj = new_obj_coeff[j];</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>            tableau[numConstraints][j] = -cj;       <span class="comment">// x&#39;_j gets -c_j</span></div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>            tableau[numConstraints][w_index] += cj; <span class="comment">// shared W gets +c_j</span></div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        }</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        <span class="comment">// Reset objective RHS for canonicalization</span></div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        tableau[numConstraints].back() = 0.0;</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    }</div>
+</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
+<div class="foldopen" id="foldopen00313" data-start="{" data-end="}">
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno"><a class="line" href="../../d8/dff/classSimplex.html#a3dbffc53daa29aad2b6555e8c426687f">  313</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="../../d8/dff/classSimplex.html#a3dbffc53daa29aad2b6555e8c426687f">normalize_objective_row</a>() {</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        <span class="keywordtype">int</span> total_cols = tableau[0].size();</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; numConstraints; ++i) {</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>            <span class="keywordtype">int</span> basic_var = basis[i];</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>            <span class="keywordtype">double</span> coeff = tableau[numConstraints][basic_var];</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>            <span class="keywordflow">if</span> (std::fabs(coeff) &lt; 1e-12) {</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            }</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            <span class="keywordtype">double</span> factor = coeff;</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> col = 0; col &lt; total_cols; ++col) {</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>                tableau[numConstraints][col] -= factor * tableau[i][col];</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>            }</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        }</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> col = 0; col &lt; total_cols; ++col) {</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>            <span class="keywordflow">if</span> (std::fabs(tableau[numConstraints][col]) &lt; 1e-12) {</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                tableau[numConstraints][col] = 0.0;</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            }</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        }</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    }</div>
+</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span> </div>
+<div class="foldopen" id="foldopen00333" data-start="{" data-end="}">
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno"><a class="line" href="../../d8/dff/classSimplex.html#ab2d9f4ba1492f3eba127ae9a8a82a2bc">  333</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="../../d8/dff/classSimplex.html#ab2d9f4ba1492f3eba127ae9a8a82a2bc">purge_artificial_columns</a>() {</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <span class="keywordtype">int</span> artificial_offset = numVariables + numConstraints;</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        <span class="keywordtype">int</span> total_cols = tableau[0].size();</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        <span class="keywordtype">int</span> total_rows = tableau.size();</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        <span class="comment">// Clear each artificial column across all rows</span></div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> col = artificial_offset; col &lt; total_cols - 1; ++col) {</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> row = 0; row &lt; total_rows; ++row) {</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                tableau[row][col] = 0.0;</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>            }</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        }</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    }</div>
+</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span> </div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    std::vector&lt;std::vector&lt;double&gt;&gt; tableau;</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    std::vector&lt;int&gt; basis;</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    <span class="keywordtype">int</span> numConstraints;</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    <span class="keywordtype">int</span> numVariables;</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    <span class="keywordtype">double</span> pivotValue = 0.0;</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    <span class="keywordtype">int</span> artificialVar = 0;</div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>    <span class="keywordtype">int</span> origVars;</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>};</div>
 </div>
 <div class="ttc" id="aclassSimplex_html"><div class="ttname"><a href="../../d8/dff/classSimplex.html">Simplex</a></div><div class="ttdef"><b>Definition</b> <a href="../../d9/d17/simplex_8hpp_source.html#l00017">simplex.hpp:17</a></div></div>
 <div class="ttc" id="aclassSimplex_html_a00ad04bfee73cbfe3d21307368941106"><div class="ttname"><a href="../../d8/dff/classSimplex.html#a00ad04bfee73cbfe3d21307368941106">Simplex::perform_pivot</a></div><div class="ttdeci">void perform_pivot(int pivot_row, int pivot_col)</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d17/simplex_8hpp_source.html#l00171">simplex.hpp:171</a></div></div>
+<div class="ttc" id="aclassSimplex_html_a30fba6ded970fd1da41cf33f94526d9c"><div class="ttname"><a href="../../d8/dff/classSimplex.html#a30fba6ded970fd1da41cf33f94526d9c">Simplex::update_objective_row</a></div><div class="ttdeci">void update_objective_row(const std::vector&lt; double &gt; &amp;new_obj_coeff)</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d17/simplex_8hpp_source.html#l00296">simplex.hpp:296</a></div></div>
+<div class="ttc" id="aclassSimplex_html_a3dbffc53daa29aad2b6555e8c426687f"><div class="ttname"><a href="../../d8/dff/classSimplex.html#a3dbffc53daa29aad2b6555e8c426687f">Simplex::normalize_objective_row</a></div><div class="ttdeci">void normalize_objective_row()</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d17/simplex_8hpp_source.html#l00313">simplex.hpp:313</a></div></div>
 <div class="ttc" id="aclassSimplex_html_a3f2948ec8f9c08f0244bdfe35c27afe1"><div class="ttname"><a href="../../d8/dff/classSimplex.html#a3f2948ec8f9c08f0244bdfe35c27afe1">Simplex::calculate_simplex</a></div><div class="ttdeci">auto calculate_simplex() -&gt; bool</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d17/simplex_8hpp_source.html#l00225">simplex.hpp:225</a></div></div>
 <div class="ttc" id="aclassSimplex_html_a53e8f7b1080d77b3ce3faa2e98341969"><div class="ttname"><a href="../../d8/dff/classSimplex.html#a53e8f7b1080d77b3ce3faa2e98341969">Simplex::remove_artificial_variables</a></div><div class="ttdeci">auto remove_artificial_variables() -&gt; bool</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d17/simplex_8hpp_source.html#l00195">simplex.hpp:195</a></div></div>
+<div class="ttc" id="aclassSimplex_html_ab2d9f4ba1492f3eba127ae9a8a82a2bc"><div class="ttname"><a href="../../d8/dff/classSimplex.html#ab2d9f4ba1492f3eba127ae9a8a82a2bc">Simplex::purge_artificial_columns</a></div><div class="ttdeci">void purge_artificial_columns()</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d17/simplex_8hpp_source.html#l00333">simplex.hpp:333</a></div></div>
 <div class="ttc" id="aclassSimplex_html_acb063e93baeaddb574d1e9dd315e30ec"><div class="ttname"><a href="../../d8/dff/classSimplex.html#acb063e93baeaddb574d1e9dd315e30ec">Simplex::Simplex</a></div><div class="ttdeci">Simplex(const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;matrix_coeff, const std::vector&lt; double &gt; &amp;obj_coeff_low, const std::vector&lt; double &gt; &amp;obj_coeff_up, const std::vector&lt; double &gt; &amp;var_low, const std::vector&lt; double &gt; &amp;var_up, const std::vector&lt; double &gt; &amp;obj_coeff)</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d17/simplex_8hpp_source.html#l00019">simplex.hpp:19</a></div></div>
 <div class="ttc" id="aclassSimplex_html_ad4930c18be73cbec6eccde407c396981"><div class="ttname"><a href="../../d8/dff/classSimplex.html#ad4930c18be73cbec6eccde407c396981">Simplex::get_full_results</a></div><div class="ttdeci">void get_full_results(std::vector&lt; double &gt; &amp;x_out, double &amp;objective, bool use_original_variables) const</div><div class="ttdef"><b>Definition</b> <a href="../../d9/d17/simplex_8hpp_source.html#l00261">simplex.hpp:261</a></div></div>
 <div class="ttc" id="alogging_8hpp_html"><div class="ttname"><a href="../../d0/da9/logging_8hpp.html">logging.hpp</a></div></div>
