@@ -21,7 +21,7 @@ public:
         for (auto it = vertices_begin; it != vertices_end; ++it) {
             const auto vertex = *it;
             const auto winner = computeWinner(game, vertex);
-            solution.setWinningPlayer(vertex, winner);
+            solution.set_winning_player(vertex, winner);
         }
 
         return solution;
