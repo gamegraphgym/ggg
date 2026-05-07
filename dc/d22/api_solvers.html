@@ -120,7 +120,7 @@ Implementing a Solver</h2>
 <div class="line">        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = vertices_begin; it != vertices_end; ++it) {</div>
 <div class="line">            <span class="keyword">const</span> <span class="keyword">auto</span> vertex = *it;</div>
 <div class="line">            <span class="keyword">const</span> <span class="keyword">auto</span> winner = computeWinner(game, vertex);</div>
-<div class="line">            solution.setWinningPlayer(vertex, winner);</div>
+<div class="line">            solution.set_winning_player(vertex, winner);</div>
 <div class="line">        }</div>
 <div class="line"> </div>
 <div class="line">        <span class="keywordflow">return</span> solution;</div>

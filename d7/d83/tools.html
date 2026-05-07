@@ -105,7 +105,49 @@ $(document).ready(function(){initNavTree('d7/d83/tools.html','../../'); initResi
 <h1><a class="anchor" id="game-solvers"></a>
 Game solvers</h1>
 <p>The executables for game solvers are called <code>ggg_X_solver_Y</code>, where <code>X</code> identifies the game graph type and <code>Y</code> is the name of the algorithm. For instance, the "priority promotion" algorithm for solving Parity games is compiled into a binary named <code>ggg_parity_solver_priority_promotion</code>.</p>
-<h2><a class="anchor" id="input_formats"></a>
+<p>All solver binaries are produced in <code>build/bin</code> and share a common CLI shape:</p>
+<div class="fragment"><div class="line">ggg_&lt;game&gt;_solver_&lt;algorithm&gt; [options] &lt;input&gt;</div>
+</div><!-- fragment --><p>Where <code>&lt;input&gt;</code> is required and can be:</p>
+<ul>
+<li>a file path to a DOT game graph, or</li>
+<li><code>-</code> to read from stdin.</li>
+</ul>
+<h2><a class="anchor" id="solver-options-and-examples"></a>
+Solver options and examples</h2>
+<ul>
+<li><code>-h, --help</code> show usage</li>
+<li><code>-f, --format &lt;plain|json&gt;</code> output format (<code>plain</code> by default)</li>
+<li><code>-t, --time-only</code> print only solving time</li>
+<li><code>--solver-name</code> print solver name and exit</li>
+<li><code>-v</code>, <code>-vv</code>, <code>-vvv</code> increase verbosity (when logging is enabled at build time)</li>
+</ul>
+<p>Examples:</p>
+<div class="fragment"><div class="line"># Show solver help</div>
+<div class="line">./build/bin/ggg_parity_solver_recursive --help</div>
+<div class="line"> </div>
+<div class="line"># Print only the solver name</div>
+<div class="line">./build/bin/ggg_parity_solver_recursive --solver-name test.dot</div>
+<div class="line"> </div>
+<div class="line"># Solve a game in plain output (default)</div>
+<div class="line">./build/bin/ggg_parity_solver_recursive test.dot</div>
+<div class="line"> </div>
+<div class="line"># Solve with JSON output</div>
+<div class="line">./build/bin/ggg_parity_solver_recursive --format json test.dot</div>
+<div class="line"> </div>
+<div class="line"># Output only solving time</div>
+<div class="line">./build/bin/ggg_parity_solver_recursive --time-only test.dot</div>
+<div class="line"> </div>
+<div class="line"># Read game from stdin</div>
+<div class="line">cat test.dot | ./build/bin/ggg_parity_solver_recursive -</div>
+<div class="line"> </div>
+<div class="line"># Increase verbosity</div>
+<div class="line">./build/bin/ggg_parity_solver_recursive -vv test.dot</div>
+</div><!-- fragment --><p>List available solvers by game type:</p>
+<div class="fragment"><div class="line">ls -1 build/bin/ggg_parity_solver_*</div>
+<div class="line">ls -1 build/bin/ggg_mean_payoff_solver_*</div>
+<div class="line">ls -1 build/bin/ggg_stochastic_discounted_solver_*</div>
+<div class="line">ls -1 build/bin/ggg_buechi_solver_*</div>
+</div><!-- fragment --><h2><a class="anchor" id="input_formats"></a>
 Input File Formats</h2>
 <p>GGG provides parsing and writing game graphs in <a href="https://graphviz.org/doc/info/lang.html">Graphviz DOT</a> format with custom attributes for the dynamic properties defined on the graph type.</p>
 <p>For example, Parity games graphs have the following vertex attributes:</p>
@@ -126,10 +168,352 @@ Input File Formats</h2>
 <div class="line">}</div>
 </div><!-- fragment --><h1><a class="anchor" id="random-game-graph-generators"></a>
 Random Game Graph Generators</h1>
-<p>The executables for randome game graph generators are called <code>ggg_X_generate</code>, where <code>X</code> identifies the game graph type. For instance, a generator for Parity game graphs is compiled into a binary named <code>ggg_parity_generate</code>.</p>
-<h1><a class="anchor" id="benchmarking-scripts"></a>
+<p>The executables for random game graph generators are called <code>ggg_X_generate</code>, where <code>X</code> identifies the game graph type. For instance, a generator for Parity game graphs is compiled into a binary named <code>ggg_parity_generate</code>.</p>
+<p>Common options shared by generators:</p>
+<ul>
+<li><code>-h, --help</code></li>
+<li><code>-o, --output-dir &lt;dir&gt;</code> output directory (default: <code>./generated</code>)</li>
+<li><code>-c, --count &lt;int&gt;</code> number of games to generate</li>
+<li><code>--seed &lt;int&gt;</code> deterministic random seed</li>
+<li><code>--verbose</code> print generated file names</li>
+</ul>
+<blockquote class="doxtable">
+<p>&zwj;Note: <code>ggg_buechi_generate</code> is currently not provided (Büchi has solver CLIs, no generator yet). </p>
+</blockquote>
+<h2><a class="anchor" id="parity-generator-ggg_parity_generate"></a>
+Parity generator (&lt;tt&gt;ggg_parity_generate&lt;/tt&gt;)</h2>
+<p>Additional options:</p>
+<ul>
+<li><code>--vertices</code> number of vertices (default: <code>10</code>)</li>
+<li><code>--max-priority</code> maximum priority (default: <code>5</code>)</li>
+<li><code>--min-out-degree</code> minimum out-degree per vertex (default: <code>1</code>)</li>
+<li><code>--max-out-degree</code> maximum out-degree per vertex (default: <code>-1</code>, interpreted as <code>vertices - 1</code>)</li>
+</ul>
+<p>Useful aliases are also accepted (for compatibility): <code>-vx</code>, <code>-mp</code>, <code>-mo</code>, <code>-mxo</code>.</p>
+<div class="fragment"><div class="line"># Generate 10 parity games with 40 vertices each</div>
+<div class="line">./build/bin/ggg_parity_generate -o games/parity -c 10 --vertices 40</div>
+<div class="line"> </div>
+<div class="line"># Restrict priorities and out-degree range</div>
+<div class="line">./build/bin/ggg_parity_generate -o games/parity -c 5 --vertices 30 --max-priority 12 --min-out-degree 2 --max-out-degree 5</div>
+</div><!-- fragment --><p>Output files follow the pattern: <code>parity_game_0.dot</code>, <code>parity_game_1.dot</code>, ...</p>
+<h2><a class="anchor" id="mean-payoff-generator-ggg_mean_payoff_generate"></a>
+Mean-payoff generator (&lt;tt&gt;ggg_mean_payoff_generate&lt;/tt&gt;)</h2>
+<p>Additional options:</p>
+<ul>
+<li><code>--vertices</code> number of vertices (default: <code>10</code>)</li>
+<li><code>--min-weight</code> minimum vertex weight (default: <code>-10</code>)</li>
+<li><code>--max-weight</code> maximum vertex weight (default: <code>10</code>)</li>
+<li><code>--min-out-degree</code> minimum out-degree per vertex (default: <code>1</code>)</li>
+<li><code>--max-out-degree</code> maximum out-degree per vertex (default: <code>-1</code>, interpreted as <code>vertices - 1</code>)</li>
+</ul>
+<p>Useful aliases are also accepted: <code>-vx</code>, <code>-mw</code>, <code>-mxw</code>, <code>-mo</code>, <code>-mxo</code>.</p>
+<div class="fragment"><div class="line"># Generate 20 mean-payoff games</div>
+<div class="line">./build/bin/ggg_mean_payoff_generate -o games/mpv -c 20 --vertices 60 --min-weight -20 --max-weight 20</div>
+<div class="line"> </div>
+<div class="line"># Keep branching factor moderate</div>
+<div class="line">./build/bin/ggg_mean_payoff_generate -o games/mpv -c 5 --vertices 80 --min-out-degree 2 --max-out-degree 4</div>
+</div><!-- fragment --><p>Output files follow the pattern: <code>mpv_game_0.dot</code>, <code>mpv_game_1.dot</code>, ...</p>
+<h2><a class="anchor" id="stochastic-discounted-generator-ggg_stochastic_discounted_generate"></a>
+Stochastic discounted generator (&lt;tt&gt;ggg_stochastic_discounted_generate&lt;/tt&gt;)</h2>
+<p>Additional options:</p>
+<ul>
+<li><code>--player-vertices</code> number of player-owned vertices (players 0/1)</li>
+<li><code>--min-player-outgoing</code> minimum outgoing edges per player-owned vertex</li>
+<li><code>--max-player-outgoing</code> maximum outgoing edges per player-owned vertex</li>
+<li><code>--min-weight</code> minimum deterministic edge weight</li>
+<li><code>--max-weight</code> maximum deterministic edge weight</li>
+<li><code>--discount</code> discount factor, must satisfy <code>0 &lt; discount &lt; 1</code></li>
+</ul>
+<p>Useful aliases are also accepted: <code>-vx</code>, <code>-mo</code>, <code>-mxo</code>, <code>-mw</code>, <code>-mxw</code>, <code>-d</code>.</p>
+<div class="fragment"><div class="line"># Generate stochastic discounted games with default weight range and discount</div>
+<div class="line">./build/bin/ggg_stochastic_discounted_generate -o games/sd -c 8 --player-vertices 30 --min-player-outgoing 1 --max-player-outgoing 3</div>
+<div class="line"> </div>
+<div class="line"># Use custom reward range and discount factor</div>
+<div class="line">./build/bin/ggg_stochastic_discounted_generate -o games/sd -c 4 --player-vertices 25 --min-player-outgoing 2 --max-player-outgoing 4 --min-weight -5 --max-weight 15 --discount 0.9</div>
+</div><!-- fragment --><p>Output files follow the pattern: <code>stochastic_discounted_game_0.dot</code>, <code>stochastic_discounted_game_1.dot</code>, ...</p>
+<h2><a class="anchor" id="end-to-end-cli-workflow-example"></a>
+End-to-end CLI workflow example</h2>
+<div class="fragment"><div class="line"># 1) Generate parity games</div>
+<div class="line">./build/bin/ggg_parity_generate -o games/parity -c 3 --vertices 50 --max-priority 10</div>
+<div class="line"> </div>
+<div class="line"># 2) Solve one game in JSON</div>
+<div class="line">./build/bin/ggg_parity_solver_priority_promotion --format json games/parity/parity_game_0.dot</div>
+<div class="line"> </div>
+<div class="line"># 3) Compare with a second solver and print only time</div>
+<div class="line">./build/bin/ggg_parity_solver_recursive --time-only games/parity/parity_game_0.dot</div>
+</div><!-- fragment --><h1><a class="anchor" id="benchmarking-scripts"></a>
 Benchmarking Scripts</h1>
-<p>GGG ships some convenience scripts in <code>/extra/scripts</code> to run and plot benchmarks and convert file formats. </p>
+<p>GGG ships some convenience scripts in <code>/extra/scripts</code> to run and plot benchmarks and convert file formats.</p>
+<p>Current scripts include:</p>
+<ul>
+<li><code>benchmark.sh</code></li>
+<li><code>ggg_to_dot.py</code></li>
+<li><code>hoa_to_dot.py</code></li>
+<li><code>pgsolver_to_ggg.py</code></li>
+<li><code>plot_performance_by_game_type.py</code></li>
+<li><code>plot_time_by_game_index.py</code></li>
+<li><code>plot_time_by_vertex_count.py</code></li>
+</ul>
+<h2><a class="anchor" id="benchmark-runner-benchmarksh"></a>
+Benchmark runner: &lt;tt&gt;benchmark.sh&lt;/tt&gt;</h2>
+<p>The benchmark runner executes one or more solver binaries against a corpus of <code>.dot</code> games and writes a JSON results file.</p>
+<p>System prerequisites for the shell runner: <code>bash</code>, <code>timeout</code> (coreutils), and <code>bc</code>.</p>
+<p>Usage:</p>
+<div class="fragment"><div class="line">bash extra/scripts/benchmark.sh &lt;games_dir&gt; &lt;solver_dir&gt; [--time SECONDS] [-o OUTPUT_FILE] [--solver NAME]... [--solvers NAME1,NAME2,...]</div>
+</div><!-- fragment --><p>Arguments:</p>
+<ul>
+<li><code>&lt;games_dir&gt;</code>: directory containing game files<ul>
+<li>either flat (<code>games_dir/*.dot</code>), or</li>
+<li>grouped by type (<code>games_dir/&lt;type&gt;/*.dot</code>)</li>
+</ul>
+</li>
+<li><code>&lt;solver_dir&gt;</code>: directory containing executable solver binaries (typically <code>build/bin</code>)</li>
+</ul>
+<p>Options:</p>
+<ul>
+<li><code>--time SECONDS</code>: timeout per solver/game pair (default: <code>300</code>)</li>
+<li><code>-o, --output FILE</code>: output JSON file</li>
+<li><code>--solver NAME</code>: pick one solver (repeatable)</li>
+<li><code>--solvers NAME1,NAME2,...</code>: pick multiple solvers in one option</li>
+</ul>
+<p>If no <code>--solver</code>/<code>--solvers</code> is provided, the script prompts interactively.</p>
+<blockquote class="doxtable">
+<p>&zwj;Tip: if you pass <code>./build/bin</code> as <code>&lt;solver_dir&gt;</code>, prefer explicit <code>--solver</code>/<code>--solvers</code> so you only benchmark solver executables. </p>
+</blockquote>
+<h3><a class="anchor" id="working-example-1-benchmark-generated-parity-games"></a>
+Working example 1: benchmark generated parity games</h3>
+<div class="fragment"><div class="line"># 1) Generate a small corpus</div>
+<div class="line">./build/bin/ggg_parity_generate -o /tmp/ggg_games/parity -c 10 --vertices 50 --max-priority 10</div>
+<div class="line"> </div>
+<div class="line"># 2) Benchmark two parity solvers with a 60s timeout</div>
+<div class="line">bash extra/scripts/benchmark.sh \</div>
+<div class="line">    /tmp/ggg_games/parity \</div>
+<div class="line">    ./build/bin \</div>
+<div class="line">    --time 60 \</div>
+<div class="line">    --solvers ggg_parity_solver_recursive,ggg_parity_solver_priority_promotion \</div>
+<div class="line">    -o /tmp/ggg_parity_results.json</div>
+</div><!-- fragment --><h3><a class="anchor" id="working-example-2-benchmark-existing-test-suite-corpus"></a>
+Working example 2: benchmark existing test-suite corpus</h3>
+<div class="fragment"><div class="line">bash extra/scripts/benchmark.sh \</div>
+<div class="line">    ./tests/test-suites/parity \</div>
+<div class="line">    ./build/bin \</div>
+<div class="line">    --solver ggg_parity_solver_recursive \</div>
+<div class="line">    --solver ggg_parity_solver_progressive_small_progress_measures \</div>
+<div class="line">    -o /tmp/parity_suite_results.json</div>
+</div><!-- fragment --><p>The output JSON is an array of records with fields such as:</p>
+<ul>
+<li><code>solver</code></li>
+<li><code>game</code></li>
+<li><code>type</code> (present for type-based directory layouts)</li>
+<li><code>status</code> (<code>success</code>, <code>timeout</code>, <code>failed</code>)</li>
+<li><code>time</code> (seconds; timeout entries are set to the timeout value)</li>
+<li><code>vertices</code>, <code>edges</code>, <code>timestamp</code></li>
+</ul>
+<p>Representative record:</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">    &quot;solver&quot;: &quot;ggg_parity_solver_recursive&quot;,</div>
+<div class="line">    &quot;game&quot;: &quot;parity_game_0&quot;,</div>
+<div class="line">    &quot;type&quot;: &quot;parity&quot;,</div>
+<div class="line">    &quot;status&quot;: &quot;success&quot;,</div>
+<div class="line">    &quot;time&quot;: 0.01342,</div>
+<div class="line">    &quot;vertices&quot;: 50,</div>
+<div class="line">    &quot;edges&quot;: 121,</div>
+<div class="line">    &quot;timestamp&quot;: 1770000000</div>
+<div class="line">}</div>
+</div><!-- fragment --><h2><a class="anchor" id="plotting-benchmark-output"></a>
+Plotting benchmark output</h2>
+<p>The plotting scripts consume the JSON produced by <code>benchmark.sh</code>.</p>
+<p>Prerequisites (Python):</p>
+<div class="fragment"><div class="line">python3 -m pip install matplotlib numpy pandas</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md1-time-by-game-index"></a>
+1) Time by game index</h3>
+<div class="fragment"><div class="line">python3 extra/scripts/plot_time_by_game_index.py \</div>
+<div class="line">    /tmp/ggg_parity_results.json \</div>
+<div class="line">    --output-dir /tmp/ggg_plots \</div>
+<div class="line">    --title &quot;Parity solvers: runtime by game index&quot;</div>
+</div><!-- fragment --><p>Output file:</p>
+<ul>
+<li><code>/tmp/ggg_plots/individual_game_performance.png</code></li>
+</ul>
+<h3><a class="anchor" id="autotoc_md2-mean-time-by-vertex-count-scalability"></a>
+2) Mean time by vertex count (scalability)</h3>
+<div class="fragment"><div class="line">python3 extra/scripts/plot_time_by_vertex_count.py \</div>
+<div class="line">    /tmp/ggg_parity_results.json \</div>
+<div class="line">    --output-dir /tmp/ggg_plots \</div>
+<div class="line">    --title &quot;Parity solvers: scalability by vertex count&quot;</div>
+</div><!-- fragment --><p>Output file:</p>
+<ul>
+<li><code>/tmp/ggg_plots/scalability_by_vertex_count.png</code></li>
+</ul>
+<h3><a class="anchor" id="autotoc_md3-performance-by-game-type"></a>
+3) Performance by game type</h3>
+<div class="fragment"><div class="line">python3 extra/scripts/plot_performance_by_game_type.py /tmp/ggg_parity_results.json</div>
+</div><!-- fragment --><p>Output file (saved next to the JSON input):</p>
+<ul>
+<li><code>/tmp/game_type_performance.png</code> (if input is <code>/tmp/ggg_parity_results.json</code>)</li>
+</ul>
+<p>This plot aggregates results by <code>(solver, game type)</code> and overlays timeout counts.</p>
+<h2><a class="anchor" id="typical-end-to-end-workflow"></a>
+Typical end-to-end workflow</h2>
+<div class="fragment"><div class="line"># Generate games</div>
+<div class="line">./build/bin/ggg_parity_generate -o /tmp/bench_games -c 20 --vertices 100</div>
+<div class="line"> </div>
+<div class="line"># Benchmark</div>
+<div class="line">bash extra/scripts/benchmark.sh /tmp/bench_games ./build/bin \</div>
+<div class="line">    --solvers ggg_parity_solver_recursive,ggg_parity_solver_priority_promotion \</div>
+<div class="line">    --time 120 \</div>
+<div class="line">    -o /tmp/bench_results.json</div>
+<div class="line"> </div>
+<div class="line"># Produce all plots</div>
+<div class="line">python3 extra/scripts/plot_time_by_game_index.py /tmp/bench_results.json --output-dir /tmp/bench_plots</div>
+<div class="line">python3 extra/scripts/plot_time_by_vertex_count.py /tmp/bench_results.json --output-dir /tmp/bench_plots</div>
+<div class="line">python3 extra/scripts/plot_performance_by_game_type.py /tmp/bench_results.json</div>
+</div><!-- fragment --><h2><a class="anchor" id="format-conversion-helpers"></a>
+Format conversion helpers</h2>
+<p>These scripts are useful when preparing benchmark corpora from external formats:</p>
+<ul>
+<li><code>pgsolver_to_ggg.py</code>: convert pgsolver parity format to GGG DOT</li>
+<li><code>hoa_to_dot.py</code>: convert HOA automata/parity-game-like inputs to DOT</li>
+<li><code>ggg_to_dot.py</code>: transform GGG DOT attributes for Graphviz-friendly visualization</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md1-pgsolver_to_gggpy"></a>
+1) &lt;tt&gt;pgsolver_to_ggg.py&lt;/tt&gt;</h3>
+<p>Input format (pgsolver parity):</p>
+<div class="fragment"><div class="line">parity 2;</div>
+<div class="line">0 1 0 1,2 &quot;v0&quot;;</div>
+<div class="line">1 2 1 0 &quot;v1&quot;;</div>
+<div class="line">2 0 0 2 &quot;v2&quot;;</div>
+</div><!-- fragment --><p>Converted output (GGG DOT):</p>
+<div class="fragment"><div class="line">digraph ParityGame {</div>
+<div class="line">    0 [name=&quot;v0&quot;, player=0, priority=1];</div>
+<div class="line">    1 [name=&quot;v1&quot;, player=1, priority=2];</div>
+<div class="line">    2 [name=&quot;v2&quot;, player=0, priority=0];</div>
+<div class="line"> </div>
+<div class="line">    0 -&gt; 1;</div>
+<div class="line">    0 -&gt; 2;</div>
+<div class="line">    1 -&gt; 0;</div>
+<div class="line">    2 -&gt; 2;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Command example:</p>
+<div class="fragment"><div class="line">python3 extra/scripts/pgsolver_to_ggg.py input.pg -o output.dot --verify</div>
+</div><!-- fragment --><p>Batch conversion example:</p>
+<div class="fragment"><div class="line">python3 extra/scripts/pgsolver_to_ggg.py ./pg_games -o ./dot_games --recursive --verify</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md2-hoa_to_dotpy"></a>
+2) &lt;tt&gt;hoa_to_dot.py&lt;/tt&gt;</h3>
+<p>HOA stands for <b>Hanoi Omega-Automata format</b>. It is an external interchange format from the ω-automata/model-checking ecosystem (not specific to GGG). You will typically encounter <code>.hoa</code>/<code>.ehoa</code> files when exporting automata or game-like structures from tools such as Spot and related LTL/automata toolchains.</p>
+<p>Converter capabilities:</p>
+<ul>
+<li>single-file conversion and directory batch conversion</li>
+<li>recursive traversal with <code>--recursive</code></li>
+<li>extension filtering with <code>--input-exts</code></li>
+<li>optional semantic checks with <code>--verify</code></li>
+<li>internal smoke test with <code>--self-test</code></li>
+<li>supports state-based acceptance, transition-based acceptance, and generalized-Büchi HOA inputs</li>
+</ul>
+<p>Input format (HOA, state-acceptance style):</p>
+<div class="fragment"><div class="line">HOA: v1</div>
+<div class="line">States: 2</div>
+<div class="line">Start: 0</div>
+<div class="line">acc-name: parity min even 2</div>
+<div class="line">Acceptance: 2 Inf(0) &amp; Fin(1)</div>
+<div class="line">--BODY--</div>
+<div class="line">State: 0 &quot;s0&quot; {1}</div>
+<div class="line">[0] 1</div>
+<div class="line">State: 1 &quot;s1&quot; {0}</div>
+<div class="line">[0] 0</div>
+<div class="line">--END--</div>
+</div><!-- fragment --><p>Converted output (DOT):</p>
+<div class="fragment"><div class="line">digraph ParityGame {</div>
+<div class="line">    0 [name=&quot;s0&quot;, player=1, priority=1];</div>
+<div class="line">    1 [name=&quot;s1&quot;, player=0, priority=0];</div>
+<div class="line"> </div>
+<div class="line">    0 -&gt; 1;</div>
+<div class="line">    1 -&gt; 0;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Command examples:</p>
+<div class="fragment"><div class="line"># single file</div>
+<div class="line">python3 extra/scripts/hoa_to_dot.py game.hoa -o game.dot</div>
+<div class="line"> </div>
+<div class="line"># directory batch conversion</div>
+<div class="line">python3 extra/scripts/hoa_to_dot.py ./hoa_games -o ./dot_games --recursive</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md3-ggg_to_dotpy"></a>
+3) &lt;tt&gt;ggg_to_dot.py&lt;/tt&gt;</h3>
+<p>This script takes valid GGG DOT and rewrites labels/styles for visualization.</p>
+<p>I/O behavior:</p>
+<ul>
+<li>reads from the file path argument (or stdin when omitted / <code>-</code>)</li>
+<li>writes transformed DOT to stdout (redirect with <code>&gt;</code>)</li>
+</ul>
+<p>Typical GGG DOT input:</p>
+<div class="fragment"><div class="line">digraph ParityGame {</div>
+<div class="line">    0 [name=&quot;v0&quot;, player=0, priority=2];</div>
+<div class="line">    1 [name=&quot;v1&quot;, player=1, priority=1];</div>
+<div class="line">    0 -&gt; 1 [label=&quot;move&quot;];</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Representative transformed DOT output (Graphviz-friendly labels/shapes):</p>
+<div class="fragment"><div class="line">digraph ParityGame {</div>
+<div class="line">    0 [label=&lt;...&gt;, shape=&quot;diamond&quot;];</div>
+<div class="line">    1 [label=&lt;...&gt;, shape=&quot;square&quot;];</div>
+<div class="line">    0-&gt;1  [label=&lt;...&gt;];</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Command example:</p>
+<div class="fragment"><div class="line">python3 extra/scripts/ggg_to_dot.py input.dot &gt; visual.dot</div>
+</div><!-- fragment --><h2><a class="anchor" id="troubleshooting-1"></a>
+Troubleshooting</h2>
+<h3><a class="anchor" id="benchmarksh-fails-with-timeout-command-not-found"></a>
+&lt;tt&gt;benchmark.sh&lt;/tt&gt; fails with &lt;tt&gt;timeout: command not found&lt;/tt&gt;</h3>
+<p>Cause: GNU coreutils <code>timeout</code> is missing.</p>
+<p>Fix: install coreutils for your platform, then re-run the benchmark command.</p>
+<h3><a class="anchor" id="benchmarksh-fails-with-bc-command-not-found"></a>
+&lt;tt&gt;benchmark.sh&lt;/tt&gt; fails with &lt;tt&gt;bc: command not found&lt;/tt&gt;</h3>
+<p>Cause: the script uses <code>bc</code> to compute elapsed wall-clock time.</p>
+<p>Fix: install <code>bc</code>, then re-run.</p>
+<h3><a class="anchor" id="no-executable-solvers-found-in-solver_dir"></a>
+&lt;tt&gt;No executable solvers found in &lt;solver_dir&gt;&lt;/tt&gt;</h3>
+<p>Cause: wrong directory passed as <code>&lt;solver_dir&gt;</code>, or tools/solvers are not built yet.</p>
+<p>Fixes:</p>
+<ul>
+<li>ensure binaries exist under <code>build/bin</code></li>
+<li>configure/build with tool families enabled (for example <code>-DTOOLS_ALL=ON</code>)</li>
+<li>pass the correct solver directory path</li>
+</ul>
+<h3><a class="anchor" id="benchmarks-unexpectedly-include-non-solver-binaries"></a>
+Benchmarks unexpectedly include non-solver binaries</h3>
+<p>Cause: <code>benchmark.sh</code> scans executable files in <code>&lt;solver_dir&gt;</code>.</p>
+<p>Fix: always pass explicit <code>--solver</code>/<code>--solvers</code> names to restrict selection.</p>
+<h3><a class="anchor" id="no-dot-files--empty-result-set"></a>
+&lt;tt&gt;No .dot files&lt;/tt&gt; / empty result set</h3>
+<p>Cause: input corpus path is wrong, file extension does not match, or directory structure is unexpected.</p>
+<p>Fixes:</p>
+<ul>
+<li>verify the game path contains <code>.dot</code> files</li>
+<li>check whether your corpus is flat (<code>dir/*.dot</code>) or grouped (<code>dir/type/*.dot</code>)</li>
+<li>for conversion pipelines, confirm output files were written to the expected directory</li>
+</ul>
+<h3><a class="anchor" id="plot-scripts-fail-with-python-import-errors"></a>
+Plot scripts fail with Python import errors</h3>
+<p>Cause: missing plotting dependencies.</p>
+<p>Fix:</p>
+<div class="fragment"><div class="line">python3 -m pip install matplotlib numpy pandas</div>
+</div><!-- fragment --><h3><a class="anchor" id="plot-scripts-run-but-no-curves-appear"></a>
+Plot scripts run, but no curves appear</h3>
+<p>Cause: many plot scripts only use successful benchmark entries (<code>status == success</code>).</p>
+<p>Fixes:</p>
+<ul>
+<li>inspect the JSON and confirm successful rows exist</li>
+<li>increase benchmark timeout to reduce <code>timeout</code> statuses</li>
+<li>verify selected solver names are correct and runnable</li>
+</ul>
+<h3><a class="anchor" id="conversion-script-processes-no-files-in-directory-mode"></a>
+Conversion script processes no files in directory mode</h3>
+<p>Cause: input extension filter does not match your files.</p>
+<p>Fix: pass <code>--input-exts</code> explicitly, for example:</p>
+<div class="fragment"><div class="line">python3 extra/scripts/hoa_to_dot.py ./hoa_games -o ./dot_games --recursive --input-exts .hoa,.ehoa</div>
+<div class="line">python3 extra/scripts/pgsolver_to_ggg.py ./pg_games -o ./dot_games --recursive --input-exts .pg,.pgsolver,.gm</div>
+</div><!-- fragment --><h3><a class="anchor" id="ggg_to_dotpy-appears-to-produce-no-output-file"></a>
+&lt;tt&gt;ggg_to_dot.py&lt;/tt&gt; appears to produce no output file</h3>
+<p>Cause: the script writes to stdout by design.</p>
+<p>Fix: redirect output explicitly (for example <code>&gt; visual.dot</code>). </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

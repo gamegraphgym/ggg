@@ -137,7 +137,7 @@ Adding New Game Types</h1>
 <li><code>Graph</code> - a Boost adjacency_list alias with the declared bundled properties</li>
 <li><code>Vertex</code>, <code>Edge</code> - descriptor type aliases</li>
 <li><code>add_vertex()</code> and <code>add_edge()</code> - convenience helpers whose parameter lists match the declared vertex/edge fields</li>
-<li><code>parse(std::istream&amp;)</code> and <code>parse(const std::string&amp;)</code> - DOT parsers that return <code>std::shared_ptr&lt;Graph&gt;</code> on success (or <code>nullptr</code> on failure)</li>
+<li><code>parse(std::istream&amp;)</code> and <code>parse(const std::string&amp;)</code> - DOT parsers that return <code>std::shared_ptr&lt;Graph&gt;</code> on success and throw on parse/file errors</li>
 <li><code>write(std::ostream&amp;)</code> and <code>write(const std::string&amp;)</code> - DOT writers</li>
 </ul>
 <p>To use the generated types and functions:</p>
@@ -330,7 +330,7 @@ Implementing a Solver</h2>
 <div class="line">        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = vertices_begin; it != vertices_end; ++it) {</div>
 <div class="line">            <span class="keyword">const</span> <span class="keyword">auto</span> vertex = *it;</div>
 <div class="line">            <span class="keyword">const</span> <span class="keyword">auto</span> winner = computeWinner(game, vertex);</div>
-<div class="line">            solution.setWinningPlayer(vertex, winner);</div>
+<div class="line">            solution.set_winning_player(vertex, winner);</div>
 <div class="line">        }</div>
 <div class="line"> </div>
 <div class="line">        <span class="keywordflow">return</span> solution;</div>
@@ -359,8 +359,8 @@ Implementing a Solver</h2>
 <div class="line">)</div>
 </div><!-- fragment --><p>The macro generates a complete <code><a class="el" href="../../de/d75/mean__payoff_2generate_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a></code> function that:</p>
 <ol type="1">
-<li>Parses command-line arguments (supports <code>--csv</code>, <code>--time-only</code>, <code>--solver-name</code>)</li>
-<li>Reads the graph from stdin using the provided parser</li>
+<li>Parses command-line arguments (supports <code>--format</code>, <code>--time-only</code>, <code>--solver-name</code>, and <code>-v</code> when logging is enabled)</li>
+<li>Reads the graph from the required positional input path (<code>&lt;input&gt;</code>), using <code>-</code> for stdin</li>
 <li>Validates the graph using the specified validator</li>
 <li>Runs the solver</li>
 <li>Outputs the solution</li>

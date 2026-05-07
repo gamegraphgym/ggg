@@ -136,7 +136,7 @@ Adding New Game Types</h1>
 <li><code>Graph</code> - a Boost adjacency_list alias with the declared bundled properties</li>
 <li><code>Vertex</code>, <code>Edge</code> - descriptor type aliases</li>
 <li><code>add_vertex()</code> and <code>add_edge()</code> - convenience helpers whose parameter lists match the declared vertex/edge fields</li>
-<li><code>parse(std::istream&amp;)</code> and <code>parse(const std::string&amp;)</code> - DOT parsers that return <code>std::shared_ptr&lt;Graph&gt;</code> on success (or <code>nullptr</code> on failure)</li>
+<li><code>parse(std::istream&amp;)</code> and <code>parse(const std::string&amp;)</code> - DOT parsers that return <code>std::shared_ptr&lt;Graph&gt;</code> on success and throw on parse/file errors</li>
 <li><code>write(std::ostream&amp;)</code> and <code>write(const std::string&amp;)</code> - DOT writers</li>
 </ul>
 <p>To use the generated types and functions:</p>
